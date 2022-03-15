@@ -21,10 +21,12 @@ export const path = {
     },
     watch: {
         scss: `${srcFolder}/scss/**/*.scss`,
-        html: `${srcFolder}/**/*.*`,
+        html: `${srcFolder}/*.*`,
+        templates: `${srcFolder}/html/*.html`,
         files: `${srcFolder}/files/**/*.*`,
         images: `${srcFolder}/img/**/*.{jpg,jpeg,png,gif,webp}`
     },
+    
     clean: buildFolder,
     srcFolder: srcFolder,
     rootFolder: rootFolder,
