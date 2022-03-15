@@ -6,7 +6,9 @@
   "main": "index.js",
   "scripts": {
     "test": "node index.js",
-    "demon": "nodemon index.js"
+    "demon": "nodemon index.js",
+    "ngyp": "node-gyp",
+    "nd": "node"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
     "node": "^17.7.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "node-addon-api": "^4.3.0"
   }
 }

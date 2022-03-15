@@ -31,3 +31,8 @@ export default Router()
             title: "Neural net"
         })
     })
+    .get("/desicion", (req, res) => {
+        res.render("desicion", {
+            title: "Desicion tree"
+        })
+    })
