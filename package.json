@@ -19,12 +19,32 @@
   },
   "homepage": "https://github.com/rtm0x143/PUJAKwebAlgs#readme",
   "dependencies": {
+    "browser-sync": "^2.27.9",
     "dotenv": "^16.0.0",
-    "express": "^4.17.3",
     "express-handlebars": "^6.0.3",
-    "node": "^17.7.1"
+    "fs": "^0.0.1-security",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-fonter": "^0.3.0",
+    "gulp-group-css-media-queries": "^1.2.2",
+    "gulp-imagemin": "^8.0.0",
+    "gulp-newer": "^1.4.0",
+    "gulp-notify": "^4.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-ttf2woff2": "^4.0.1",
+    "gulp-version-number": "^0.2.4",
+    "gulp-webp": "^4.0.1",
+    "gulp-webpcss": "^1.1.1",
+    "node": "^17.7.1",
+    "require-dir": "^1.2.0",
+    "sass": "^1.49.9"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "del": "^6.0.0",
+    "gulp": "^4.0.2",
+    "gulp-file-include": "^2.3.0",
+    "webp-converter": "^2.2.3"
   }
 }
