@@ -18,9 +18,12 @@ app.use(express.json())
     .use(pagesRouter)
 
 
+const port = process.env.CONNECTION_PORT
+if (!port) throw "Enviroment variable 'CONNECTION_PORT' isn't initialized"
 try {
-    app.listen(process.env.CONNECTION_PORT, () => {
-        console.log(`Server has been started on port ${process.env.CONNECTION_PORT}...`)
+
+    app.listen(port, () => {
+        console.log(`Server has been started on port ${port}...`)
     })
 } 
 catch(e) {
