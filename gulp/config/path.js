@@ -1,33 +1,33 @@
 import * as nodePath from 'path';
 const rootFolder = nodePath.basename(nodePath.resolve());
 
-const buildFolder = './build';
-const srcFolder = './src';
+const build = './build';
+const src = './src';
 
 export const path = {
     build: {
-        css: `${buildFolder}/css/`,
-        html: `${buildFolder}/`,
-        images: `${buildFolder}/img/`,
-        fonts: `${buildFolder}/fonts/`,
-        files:  `${buildFolder}/files/` 
+        css: `${build}/css/`,
+        html: `${build}/`,
+        images: `${build}/img/`,
+        fonts: `${build}/fonts/`,
+        files:  `${build}/files/` 
     },
     src: {
-        images: `${srcFolder}/img/**/*.{jpg,jpeg,png,gif,webp}`,
-        svg: `${srcFolder}/img/**/*.svg`,
-        scss: `${srcFolder}/scss/style.scss`,
-        html: `${srcFolder}/*.html`,
-        files: `${srcFolder}/files/**/*.*`
+        images: `${src}/img/**/*.{jpg,jpeg,png,gif,webp}`,
+        svg: `${src}/img/**/*.svg`,
+        scss: `${src}/scss/style.scss`,
+        html: `${src}/*.html`,
+        files: `${src}/files/**/*.*`
     },
     watch: {
-        scss: `${srcFolder}/scss/**/*.scss`,
-        html: `${srcFolder}/*.*`,
-        templates: `${srcFolder}/html/*.html`,
-        files: `${srcFolder}/files/**/*.*`,
-        images: `${srcFolder}/img/**/*.{jpg,jpeg,png,gif,webp}`
+        scss: `${src}/scss/**/*.scss`,
+        html: `${src}/*.*`,
+        templates: `${src}/html/*.html`,
+        files: `${src}/files/**/*.*`,
+        images: `${src}/img/**/*.{jpg,jpeg,png,gif,webp}`
     },
     
-    clean: buildFolder,
-    srcFolder: srcFolder,
+    clean: build,
+    srcFolder: src,
     rootFolder: rootFolder,
 }
