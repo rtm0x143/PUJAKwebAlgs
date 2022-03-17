@@ -1,0 +1,28 @@
+.title {
+    font-size: 180px;
+    line-height: 264px;
+    color: #303030;
+}
+
+.ui {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .regulator {
+        width: 207px;
+        height: 1045.58px;
+        background: #303030;
+    }
+
+    canvas {
+        background: #303030;
+    }
+
+    .buttons-menu {
+        background: #303030;
+        width: 207px;
+        height: 1053px;
+        display: block;        
+    }
+}

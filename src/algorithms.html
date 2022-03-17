@@ -1,6 +1,22 @@
 @@include('html/head.html', {})
 @@include('html/header.html', {})
-<div class="title">
-    <p class="title__text title__text_type_header">algorithms Realisation</p>
+<div class="preview">
+    <img class="preview__image" src="img/computer1 1.jpg">
+    <p class="preview__text preview__text_type_header">ALGORITHMS</p>
+</div>
+
+<div class="visualisations">
+    <p class="visualisations__paragraph">Visualisations</p>
+        <div class="container">
+            @@include('html/algorithm-block.html', {"name": "A*"})
+            @@include('html/algorithm-block.html', {"name": "Кластеризация"})
+            @@include('html/algorithm-block.html', {"name": "Генетический алгоритм"})
+        </div>
+        <div class="container">
+            @@include('html/algorithm-block.html', {"name": "Муравьиный алгоритм"})
+            @@include('html/algorithm-block.html', {"name": "Дерево решений"})
+            @@include('html/algorithm-block.html', {"name": "Нейронная сеть"})
+        </div>
+    </div>
 </div>
 @@include('html/footer.html', {})
