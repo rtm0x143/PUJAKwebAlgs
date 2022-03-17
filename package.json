@@ -7,8 +7,7 @@
   "scripts": {
     "test": "node index.js",
     "demon": "nodemon index.js",
-    "ngyp": "node-gyp",
-    "nd": "node"
+    "ngyp": "node-gyp"
   },
   "repository": {
     "type": "git",

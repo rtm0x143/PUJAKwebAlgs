@@ -7,6 +7,7 @@ export default Router()
         })
     })
     .get("/ant", (req, res) => {
+
         res.render("ant", {
             title: "Ant algorithm"
         })
