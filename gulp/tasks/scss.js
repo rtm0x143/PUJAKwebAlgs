@@ -14,6 +14,7 @@ export const scss = () => {
         .pipe(app.plugins.plumber(
             app.plugins.notify.onError({
                 title: "SCSS",
+                subtitle: "FAIL SCSS COMPILATION",
                 message: "Error: <%= error.message %>"
             }))
         )
@@ -23,7 +24,7 @@ export const scss = () => {
         .pipe(groupCssMediaQuieries())
         .pipe(webpcss(
             {
-                webpClass: ".webp",
+                webpClass: "",
                 noWebpClass: ".no-webp"
             }
         ))
@@ -32,7 +33,7 @@ export const scss = () => {
             overrideBrowserlist: ["last 3 versions"],
             cascad: true
         }))
-        .pipe(app.gulp.dest(app.path.build.css)) //after finish work comment this line
+        .pipe(app.gulp.dest(app.path.build.css))
         .pipe(cleanCss())
         .pipe(rename({
             extname: ".min.css"

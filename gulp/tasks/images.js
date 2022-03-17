@@ -6,6 +6,7 @@ export const images = () => {
     .pipe(app.plugins.plumber(
             app.plugins.notify.onError({
                 title: "IMAGES",
+                subtitle: "FAIL IMAGES COMPILATION",
                 message: "Error: <%= error.message %>"
             }))
         )

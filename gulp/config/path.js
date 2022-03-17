@@ -1,4 +1,4 @@
-import * as nodePath from 'path';
+import nodePath from 'path';
 const rootFolder = nodePath.basename(nodePath.resolve());
 
 const build = './build';

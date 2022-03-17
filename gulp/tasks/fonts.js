@@ -7,6 +7,7 @@ export const fontStyle = () => {
     .pipe(app.plugins.plumber(
         app.plugins.notify.onError({
             title: "FONTS",
+            subtitle: "FAIL FONTS COMPILATION",
             message: "Error: <%= error.message %>"
         }))
     )
@@ -18,6 +19,7 @@ export const fontConvert = () => {
         .pipe(app.plugins.plumber(
             app.plugins.notify.onError({
                 title: "FONTS",
+                subtitle: "FAIL FONTS COMPILATION",
                 message: "Error: <%= error.message %>"
             }))
         )
