@@ -1,6 +1,7 @@
 .title {
     font-size: 180px;
     line-height: 264px;
+    text-align: center;
     color: #303030;
 }
 
@@ -11,15 +12,19 @@
 
     .regulator {
         width: 207px;
-        height: 1045.58px;
+        height: 1053px;
         background: #303030;
     }
 
     canvas {
+        margin-left: 27px;
         background: #303030;
+        width: 1398px;
+        height: 988px;
     }
 
     .buttons-menu {
+        margin-left: 27px;  
         background: #303030;
         width: 207px;
         height: 1053px;

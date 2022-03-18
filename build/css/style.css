@@ -42,3 +42,37 @@
   background: #879E94;
   border-radius: 0px 0px 10px 10px;
 }
+
+.title {
+  font-size: 180px;
+  line-height: 264px;
+  text-align: center;
+  color: #303030;
+}
+
+.ui {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ui .regulator {
+  width: 207px;
+  height: 1053px;
+  background: #303030;
+}
+
+.ui canvas {
+  margin-left: 27px;
+  background: #303030;
+  width: 1398px;
+  height: 988px;
+}
+
+.ui .buttons-menu {
+  margin-left: 27px;
+  background: #303030;
+  width: 207px;
+  height: 1053px;
+  display: block;
+}
