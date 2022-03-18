@@ -11,9 +11,55 @@
     align-items: center;
 
     .regulator {
+        display: flex;
+        justify-content: center;
         width: 207px;
         height: 1053px;
         background: #303030;
+
+        .regulator__block {
+            display: block;
+
+            .regulator__height-paragraph {
+                color: #CFCFCF;
+            }
+
+            .regulator__width-param {
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                background: #CFCFCF;
+                width: 28px;
+                height: 982px;
+
+                .regulator__text {
+                    white-space: nowrap;
+                    font-size: 14px;
+                    color: #000;
+                    transform: rotate(-90deg);
+                }
+            }
+                
+            .regulator__height-param {
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                background: #CFCFCF;
+                width: 28px;
+                height: 982px;
+
+                .regulator__text {
+                    white-space: nowrap;
+                    font-size: 14px;
+                    color: #000;
+                    transform: rotate(-90deg);
+                }
+            }
+        }
+
+        .regulator__block:nth-child(2) {
+            margin-left: 39px;
+        }
     }
 
     canvas {
