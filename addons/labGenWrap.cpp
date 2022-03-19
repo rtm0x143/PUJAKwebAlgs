@@ -1,18 +1,18 @@
 #include "napi.h"
-#include "algs/labgen.cpp"
+#include "algs/src/labgen.cpp"
 
-Napi::Value run(const Napi::CallbackInfo& info) 
+Napi::Value labGen(const Napi::CallbackInfo& info) 
 {
     Napi::Env env = info.Env();
     
     if (info.Length() < 1) {
         Napi::TypeError::New(env, "Function requires 1 argument").ThrowAsJavaScriptException();
-        return env.Null();
+        return env.Undefined();
     }
     Napi::Object dims = info[0].As<Napi::Object>();
     if (!dims.Has("width") || !dims.Has("height")) {
         Napi::TypeError::New(env, "Invalid argument, {width, height} required").ThrowAsJavaScriptException();
-        return env.Null();
+         return env.Undefined();
     }
     int width = dims.Get("width").As<Napi::Number>(),
         heigth = dims.Get("height").As<Napi::Number>();
@@ -30,12 +30,13 @@ Napi::Value run(const Napi::CallbackInfo& info)
         result.Set(i, buffers[i]);
     } 
     
+    delete[] buffers;
     return result;
 }
 
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-    exports.Set(Napi::String::New(env, "run"), Napi::Function::New(env, run));
+    exports.Set(Napi::String::New(env, "labGen"), Napi::Function::New(env, labGen));
     return exports;
 }
 

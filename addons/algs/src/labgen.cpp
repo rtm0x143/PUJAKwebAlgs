@@ -1,4 +1,5 @@
 #include <list>
+#include <ctime>
 
 namespace labirint {
     struct Cell {
@@ -78,8 +79,8 @@ namespace labirint {
         }
         
 
-        int i = ((double)rand() / RAND_MAX) * height;
-        int j = ((double)rand() / RAND_MAX) * width;;
+        int i = ((double)rand() / (RAND_MAX + 1)) * height;
+        int j = ((double)rand() / (RAND_MAX + 1)) * width;;
 
         matrix[i][j] = 1;
         addEdges(i, j);
