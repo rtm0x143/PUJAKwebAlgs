@@ -82,24 +82,35 @@ uint8_t* clast::k_means(const std::vector<double*>& objs, int paramCount,
 	double(*metricsFun)(double* obj1, double* obj2, int paramCount), uint8_t& clasterCount, bool findClasterCount)
 {
 	srand(time(0));
-	uint8_t* clasterisationResult = new uint8_t[objs.size()];
+	uint8_t* result = new uint8_t[objs.size()];
 	if (findClasterCount)
 	{
+		uint8_t* newResult = new uint8_t[objs.size()];
 		clasterCount = 1;
-		double error = k_means_run(objs, paramCount, metricsFun, clasterisationResult, clasterCount);
-		while (true)
+		double error = k_means_run(objs, paramCount, metricsFun, result, clasterCount);
+		bool run = true;
+		while (run && clasterCount <= 10)
 		{
-			double newError = k_means_run(objs, paramCount, metricsFun, clasterisationResult, clasterCount + 1);
+			double newError = k_means_run(objs, paramCount, metricsFun, newResult, clasterCount + 1);
+
 			// std::cout << (int)clasterCount << " : " << error << " ; " << clasterCount + 1 << " : " << newError << '\n';
 			// std::cout << '\t' << (double)(clasterCount + 1) / clasterCount << ' ' << error / newError << '\n';
-			if ((double)(clasterCount + 1) / clasterCount > error / newError) break;
+
+			if (newError) {
+				if (newError >= error) continue;
+				if ((double)(clasterCount + 1) / clasterCount > error / newError) break;
+			} else {
+				run = false;
+			}
+
 			error = newError;
+			std::swap(result, newResult);
 			++clasterCount;
-			if (clasterCount == 11) break;
 		}
+		delete[] newResult;
 	}
 	else {
-		k_means_run(objs, paramCount, metricsFun, clasterisationResult, clasterCount);
+		k_means_run(objs, paramCount, metricsFun, result, clasterCount);
 	}
-	return clasterisationResult;
+	return result;
 }

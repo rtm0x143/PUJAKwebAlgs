@@ -1,7 +1,8 @@
-import {config} from "dotenv"; config()
+import { config } from "dotenv"; config()
 import express from "express";
 import handlebars from "express-handlebars"
 import pagesRouter from "./src/routes/pages.js"
+import algsRouter from "./src/routes/algs.js"
 
 const app = express()
 const hbs = handlebars.create({
@@ -16,6 +17,7 @@ app.engine("hbs", hbs.engine)
 app.use(express.json())
     .use(express.static("./public"))
     .use(pagesRouter)
+    .use("/alg", algsRouter)
 
 
 const port = process.env.CONNECTION_PORT

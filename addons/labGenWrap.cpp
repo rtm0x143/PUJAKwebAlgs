@@ -12,7 +12,7 @@ Napi::Value labGen(const Napi::CallbackInfo& info)
     Napi::Object dims = info[0].As<Napi::Object>();
     if (!dims.Has("width") || !dims.Has("height")) {
         Napi::TypeError::New(env, "Invalid argument, {width, height} required").ThrowAsJavaScriptException();
-         return env.Undefined();
+        return env.Undefined();
     }
     int width = dims.Get("width").As<Napi::Number>(),
         heigth = dims.Get("height").As<Napi::Number>();

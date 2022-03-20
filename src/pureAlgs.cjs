@@ -1,6 +1,6 @@
 module.exports = {
-    ...require("./native/astar"), 
-    ...require("./native/clasterisation"),
-    ...require("./native/neuralNet"),
-    ...require("./native/labGen")
+    // ...require("./native/astar"), 
+    ...require("./native/clasterisation"), // DBSCAN, k_means
+    // ...require("./native/neuralNet"),
+    ...require("./native/labGen") // labGen
 }
