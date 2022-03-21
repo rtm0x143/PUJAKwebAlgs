@@ -1,10 +1,9 @@
 import { Router } from "express"
-import { checkQuery, binStreamParser } from "./routeTools.js"
+import { checkQuery } from "../middlewares.js"
 // import pAlgs from "../pureAlgs.cjs"
 import pAlgs from "../_build.cjs"
 
 export default Router()
-    .use(binStreamParser)
     .post("/clasterisation", [checkQuery(["type"]), (req, res) => {
         if (pAlgs[req.query.type]) 
         {
