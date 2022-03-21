@@ -7,7 +7,9 @@ bin-release/
 # Other files and folders
 .settings/
 node_modules/
+.vscode/
 .env
+build/
 
 # Executables
 *.swf
