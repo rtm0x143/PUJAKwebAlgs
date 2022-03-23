@@ -45,7 +45,6 @@ class CanvasClasterView {
     }
 
     _subscribe() {
-        console.log(Buffer.from(this._clasterModel.positions));
         this._clasterModel.addEventListener('claster.model:addObj', () => this.changeCanvasView());
     }
 
