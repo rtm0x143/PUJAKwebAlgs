@@ -1,0 +1,8 @@
+{
+    "errors": [
+        {
+            "nullReference": "Null reference exception",
+            "typeError": "Invalid type of assigned data"
+        }
+    ]
+}
