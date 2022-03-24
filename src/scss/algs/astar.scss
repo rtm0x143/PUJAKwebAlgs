@@ -1,27 +1,34 @@
 .title {
+    font-family: 'codenext';
     font-size: 180px;
     line-height: 264px;
     text-align: center;
     color: #303030;
+    margin: 44px 0px 33px 0px;
 }
 
 .ui {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
+    max-width: 100%;
+    // flex-flow: row wrap;
 
     .regulator {
         display: flex;
         justify-content: center;
-        width: 207px;
+        flex-grow: 1;
+        flex-basis: 0px;
         height: 1053px;
         background: #303030;
+        border-radius: 30px;
 
         .regulator__block {
             display: block;
 
-            .regulator__height-paragraph {
+            .regulator__paragraph {
                 color: #CFCFCF;
+                font-family: 'codenext', sans-serif;
             }
 
             .regulator__width-param {
@@ -29,13 +36,15 @@
                 align-items: center;
                 justify-content: space-around;
                 background: #CFCFCF;
-                width: 28px;
+                width: 40px;
                 height: 982px;
+                border-radius: 30px;
 
                 .regulator__text {
                     white-space: nowrap;
-                    font-size: 14px;
-                    color: #000;
+                    font-size: 26px;
+                    color: #303030;
+                    font-family: 'codenext', sans-serif;
                     transform: rotate(-90deg);
                 }
             }
@@ -45,13 +54,15 @@
                 align-items: center;
                 justify-content: space-around;
                 background: #CFCFCF;
-                width: 28px;
+                width: 40px;
                 height: 982px;
+                border-radius: 30px;
 
                 .regulator__text {
                     white-space: nowrap;
-                    font-size: 14px;
-                    color: #000;
+                    font-size: 26px;
+                    color: #303030;
+                    font-family: 'codenext', sans-serif;
                     transform: rotate(-90deg);
                 }
             }
@@ -65,15 +76,19 @@
     canvas {
         margin-left: 27px;
         background: #303030;
-        width: 1398px;
+        width: 0px;
         height: 988px;
+        border-radius: 20px;
+        flex-grow: 6.8;
     }
 
     .buttons-menu {
+        flex-grow: 1;
         margin-left: 27px;  
         background: #303030;
-        width: 207px;
+        flex-basis: 0px;
         height: 1053px;
-        display: block;        
+        display: block;
+        border-radius: 30px;
     }
 }

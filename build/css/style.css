@@ -1,3 +1,145 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+@font-face {
+  font-family: "codenext";
+  src: url("../fonts/codenext.otf");
+}
+
 .preview {
   display: flex;
   justify-content: center;
@@ -44,32 +186,38 @@
 }
 
 .title {
+  font-family: "codenext";
   font-size: 180px;
   line-height: 264px;
   text-align: center;
   color: #303030;
+  margin: 44px 0px 33px 0px;
 }
 
 .ui {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  max-width: 100%;
 }
 
 .ui .regulator {
   display: flex;
   justify-content: center;
-  width: 207px;
+  flex-grow: 1;
+  flex-basis: 0px;
   height: 1053px;
   background: #303030;
+  border-radius: 30px;
 }
 
 .ui .regulator .regulator__block {
   display: block;
 }
 
-.ui .regulator .regulator__block .regulator__height-paragraph {
+.ui .regulator .regulator__block .regulator__paragraph {
   color: #CFCFCF;
+  font-family: "codenext", sans-serif;
 }
 
 .ui .regulator .regulator__block .regulator__width-param {
@@ -77,14 +225,16 @@
   align-items: center;
   justify-content: space-around;
   background: #CFCFCF;
-  width: 28px;
+  width: 40px;
   height: 982px;
+  border-radius: 30px;
 }
 
 .ui .regulator .regulator__block .regulator__width-param .regulator__text {
   white-space: nowrap;
-  font-size: 14px;
-  color: #000;
+  font-size: 26px;
+  color: #303030;
+  font-family: "codenext", sans-serif;
   transform: rotate(-90deg);
 }
 
@@ -93,14 +243,16 @@
   align-items: center;
   justify-content: space-around;
   background: #CFCFCF;
-  width: 28px;
+  width: 40px;
   height: 982px;
+  border-radius: 30px;
 }
 
 .ui .regulator .regulator__block .regulator__height-param .regulator__text {
   white-space: nowrap;
-  font-size: 14px;
-  color: #000;
+  font-size: 26px;
+  color: #303030;
+  font-family: "codenext", sans-serif;
   transform: rotate(-90deg);
 }
 
@@ -111,14 +263,18 @@
 .ui canvas {
   margin-left: 27px;
   background: #303030;
-  width: 1398px;
+  width: 0px;
   height: 988px;
+  border-radius: 20px;
+  flex-grow: 6.8;
 }
 
 .ui .buttons-menu {
+  flex-grow: 1;
   margin-left: 27px;
   background: #303030;
-  width: 207px;
+  flex-basis: 0px;
   height: 1053px;
   display: block;
+  border-radius: 30px;
 }
