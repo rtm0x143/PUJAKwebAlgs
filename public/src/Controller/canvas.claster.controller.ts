@@ -26,9 +26,8 @@ class ClasterController {
         }).then((responce) => {
             let reader = responce.body?.getReader();
             reader?.read().then(({ done, value }) => {
-                
+                console.log(value);
             })
-            
         })
     }
 
