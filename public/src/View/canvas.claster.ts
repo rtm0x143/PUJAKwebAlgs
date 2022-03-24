@@ -17,7 +17,7 @@ class CanvasClasterView {
         this._canvas = document.querySelector('.canvas') ?? Errors.handleError('null');
         this._canvasContext = this._canvas.getContext('2d') ?? Errors.handleError('null');
         this._button = document.querySelector('.sendButton') ?? Errors.handleError('null');
-        this._DBSCANButton = document.querySelector('.send') ?? Errors.handleError('null');
+        this._DBSCANButton = document.querySelector('.DBSCAN') ?? Errors.handleError('null');
         this._Kmeansutton = document.querySelector('.kmeans') ?? Errors.handleError('null');
         this._rangeInput = document.querySelector('.range') ?? Errors.handleError('null');
         this._groupInput = document.querySelector('.groupsize') ?? Errors.handleError('null');
