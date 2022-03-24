@@ -9,7 +9,7 @@
     "demon": "nodemon index.js",
     "ngyp": "node-gyp",
     "build:start": "node-gyp build && node index.js",
-    "build:demon": "node-gyp build && nodemon index.js"
+    "rebuild:demon": "node-gyp rebuild && nodemon index.js"
   },
   "repository": {
     "type": "git",

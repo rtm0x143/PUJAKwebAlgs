@@ -1,5 +1,6 @@
 #include <list>
 #include <cmath>
+#include <iostream>
 #include "clasterisation.h"
 
 std::vector<uint32_t>* calcNeighborhoods(int16_t* points, uint32_t pNum, double inclusionRange) {
@@ -7,8 +8,7 @@ std::vector<uint32_t>* calcNeighborhoods(int16_t* points, uint32_t pNum, double 
 
 	for (uint32_t i = 0; i < pNum * 2; ++++i) {
 		neighborhoods[i / 2].push_back(i / 2);
-		for (uint32_t j = i + 2; j < pNum * 2; ++++j)
-		{
+		for (uint32_t j = i + 2; j < pNum * 2; ++++j) {
 			double dist = std::sqrt(std::pow(points[i] - points[j], 2) + std::pow(points[i + 1] - points[j + 1], 2));
 			if (dist < inclusionRange) {
 				neighborhoods[i / 2].push_back(j / 2);
@@ -22,7 +22,7 @@ std::vector<uint32_t>* calcNeighborhoods(int16_t* points, uint32_t pNum, double 
 uint8_t* clast::DBSCAN(int16_t* points, uint32_t pNum, double inclusionRange, uint32_t neighborhoodSize, uint8_t& clusterCount)
 {
 	uint8_t* clusterData = new uint8_t[pNum * 2];
-	for (uint32_t i = 1; i < pNum * 2; ++++i) clusterData[i] = 0; // seting 0 point type
+	for (uint32_t i = 0; i < pNum * 2; ++i) clusterData[i] = 0;
 
 	clusterCount = 0;
 
@@ -37,7 +37,6 @@ uint8_t* clast::DBSCAN(int16_t* points, uint32_t pNum, double inclusionRange, ui
 		unmarcked.pop_front();
 
 		if (neighborhoods[cur].size() < neighborhoodSize) {
-			// clusterData[cur * 2] = 0;
 			clusterData[cur * 2 + 1] = 1;
 		}
 		else {
@@ -51,13 +50,14 @@ uint8_t* clast::DBSCAN(int16_t* points, uint32_t pNum, double inclusionRange, ui
 						clusterData[cluster[i] * 2 + 1] = 3;
 						clusterData[cluster[i] * 2] = clusterCount;
 						for (uint32_t neighbor : neighborhoods[cluster[i]]) {
-							if (clusterData[neighbor * 2 + 1] < 2)
+							if (!clusterData[neighbor * 2]) {
 								cluster.push_back(neighbor);
+								clusterData[neighbor * 2] = clusterCount;
+							} 
 						}
-					}
-					else {
-						clusterData[i * 2 + 1] = 2;
-						clusterData[i * 2] = clusterCount;
+					} else {
+						clusterData[cluster[i] * 2 + 1] = 2;
+						clusterData[cluster[i] * 2] = clusterCount;
 					}
 				}
 			}
