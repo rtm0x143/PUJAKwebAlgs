@@ -36,7 +36,8 @@ class CanvasClasterView extends View {
         }
     }
 
-    changeCanvasView(strokeColor: string, fillColor: string, x: number, y: number) {
+    changeCanvasView(strokeColor: string, fillColor: string, x: number, y: number, i: number) {
+        console.log({fillColor, x, y, i});
         this.drawCircle(
             this._canvasContext,
             strokeColor,
@@ -52,6 +53,7 @@ class CanvasClasterView extends View {
             'red', 
             this._clasterModel.positions[this._clasterModel.positions.length - 1],
             this._clasterModel.positions[this._clasterModel.positions.length - 2],
+            0
         ));
     }
 

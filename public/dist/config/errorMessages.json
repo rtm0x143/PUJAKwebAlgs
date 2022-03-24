@@ -1,0 +1,9 @@
+{
+    "errors": [
+        {
+            "nullReference": "Null reference exception",
+            "undefined": "use the undefined object",
+            "typeError": "Invalid type of assigned data"
+        }
+    ]
+}
