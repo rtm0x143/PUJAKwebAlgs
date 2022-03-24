@@ -5,7 +5,11 @@
   "description": "repository for HITs team web project (module 6)",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js"
+    "test": "node index.js",
+    "demon": "nodemon index.js",
+    "ngyp": "node-gyp",
+    "build:start": "node-gyp build && node index.js",
+    "build:demon": "node-gyp build && nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -21,9 +25,11 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-handlebars": "^6.0.3",
-    "node": "^17.7.1"
+    "node": "^17.7.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "node-addon-api": "^4.3.0",
     "nodemon": "^2.0.15"
   }
 }
