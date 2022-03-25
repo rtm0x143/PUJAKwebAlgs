@@ -189,6 +189,7 @@ table {
   font-family: "codenext", sans-serif;
   font-style: normal;
   font-size: 180px;
+  line-height: 264px;
   font-weight: 800;
   color: #303030;
   text-align: center;
@@ -196,6 +197,7 @@ table {
 }
 
 .ui {
+  margin: 0 30px 0 30px;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -220,8 +222,20 @@ table {
   font-family: "codenext", sans-serif;
   font-style: normal;
   font-size: 18px;
+  line-height: 26px;
   font-weight: 800;
   color: #E8E8E8;
+  margin-top: 16.23px;
+}
+
+.ui .regulator .regulator__block .regulator__button {
+  width: 40px;
+  height: 60px;
+  background: #303030;
+  border: 4px solid #CFCFCF;
+  margin-top: -60px;
+  border-radius: 20px;
+  display: block;
 }
 
 .ui .regulator .regulator__block .regulator__width-param {
@@ -265,7 +279,8 @@ table {
 }
 
 .ui canvas {
-  margin-left: 27px;
+  margin-left: 28px;
+  margin-right: 28px;
   background: #303030;
   width: 0px;
   height: 988px;

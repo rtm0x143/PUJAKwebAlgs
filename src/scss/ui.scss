@@ -1,3 +1,5 @@
+$param-width: 40px;
+
 .title {
     @include setFont('codenext', normal, 180px, 264px, 800, $black);
     text-align: center;
@@ -5,6 +7,7 @@
 }
 
 .ui {
+    margin: 0 30px 0 30px;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -25,6 +28,17 @@
 
             .regulator__paragraph {
                 @include setFont('codenext', normal, 18px, 26px, 800, $greyTextColor);
+                margin-top: 16.23px;
+            }
+
+            .regulator__button {
+                width: $param-width;
+                height: 60px;
+                background: $black;
+                border: 4px solid $white;
+                margin-top: -60px;
+                border-radius: 20px;
+                display: block;
             }
 
             .regulator__width-param {
@@ -32,7 +46,7 @@
                 align-items: center;
                 justify-content: space-around;
                 background: $white;
-                width: 40px;
+                width: $param-width;
                 height: 982px;
                 border-radius: 30px;
 
@@ -50,7 +64,7 @@
                 align-items: center;
                 justify-content: space-around;
                 background: $white;
-                width: 40px;
+                width: $param-width;
                 height: 982px;
                 border-radius: 30px;
 
@@ -70,7 +84,8 @@
     }
 
     canvas {
-        margin-left: 27px;
+        margin-left: 28px;
+        margin-right: 28px;
         background: $black;
         width: 0px;
         height: 988px;

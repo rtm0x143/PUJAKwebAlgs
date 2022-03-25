@@ -10,6 +10,7 @@ $greyTextColor: #E8E8E8;
     font-family: $fontFamily, sans-serif;
     font-style: $fontStyle;
     font-size: $fontSize;
+    line-height: $lineHeight;
     font-weight: $fontWeight;
     color: $color;
 }
@@ -20,4 +21,4 @@ $greyTextColor: #E8E8E8;
 }
 
 @import "algs/algorithms";
-@import "algs/astar";
+@import "ui";
