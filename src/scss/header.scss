@@ -1,0 +1,53 @@
+.header {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    z-index: 20;
+}
+
+.nav-button__animation {
+    animation: cssAnimation 2s ease 0s 1 forwards;
+    animation: name duration timing-function delay iteration-count direction fill-mode;
+    // -webkit-animation: cssAnimation 2s ease 0s 1 forwards;
+}
+// @-webkit-keyframes cssAnimation {
+//     from {
+//         -webkit-transform: rotate(0deg) scale(1) skew(0deg) translate(100px);
+//     }
+//     to {
+//         -webkit-transform: rotate(0deg) scale(2) skew(0deg) translate(100px);
+//     }
+// }
+// @keyframes cssAnimation {
+//     from {
+//         -webkit-transform: rotate(0deg) scale(1) skew(0deg) translate(100px);
+//     }
+//     to {
+//         -webkit-transform: rotate(0deg) scale(2) skew(0deg) translate(100px);
+//     }
+// }
+@keyframes cssAnimation {
+    0% {
+        -webkit-transform: rotate(0deg) scale(1) skew(0deg) translate(100px);
+    }
+    100% {
+        -webkit-transform: rotate(0deg) scale(2) skew(0deg) translate(100px);
+    }
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.nav-icon {
+    width: 70px;
+    height: 70px;
+}
+
+.nav-icon__circle {
+    fill: $gray;
+}
+
+.nav-icon__line {
+    fill: $white;
+}

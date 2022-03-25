@@ -1,0 +1,73 @@
+$gray: #303030;
+$white: #FFFFFF;
+
+// .main-menu {
+//     display: flex;
+//     justify-content: flex-start;
+//     width: 100%;
+//     height: 100%;
+//     align-items: center;
+//     cursor: pointer;
+// }
+
+// .main-menu__link {
+
+// }
+
+.navigaton {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    visibility: hidden;
+}
+
+.navigaton-overlay {
+    background-color: $gray;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    visibility: inherit;
+}
+
+.nav-button-close {
+    position: fixed;
+    z-index: 100;
+    visibility: inherit;
+}
+
+.nav-button-close .nav-icon .nav-icon__circle {
+    fill: $white;
+}
+
+.nav-button-close .nav-icon .nav-icon__line {
+    fill: $gray;
+}
+
+@font-face {
+    font-family: 'garet';
+    src: url('../fonts/GARET-BOOK.OTF');
+}
+
+.main-menu {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    visibility: inherit;
+}
+
+.main-menu__link {
+    font-family: 'garet';
+    font-size: 96px;
+    color: $white;
+}
+
+.separator-line {
+    height: 2px;
+    width: 1000px;
+    color: $white;
+}

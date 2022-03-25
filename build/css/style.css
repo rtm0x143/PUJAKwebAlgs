@@ -135,6 +135,196 @@ table {
   border-spacing: 0;
 }
 
+.welcome-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+@font-face {
+  font-family: "codenext";
+  src: url("../fonts/codenext.otf");
+}
+
+.team-name__text {
+  color: #303030;
+  font-family: "codenext";
+  font-size: 410px;
+  letter-spacing: 0.05em;
+  text-indent: 0.05em;
+}
+
+.team-name__blinking-line {
+  background-color: #303030;
+  width: 1px;
+  height: 545.3px;
+  -webkit-animation: InteractiveCodeExample_blink__jxhZI 1.2s linear infinite;
+          animation: InteractiveCodeExample_blink__jxhZI 1.2s linear infinite;
+}
+
+@-webkit-keyframes InteractiveCodeExample_blink__jxhZI {
+  0% {
+    opacity: 1;
+  }
+
+  45% {
+    opacity: 1;
+  }
+
+  55% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes InteractiveCodeExample_blink__jxhZI {
+  0% {
+    opacity: 1;
+  }
+
+  45% {
+    opacity: 1;
+  }
+
+  55% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.drawing {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.drawing__svg {
+  width: 1000px;
+  height: 716px;
+  padding-top: 50px;
+  padding-right: 50px;
+  padding-left: 50px;
+}
+
+.navigaton {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  visibility: hidden;
+}
+
+.navigaton-overlay {
+  background-color: #303030;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  visibility: inherit;
+}
+
+.nav-button-close {
+  position: fixed;
+  z-index: 100;
+  visibility: inherit;
+}
+
+.nav-button-close .nav-icon .nav-icon__circle {
+  fill: #FFFFFF;
+}
+
+.nav-button-close .nav-icon .nav-icon__line {
+  fill: #303030;
+}
+
+@font-face {
+  font-family: "garet";
+  src: url("../fonts/GARET-BOOK.OTF");
+}
+
+.main-menu {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  visibility: inherit;
+}
+
+.main-menu__link {
+  font-family: "garet";
+  font-size: 96px;
+  color: #FFFFFF;
+}
+
+.separator-line {
+  height: 2px;
+  width: 1000px;
+  color: #FFFFFF;
+}
+
+.header {
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  z-index: 20;
+}
+
+.nav-button__animation {
+  -webkit-animation: cssAnimation 2s ease 0s 1 forwards;
+          animation: cssAnimation 2s ease 0s 1 forwards;
+  -webkit-animation: name duration timing-function delay iteration-count direction fill-mode;
+          animation: name duration timing-function delay iteration-count direction fill-mode;
+}
+
+@-webkit-keyframes cssAnimation {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1) skew(0deg) translate(100px);
+  }
+
+  100% {
+    -webkit-transform: rotate(0deg) scale(2) skew(0deg) translate(100px);
+  }
+}
+
+@keyframes cssAnimation {
+  0% {
+    -webkit-transform: rotate(0deg) scale(1) skew(0deg) translate(100px);
+  }
+
+  100% {
+    -webkit-transform: rotate(0deg) scale(2) skew(0deg) translate(100px);
+  }
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.nav-icon {
+  width: 70px;
+  height: 70px;
+}
+
+.nav-icon__circle {
+  fill: #303030;
+}
+
+.nav-icon__line {
+  fill: #FFFFFF;
+}
+
 @font-face {
   font-family: "codenext";
   src: url("../fonts/codenext.otf");
