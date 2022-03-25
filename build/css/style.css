@@ -186,11 +186,12 @@ table {
 }
 
 .title {
-  font-family: "codenext";
+  font-family: "codenext", sans-serif;
+  font-style: normal;
   font-size: 180px;
-  line-height: 264px;
-  text-align: center;
+  font-weight: 800;
   color: #303030;
+  text-align: center;
   margin: 44px 0px 33px 0px;
 }
 
@@ -216,8 +217,11 @@ table {
 }
 
 .ui .regulator .regulator__block .regulator__paragraph {
-  color: #CFCFCF;
   font-family: "codenext", sans-serif;
+  font-style: normal;
+  font-size: 18px;
+  font-weight: 800;
+  color: #E8E8E8;
 }
 
 .ui .regulator .regulator__block .regulator__width-param {

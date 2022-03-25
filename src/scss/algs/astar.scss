@@ -1,9 +1,6 @@
 .title {
-    font-family: 'codenext';
-    font-size: 180px;
-    line-height: 264px;
+    @include setFont('codenext', normal, 180px, 264px, 800, $black);
     text-align: center;
-    color: #303030;
     margin: 44px 0px 33px 0px;
 }
 
@@ -20,22 +17,21 @@
         flex-grow: 1;
         flex-basis: 0px;
         height: 1053px;
-        background: #303030;
+        background: $black;
         border-radius: 30px;
 
         .regulator__block {
             display: block;
 
             .regulator__paragraph {
-                color: #CFCFCF;
-                font-family: 'codenext', sans-serif;
+                @include setFont('codenext', normal, 18px, 26px, 800, $greyTextColor);
             }
 
             .regulator__width-param {
                 display: flex;
                 align-items: center;
                 justify-content: space-around;
-                background: #CFCFCF;
+                background: $white;
                 width: 40px;
                 height: 982px;
                 border-radius: 30px;
@@ -43,7 +39,7 @@
                 .regulator__text {
                     white-space: nowrap;
                     font-size: 26px;
-                    color: #303030;
+                    color: $black;
                     font-family: 'codenext', sans-serif;
                     transform: rotate(-90deg);
                 }
@@ -53,7 +49,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-around;
-                background: #CFCFCF;
+                background: $white;
                 width: 40px;
                 height: 982px;
                 border-radius: 30px;
@@ -61,7 +57,7 @@
                 .regulator__text {
                     white-space: nowrap;
                     font-size: 26px;
-                    color: #303030;
+                    color: $black;
                     font-family: 'codenext', sans-serif;
                     transform: rotate(-90deg);
                 }
@@ -75,7 +71,7 @@
 
     canvas {
         margin-left: 27px;
-        background: #303030;
+        background: $black;
         width: 0px;
         height: 988px;
         border-radius: 20px;
@@ -85,7 +81,7 @@
     .buttons-menu {
         flex-grow: 1;
         margin-left: 27px;  
-        background: #303030;
+        background: $black;
         flex-basis: 0px;
         height: 1053px;
         display: block;
