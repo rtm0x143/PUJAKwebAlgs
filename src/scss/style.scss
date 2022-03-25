@@ -1,8 +1,5 @@
 @import "reset";
 @import "normilise";
-@import "mainPage";
-@import "menu";
-@import "header";
 
 $black: #303030;
 $white: #CFCFCF;
@@ -23,5 +20,8 @@ $greyTextColor: #E8E8E8;
     src: url("../fonts/codenext.otf");
 }
 
+@import "mainPage";
+@import "menu";
+@import "header";
 @import "algs/algorithms";
 @import "ui";
