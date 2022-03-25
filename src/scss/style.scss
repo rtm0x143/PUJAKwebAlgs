@@ -4,10 +4,24 @@
 @import "menu";
 @import "header";
 
+$black: #303030;
+$white: #CFCFCF;
+$greyTextColor: #E8E8E8;
+
+//Default MIXIN FOR FONTPARAMS
+@mixin setFont($fontFamily, $fontStyle, $fontSize, $lineHeight, $fontWeight, $color) {
+    font-family: $fontFamily, sans-serif;
+    font-style: $fontStyle;
+    font-size: $fontSize;
+    line-height: $lineHeight;
+    font-weight: $fontWeight;
+    color: $color;
+}
+
 @font-face {
     font-family: "codenext";
     src: url("../fonts/codenext.otf");
 }
 
 @import "algs/algorithms";
-@import "algs/astar";
+@import "ui";

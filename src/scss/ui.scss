@@ -1,13 +1,13 @@
+$param-width: 40px;
+
 .title {
-    font-family: 'codenext';
-    font-size: 180px;
-    line-height: 264px;
+    @include setFont('codenext', normal, 180px, 264px, 800, $black);
     text-align: center;
-    color: #303030;
     margin: 44px 0px 33px 0px;
 }
 
 .ui {
+    margin: 0 30px 0 30px;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -20,30 +20,40 @@
         flex-grow: 1;
         flex-basis: 0px;
         height: 1053px;
-        background: #303030;
+        background: $black;
         border-radius: 30px;
 
         .regulator__block {
             display: block;
 
             .regulator__paragraph {
-                color: #CFCFCF;
-                font-family: 'codenext', sans-serif;
+                @include setFont('codenext', normal, 18px, 26px, 800, $greyTextColor);
+                margin-top: 16.23px;
+            }
+
+            .regulator__button {
+                width: $param-width;
+                height: 60px;
+                background: $black;
+                border: 4px solid $white;
+                margin-top: -60px;
+                border-radius: 20px;
+                display: block;
             }
 
             .regulator__width-param {
                 display: flex;
                 align-items: center;
                 justify-content: space-around;
-                background: #CFCFCF;
-                width: 40px;
+                background: $white;
+                width: $param-width;
                 height: 982px;
                 border-radius: 30px;
 
                 .regulator__text {
                     white-space: nowrap;
                     font-size: 26px;
-                    color: #303030;
+                    color: $black;
                     font-family: 'codenext', sans-serif;
                     transform: rotate(-90deg);
                 }
@@ -53,15 +63,15 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-around;
-                background: #CFCFCF;
-                width: 40px;
+                background: $white;
+                width: $param-width;
                 height: 982px;
                 border-radius: 30px;
 
                 .regulator__text {
                     white-space: nowrap;
                     font-size: 26px;
-                    color: #303030;
+                    color: $black;
                     font-family: 'codenext', sans-serif;
                     transform: rotate(-90deg);
                 }
@@ -74,8 +84,9 @@
     }
 
     canvas {
-        margin-left: 27px;
-        background: #303030;
+        margin-left: 28px;
+        margin-right: 28px;
+        background: $black;
         width: 0px;
         height: 988px;
         border-radius: 20px;
@@ -85,7 +96,7 @@
     .buttons-menu {
         flex-grow: 1;
         margin-left: 27px;  
-        background: #303030;
+        background: $black;
         flex-basis: 0px;
         height: 1053px;
         display: block;

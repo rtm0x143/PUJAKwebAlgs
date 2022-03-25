@@ -1,6 +1,5 @@
 $team-name-size: 410px;
 $line-scale: 1.33;
-$gray: #303030;
 
 .welcome-screen {
     display: flex;
@@ -16,7 +15,7 @@ $gray: #303030;
 }
 
 .team-name__text {
-    color: $gray;
+    color: $black;
     font-family: "codenext";
     font-size: $team-name-size;
     letter-spacing: 0.05em;
@@ -24,7 +23,7 @@ $gray: #303030;
 }
 
 .team-name__blinking-line {
-    background-color: $gray;
+    background-color: $black;
     width: 1px;
     height: $team-name-size * $line-scale;
     animation: InteractiveCodeExample_blink__jxhZI 1.2s linear infinite;
