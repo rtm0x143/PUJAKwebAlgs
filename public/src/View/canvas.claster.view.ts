@@ -1,8 +1,9 @@
 import Errors from '../config/Errors.js';
 import Brush from '../Model/brush.model.js';
 import ClasterModel from '../Model/claster.model.js';
+import View from './View.js';
 
-class CanvasClasterView {
+class CanvasClasterView extends View {
     private _canvas: HTMLCanvasElement;
     private _canvasContext: CanvasRenderingContext2D;
     private _button: HTMLInputElement;
@@ -14,6 +15,8 @@ class CanvasClasterView {
     private _groupInput: HTMLInputElement;
     
     constructor(model: ClasterModel) {
+        super();
+
         this._canvas = document.querySelector('.canvas') ?? Errors.handleError('null');
         this._canvasContext = this._canvas.getContext('2d') ?? Errors.handleError('null');
         this._button = document.querySelector('.sendButton') ?? Errors.handleError('null');
@@ -33,19 +36,25 @@ class CanvasClasterView {
         }
     }
 
-    changeCanvasView() {
-        let x: number = this._clasterModel.positions[this._clasterModel.positions.length - 1];
-        let y: number = this._clasterModel.positions[this._clasterModel.positions.length - 2];
-        this._canvasContext.strokeStyle = 'blue';
-        this._canvasContext.fillStyle = 'red';
-        this._canvasContext.beginPath();
-        this._canvasContext.arc(x, y, 5, 0, 2 * Math.PI);
-        this._canvasContext.stroke();
-        this._canvasContext.fill();
+    changeCanvasView(strokeColor: string, fillColor: string, x: number, y: number, i: number) {
+        console.log({fillColor, x, y, i});
+        this.drawCircle(
+            this._canvasContext,
+            strokeColor,
+            fillColor,
+            x,
+            y,
+            5
+        )
     }
 
     _subscribe() {
-        this._clasterModel.addEventListener('claster.model:addObj', () => this.changeCanvasView());
+        this._clasterModel.addEventListener('claster.model:addObj', () => this.changeCanvasView('',
+            'red', 
+            this._clasterModel.positions[this._clasterModel.positions.length - 1],
+            this._clasterModel.positions[this._clasterModel.positions.length - 2],
+            0
+        ));
     }
 
     handleButtonClick(callback: Function) {
