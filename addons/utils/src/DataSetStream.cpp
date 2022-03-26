@@ -1,4 +1,4 @@
-#include "DataSetStream.h"
+#include "../DataSetStream.h"
 
 DataSetStream::DataSetStream(size_t packageCount) {
 	_packageLeft = packageCount;

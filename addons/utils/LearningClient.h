@@ -4,7 +4,7 @@
 #include <vector>
 #include <mutex>
 #include "DataSetStream.h"
-#include "NeuralNetwork.h"
+#include "../algs/NeuralNetwork.h"
 
 class LearningClient
 {

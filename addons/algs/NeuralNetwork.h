@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "Matrix.h"
+#include "../utils/Matrix.h"
 
 class NeuralNetwork
 {

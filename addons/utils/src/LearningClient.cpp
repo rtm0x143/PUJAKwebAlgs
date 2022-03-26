@@ -1,4 +1,4 @@
-#include "LearningClient.h"
+#include "../LearningClient.h"
 
 LearningClient::LearningClient(MNIST_DSStream* stream, const NeuralNetwork& net, size_t workersCount)
 	: _stream(stream), workers(workersCount), tasksDone(0), sampleSize(0), run(true), resultSum(net.dims.size() - 1)
@@ -24,7 +24,7 @@ void LearningClient::workerRuntime(LearningClient* client, const NeuralNetwork& 
 {
 	NeuralNetwork _net(net);
 	std::mutex _mutex;
-	std::unique_lock selfLock(_mutex);
+	std::unique_lock<std::mutex> selfLock(_mutex);
 
 	while (client->run)
 	{
@@ -35,14 +35,14 @@ void LearningClient::workerRuntime(LearningClient* client, const NeuralNetwork& 
 		}
 		MNIST_DSStream::Package* package;
 		{
-			std::unique_lock lock(client->streamMutex);
+			std::unique_lock<std::mutex> lock(client->streamMutex);
 			if (client->_stream->isEnded()) continue;
 			package = client->_stream->nextPackage();
 		}
 		Matrix<double>* gradient = _net.backPropagation(package->data, package->label);
 		delete package;
 		{
-			std::unique_lock lock(client->outputMutex);
+			std::unique_lock<std::mutex> lock(client->outputMutex);
 			for (size_t i = 0; i < _net.dims.size() - 1; i++) {
 				client->resultSum[i] += gradient[i];
 			}
@@ -72,7 +72,7 @@ void LearningClient::calcAverage() {
 
 const Matrix<double>* LearningClient::getResult() {
 	std::mutex _mutex;
-	std::unique_lock selfLock(_mutex);
+	std::unique_lock<std::mutex> selfLock(_mutex);
 	if (!isDone()) workDone.wait(selfLock);
 	return resultSum.data();
 }
@@ -80,6 +80,6 @@ const Matrix<double>* LearningClient::getResult() {
 void LearningClient::abort() { sampleSize = 0; }
 
 void LearningClient::assignStream(MNIST_DSStream* stream) {
-	std::unique_lock lock(streamMutex);
+	std::unique_lock<std::mutex> lock(streamMutex);
 	_stream = stream;
 }

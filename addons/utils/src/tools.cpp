@@ -1,4 +1,4 @@
-#include "tools.h"
+#include "../tools.h"
 #include <cmath>
 
 const uint32_t MAX_PX_VAL = 3 * 255 * 255;

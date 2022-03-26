@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "NeuralNetwork.h"
+#include "../NeuralNetwork.h"
 
 NeuralNetwork::NeuralNetwork(const std::vector<size_t>& dimensions, Matrix<double>* weights, 
 	std::vector<double>* biases, double(*activFunc)(const double&), double(*derivActivFunc)(const double&)) 
