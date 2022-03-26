@@ -1,3 +1,4 @@
-import View from './View/View.js';
+import ClasterView from './View/canvas.claster.view.js';
+import ClasterModel from './Model/claster.model.js';
 
-new View();
+new ClasterView(new ClasterModel());
