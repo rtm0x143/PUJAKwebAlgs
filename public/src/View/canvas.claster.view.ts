@@ -4,29 +4,49 @@ import ClasterModel from '../Model/claster.model.js';
 import View from './View.js';
 
 class CanvasClasterView extends View {
+    private _body: HTMLBodyElement;
     private _canvas: HTMLCanvasElement;
     private _canvasContext: CanvasRenderingContext2D;
-    private _button: HTMLInputElement;
-    private _DBSCANButton: HTMLButtonElement;
-    private _Kmeansutton: HTMLButtonElement;
-    private _clasterModel: ClasterModel;
-    private _brush: Brush;
+
+    private _regulatorButton: HTMLButtonElement;
+    private _regulator: HTMLDivElement;
+
     private _rangeInput: HTMLInputElement;
     private _groupInput: HTMLInputElement;
-    
+
+    private _DBSCANButton: HTMLButtonElement;
+    private _Kmeansutton: HTMLButtonElement;
+
+    private _clasterModel: ClasterModel;
+    //private _brush: Brush;
+
     constructor(model: ClasterModel) {
         super();
 
-        this._canvas = document.querySelector('.canvas') ?? Errors.handleError('null');
+        this._body = document.querySelector('body') ?? Errors.handleError('null');
+
+        //Canvas element and context
+        this._canvas = document.querySelector('.ui canvas') ?? Errors.handleError('null');
         this._canvasContext = this._canvas.getContext('2d') ?? Errors.handleError('null');
-        this._button = document.querySelector('.sendButton') ?? Errors.handleError('null');
-        this._DBSCANButton = document.querySelector('.DBSCAN') ?? Errors.handleError('null');
-        this._Kmeansutton = document.querySelector('.kmeans') ?? Errors.handleError('null');
-        this._rangeInput = document.querySelector('.range') ?? Errors.handleError('null');
-        this._groupInput = document.querySelector('.groupsize') ?? Errors.handleError('null');
+
+        //Elements fo change canvas
+        this._regulatorButton = document.querySelector('.regulator__button') ?? Errors.handleError('null');
+        this._regulator = document.querySelector('.regulator__width-param') ?? Errors.handleError('null');
+
+        //server data
+        // this._rangeInput = document.querySelector('.range') ?? Errors.handleError('null');
+        // this._groupInput = document.querySelector('.groupsize') ?? Errors.handleError('null');
+
+        // //buttons to send on server ddata
+        // this._DBSCANButton = document.querySelector('.DBSCAN') ?? Errors.handleError('null');
+        // this._Kmeansutton = document.querySelector('.kmeans') ?? Errors.handleError('null');
+
+        //Models
         this._clasterModel = model;
-        this._brush = new Brush();
-        this._subscribe();
+        //this._brush = new Brush();    add Brush
+        //this._subscribe();
+
+        this.changeSliderParams(this._body, this._regulatorButton, this._regulator);
     }
 
     getMousePosition(event: MouseEvent): Object {
@@ -37,7 +57,6 @@ class CanvasClasterView extends View {
     }
 
     changeCanvasView(strokeColor: string, fillColor: string, x: number, y: number, i: number) {
-        console.log({fillColor, x, y, i});
         this.drawCircle(
             this._canvasContext,
             strokeColor,
@@ -80,5 +99,3 @@ class CanvasClasterView extends View {
 }
 
 export default CanvasClasterView;
-
-// Почему???

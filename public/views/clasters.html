@@ -4,22 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.min.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>PUJAK</title>
-    <style>
-        .regulator__text:hover {
-            cursor: none;
-        }
-    </style>
 </head>
 <body>
 <p class="title">Clasterisation</p>
 <div class="ui">
-    <div class="regulator">
+  <div class="regulator">
     <div class="regulator__block">
       <p class="regulator__paragraph">1000</p>
       <div class="regulator__width-param">
-        <p class="regulator__text"><span>set height</span></p>
+        <p class="regulator__text">set height</p>
       </div>
       <button class="regulator__button"></button>
     </div>
@@ -31,8 +26,16 @@
       <button class="regulator__button"></button>
     </div>
   </div>
-    <canvas></canvas>
-    <div class="regulator">
+  <div class="canvas">
+    <canvas class="canvas__element"></canvas>
+    <div class="canvas__menu">
+      <div class="canvas__menu-container">
+        <button class="canvas__menu-button">DBSCAN</button>
+        <button class="canvas__menu-button">k-means</button>
+      </div>
+    </div>
+  </div>
+  <div class="regulator">
     <div class="regulator__block">
       <p class="regulator__paragraph">inf</p>
       <div class="regulator__width-param">
@@ -48,7 +51,7 @@
       <button class="regulator__button"></button>
     </div>
   </div>
-  </div>
+</div>
 <!-- <footer></footer> -->
 <script src="../dist/clasters.js" type="module"></script>
 </body>
