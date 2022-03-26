@@ -12,11 +12,11 @@ class View {
         this.body = body;
         this.regulatorButton = regulatorButton;
         this.regulator = regulator;
-        
-        this.changeSliderParams(body, regulatorButton, regulator);
+
+        this.initSliderListeners(body, regulatorButton, regulator);
     }
 
-    changeSliderParams(body: HTMLBodyElement, regulatorButton: HTMLButtonElement, regulator: HTMLDivElement) {
+    initSliderListeners(body: HTMLBodyElement, regulatorButton: HTMLButtonElement, regulator: HTMLDivElement) {
         let height: number = -60;
         let currentHeight: number;
         let isDown: boolean = false;
