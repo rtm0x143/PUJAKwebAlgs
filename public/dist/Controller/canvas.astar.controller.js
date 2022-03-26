@@ -1,0 +1,3 @@
+class CanvasAstarController {
+}
+export {};
