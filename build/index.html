@@ -9,49 +9,17 @@
 </head>
 <body>
 <header class="header">
-    <div class="nav-button cursor" id="#nav-circle-button" onclick="showMenu();">
-        
+    <div class="nav-button cursor" id="nav-trigger">
         <svg class="nav-icon" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle class="nav-icon__circle" cx="41.5" cy="41.5" r="41.5"/>
             <path class="nav-icon__line" d="M19.5 32.9048L61.5 31L64 39L18 37.0952L19.5 32.9048Z"/>
             <path class="nav-icon__line" d="M18.5155 44.5L66 48L64.4845 51.5L17 50.3333L18.5155 44.5Z"/>
         </svg>
     </div>
-
-    <!-- Не подключается через src???  -->
-    <script type="text/javascript">
-        function showMenu() {
-            var element = document.getElementsByClassName("navigaton")[0];
-            element.style.visibility = "visible";
-            // void element.offsetWidth;
-            //element.classList.add('nav-button__animation');
-            //element.classList.remove('nav-button__animation');
-        }
-    </script>
 </header> 
-<div class="welcome-screen">
-    <span class="team-name__text">PUJAK</span>
-    <span class="team-name__blinking-line"></span>
-</div>
-
-<div class="drawing">
-    <svg class="drawing__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1649 1182" fill="none">
-        <path d="M358 1036.65L0 627.654C608 -23.9456 1352.67 372.154 1649 651.654C1191 324.454 597.5 771.988 358 1036.65Z" fill="#3D85B3"/>
-        <rect width="113.223" height="742.157" transform="matrix(-0.789543 -0.613695 -0.613695 0.789543 1543.23 595.484)" fill="#FF6464"/>
-        <circle cx="465" cy="391.115" r="253" fill="#FF6464"/>
-        <rect x="220" y="102.225" width="45.0341" height="1506.81" transform="rotate(-49.2379 220 102.225)" fill="#303030"/>
-        <rect width="156.293" height="567.459" transform="matrix(-0.72445 -0.689327 -0.689327 0.72445 1319.39 659.35)" fill="#FFE37D"/>
-        <path d="M717 0.615122L698.5 36.6151L1280.29 295.256L1287.82 279.213L717 0.615122Z" fill="#303030"/>
-        <path d="M757 94.6151L764.973 80.3133L1398.46 377.717L1388.26 399.442L757 94.6151Z" fill="#303030"/>
-        <rect x="295" y="285.225" width="45.0341" height="660.795" transform="rotate(-49.2379 295 285.225)" fill="#FFE37D"/>
-        <path d="M295 438.115L407.583 633.115H182.417L295 438.115Z" fill="#303030"/>
-        <path d="M1442.24 324.069L1559.67 284.74L1535.01 406.103L1442.24 324.069Z" fill="#FFE37D"/>
-    </svg>
-</div>
-
-<div class="navigaton" id="someId">
-    <div class="navigaton-overlay">
-        <div class="nav-button-close">
+<div class="navigation-closed" id="navigation-screen">
+    <div class="navigation-overlay">
+        <div class="nav-button-close cursor" id="nav-close">
             <svg class="nav-icon" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle class="nav-icon__circle" cx="41.5" cy="41.5" r="41.5"/>
                 <path class="nav-icon__line" d="M19.5 32.9048L61.5 31L64 39L18 37.0952L19.5 32.9048Z"/>
@@ -72,10 +40,31 @@
         </div>
     </div>
 </div>
+<div class="welcome-screen">
+    <span class="team-name__text">PUJAK</span>
+    <span class="team-name__blinking-line"></span>
+</div>
+
+<div class="drawing">
+    <svg class="drawing__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1649 1182" fill="none">
+        <path d="M358 1036.65L0 627.654C608 -23.9456 1352.67 372.154 1649 651.654C1191 324.454 597.5 771.988 358 1036.65Z" fill="#3D85B3"/>
+        <rect width="113.223" height="742.157" transform="matrix(-0.789543 -0.613695 -0.613695 0.789543 1543.23 595.484)" fill="#FF6464"/>
+        <circle cx="465" cy="391.115" r="253" fill="#FF6464"/>
+        <rect x="220" y="102.225" width="45.0341" height="1506.81" transform="rotate(-49.2379 220 102.225)" fill="#303030"/>
+        <rect width="156.293" height="567.459" transform="matrix(-0.72445 -0.689327 -0.689327 0.72445 1319.39 659.35)" fill="#FFE37D"/>
+        <path d="M717 0.615122L698.5 36.6151L1280.29 295.256L1287.82 279.213L717 0.615122Z" fill="#303030"/>
+        <path d="M757 94.6151L764.973 80.3133L1398.46 377.717L1388.26 399.442L757 94.6151Z" fill="#303030"/>
+        <rect x="295" y="285.225" width="45.0341" height="660.795" transform="rotate(-49.2379 295 285.225)" fill="#FFE37D"/>
+        <path d="M295 438.115L407.583 633.115H182.417L295 438.115Z" fill="#303030"/>
+        <path d="M1442.24 324.069L1559.67 284.74L1535.01 406.103L1442.24 324.069Z" fill="#FFE37D"/>
+    </svg>
+</div>
+
 
 <!-- <h1>PUJAK</h1>
 <a href="algorithms.html">go algs</a>
 <p>ssss</p> -->
+<script src="./buttonAnimationLaunch.js"></script>
 <!-- <footer></footer> -->
 </body>
 </html>

@@ -216,7 +216,17 @@ table {
   padding-left: 50px;
 }
 
-.navigaton {
+.navigation-opened {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  visibility: visible;
+}
+
+.navigation-closed {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -226,7 +236,7 @@ table {
   visibility: hidden;
 }
 
-.navigaton-overlay {
+.navigation-overlay {
   background-color: #303030;
   position: fixed;
   width: 100%;
@@ -238,6 +248,8 @@ table {
 
 .nav-button-close {
   position: fixed;
+  left: 10px;
+  top: 10px;
   z-index: 100;
   visibility: inherit;
 }
@@ -260,6 +272,7 @@ table {
   justify-content: flex-start;
   align-items: center;
   visibility: inherit;
+  height: 100%;
 }
 
 .main-menu__link {
