@@ -16,8 +16,8 @@ private:
 	MNIST_DSStream* _stream;
 	std::mutex streamMutex;
 
-	size_t tasksDone, sampleSize;
-	std::vector<Matrix<double>> resultSum;
+	size_t tasksDone, sampleSize, layCount;
+	NeuralNetwork::backPropagation_Result resultSum;
 	std::mutex outputMutex;
 	std::condition_variable workDone;
 
@@ -34,7 +34,7 @@ public:
 	void launch(size_t sampleSize);
 	void launch();
 	void calcAverage();
-	const Matrix<double>* getResult();
+	const NeuralNetwork::backPropagation_Result getResult();
 	void abort();
 	void assignStream(MNIST_DSStream* stream);
 };

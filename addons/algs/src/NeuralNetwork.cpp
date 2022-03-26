@@ -10,10 +10,17 @@ NeuralNetwork::NeuralNetwork(const std::vector<size_t>& dimensions, Matrix<doubl
 {
 	sums = new std::vector<double>[dims.size()];
 	neurons = new std::vector<double>[dims.size()];
-	errors = new std::vector<double>[dims.size()];
+	errors = new Matrix<double>[dims.size()];
 }
 
 NeuralNetwork::~NeuralNetwork() { delete[] neurons, errors, sums; }
+
+NeuralNetwork::backPropagation_Result::backPropagation_Result(bool bindData)
+	: is_data_owner(bindData) {};
+
+NeuralNetwork::backPropagation_Result::~backPropagation_Result() {
+	delete[] weightsGradient, biasesGradient;
+}
 
 double* NeuralNetwork::feedForward(const std::vector<double>& input) const
 {
@@ -21,29 +28,47 @@ double* NeuralNetwork::feedForward(const std::vector<double>& input) const
 	for (size_t l = 1; l < dims.size(); l++) {
 		sums[l] = weights[l - 1] * neurons[l - 1];
 		sums[l] += offsets[l];
-		for (size_t i = 0; i < sums[i].size(); i++) {
-			neurons[l][i] = activate(sums[l][i]);
-		}
+		neurons[l] = sums[l];
+		std::for_each(neurons[l].begin(), neurons[l].end(),
+			[func = activate](double& el) { el = func(el); });
 	}
 	return neurons[dims.size() - 1].data();
 }
 
-Matrix<double>* NeuralNetwork::backPropagation(const std::vector<double>& input, uint8_t expected) const
+NeuralNetwork::backPropagation_Result NeuralNetwork::backPropagation(const std::vector<double>& input, 
+	uint8_t expected) const
 {
+	feedForward(input);
+
 	size_t lastLayInd = dims.size() - 1;
-	Matrix<double>* gradient = new Matrix<double>[lastLayInd];
-	
-	for (size_t i = 0; i < dims.back(); i++) {
-		errors[lastLayInd][i] = 2 * (neurons[lastLayInd][i] - (i == expected ? 1 : 0));
-	}
-
-	for (size_t i = lastLayInd - 1; i >= 0; --i)
+	backPropagation_Result result(true);
+	result.weightsGradient = new Matrix<double>[lastLayInd];
+	result.biasesGradient = new std::vector<double>[dims.size()];
 	{
-		Matrix<double>& weirgtsLay = weights[i];
-		Matrix<double>& gradientLay = gradient[i];
-
-
+		double* errorsLastLay = errors[lastLayInd][0];
+		for (size_t i = 0; i < dims.back(); i++) {
+			errorsLastLay[i] = 2 * (neurons[lastLayInd][i] - (i == expected ? 1 : 0));
+		}
 	}
 
-	return gradient;
+	for (int i = lastLayInd - 1; i >= 0; --i)
+	{
+		Matrix<double>& weightsLay = weights[i];
+		double* errorsLay = errors[i + 1][0];
+		
+		std::vector<double> semiCalc = sums[i + 1];
+		std::for_each(semiCalc.begin(), semiCalc.end(),
+			[func = derActivate](double& el) { el = func(el); });
+		for (size_t i = 0; i < semiCalc.size(); ++i) {
+			semiCalc[i] *= errorsLay[i];
+		}
+
+		result.weightsGradient[i] = semiCalc * Matrix<double>(neurons[i]);
+
+		result.biasesGradient[i + 1] = semiCalc;
+
+		errors[i] = Matrix<double>(semiCalc) * weightsLay;
+	}
+
+	return result;
 }

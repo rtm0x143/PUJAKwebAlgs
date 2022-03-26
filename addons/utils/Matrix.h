@@ -2,6 +2,7 @@
 #include <utility>
 #include <iostream>
 #include <vector>
+//#include "../utils/tools.h"
 
 template <typename T>
 class Matrix
@@ -24,6 +25,14 @@ public:
 		for (size_t i = 0; i < rowCount; i++) {
 			for (size_t j = 0; j < columnCount; j++) data[i][j] = filler;
 		}
+	}
+
+	// represents vector as 1 row matrix
+	Matrix(std::vector<T>& other) {
+		data = (T**)other.data();
+		c_count = other.size();
+		r_count = 1;
+		is_data_owner = false;
 	}
 
 	Matrix(Matrix& other) : Matrix(other.r_count, other.c_count) {
@@ -49,7 +58,7 @@ public:
 		delete[] data;
 	}
 
-	T* operator[](size_t i) { return data[i]; }
+	T* operator[](size_t i) const { return data[i]; }
 
 	Matrix& operator=(const Matrix& other) {
 		if (this == &other) return *this; 
@@ -191,11 +200,18 @@ private:
 	bool is_data_owner;
 };
 
-//template <typename T>
-//std::vector<T>& operator+=(std::vector<T>& v1, const std::vector<double>& v2) {
-//	if (v1.size() != v2.size()) throw "Only equal sized vectors addition supported";
+//template <typename T> 
+//Matrix<T> operator*(const std::vector<T> v, const Matrix<T>& m) {
+//	if (m.r_count != 1) throw "Invalid dimentions for multiplication";
 //
-//	for (size_t i = 0; i < v1.size(); i++) v1[i] += v2[i];
-//
-//	return v1;
+//	Matrix<T> result(v.size(), m.c_count);
+//	T* mRow = m.data[0];
+//	for (size_t i = 0; i < v.size(); ++i)
+//	{
+//		T* resultRow = result.data[i];
+//		for (size_t j = 0; j < m.c_count; ++j) {
+//			resultRow[j] = v[i] * mRow[j];
+//		}
+//	}
+//	return result;
 //}

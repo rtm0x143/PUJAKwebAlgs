@@ -12,7 +12,16 @@ public:
 
 	double* feedForward(const std::vector<double>& input) const;
 
-	Matrix<double>* backPropagation(const std::vector<double>& input, uint8_t expected) const;
+	struct backPropagation_Result {
+		Matrix<double>* weightsGradient;
+		std::vector<double>* biasesGradient;
+		bool is_data_owner;
+
+		backPropagation_Result(bool bindData = false);
+		~backPropagation_Result();
+	};
+
+	backPropagation_Result backPropagation(const std::vector<double>& input, uint8_t expected) const;
 
 	const std::vector<size_t> dims;
 
@@ -24,7 +33,7 @@ private:
 
 	std::vector<double>* sums;
 	std::vector<double>* neurons;
-	std::vector<double>* errors;
+	Matrix<double>* errors; // 1 row matrices 
 
 	// optional
 	std::vector<double>* offsets;

@@ -44,7 +44,7 @@ protected:
 
 // Then you create your stream implementation; with overriding "_read" method and Package structer
 // For Example
-class MNIST_DSStream : public DataSetStream {
+class MNIST_DSStream : public DataSetStream_Async {
 public:
 	MNIST_DSStream(const std::string& pathToImg, const std::string& pathTolabel, size_t bufferSize);
 	~MNIST_DSStream();

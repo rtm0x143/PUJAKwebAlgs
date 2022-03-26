@@ -1,10 +1,18 @@
+#include <algorithm>
 #include "../LearningClient.h"
+#include "../tools.h"
+
+using namespace vectorExtention;
 
 LearningClient::LearningClient(MNIST_DSStream* stream, const NeuralNetwork& net, size_t workersCount)
-	: _stream(stream), workers(workersCount), tasksDone(0), sampleSize(0), run(true), resultSum(net.dims.size() - 1)
+	: _stream(stream), workers(workersCount), resultSum(true),
+	tasksDone(0), sampleSize(0), layCount(net.dims.size()), run(true)
 {
-	for (size_t i = 1; i < net.dims.size(); ++i) {
-		resultSum[i - 1] = Matrix<double>(net.dims[i], net.dims[i - 1], 0);
+	resultSum.weightsGradient = new Matrix<double>[layCount - 1];
+	resultSum.biasesGradient = new std::vector<double>[layCount];
+	for (size_t i = 1; i < layCount; ++i) {
+		resultSum.weightsGradient[i - 1] = Matrix<double>(net.dims[i], net.dims[i - 1], 0);
+		resultSum.biasesGradient->assign(net.dims[i], 0);
 	}
 	for (std::thread* thr : workers) {
 		thr = new std::thread(workerRuntime, this, net);
@@ -39,16 +47,16 @@ void LearningClient::workerRuntime(LearningClient* client, const NeuralNetwork& 
 			if (client->_stream->isEnded()) continue;
 			package = client->_stream->nextPackage();
 		}
-		Matrix<double>* gradient = _net.backPropagation(package->data, package->label);
+		auto result = _net.backPropagation(package->data, package->label);
 		delete package;
 		{
 			std::unique_lock<std::mutex> lock(client->outputMutex);
 			for (size_t i = 0; i < _net.dims.size() - 1; i++) {
-				client->resultSum[i] += gradient[i];
+				client->resultSum.weightsGradient[i] += result.weightsGradient[i];
+				client->resultSum.biasesGradient[i] += result.biasesGradient[i];
 			}
 			++client->tasksDone;
 		}
-		delete[] gradient;
 	}
 }
 
@@ -65,16 +73,19 @@ void LearningClient::launch() { launch(_stream->size()); }
 
 void LearningClient::calcAverage() {
 	if (tasksDone > 1) {
-		for (size_t i = 0; i < resultSum.size(); i++) 
-			resultSum[i].forEach([count = tasksDone](double& el) { el /= count; });
+		for (size_t i = 0; i < layCount; i++) {
+			resultSum.weightsGradient[i].forEach([count = tasksDone](double& el) { el /= count; });
+			std::for_each(resultSum.biasesGradient[i].begin(), resultSum.biasesGradient[i].end(),
+				[count = tasksDone](double& el) { el /= count; });
+		}
 	}
 }
 
-const Matrix<double>* LearningClient::getResult() {
+const NeuralNetwork::backPropagation_Result LearningClient::getResult() {
 	std::mutex _mutex;
 	std::unique_lock<std::mutex> selfLock(_mutex);
 	if (!isDone()) workDone.wait(selfLock);
-	return resultSum.data();
+	return resultSum;
 }
 
 void LearningClient::abort() { sampleSize = 0; }

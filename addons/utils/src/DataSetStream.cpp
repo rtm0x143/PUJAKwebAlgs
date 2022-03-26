@@ -103,10 +103,10 @@ int readInt32(std::ifstream& stream) {
 }
 
 MNIST_DSStream::MNIST_DSStream(const std::string& pathToImg, const std::string& pathTolabel,
-	size_t bufferSize) : DataSetStream(_packageLeft)
+	size_t bufferSize) : DataSetStream_Async(_packageLeft, bufferSize)
 {
-	_istream.open(pathToImg);
-	_lstream.open(pathTolabel);
+	_istream.open(pathToImg, std::ios::in | std::ios::binary);
+	_lstream.open(pathTolabel, std::ios::in | std::ios::binary);
 
 	// skip useless data
 	{
@@ -132,7 +132,7 @@ MNIST_DSStream::Package* MNIST_DSStream::_read()
 	_lstream >> byte;
 	Package* package = new Package(_imgSize, byte);
 
-	for (size_t i = 0; i < _imgSize; i++)
+	for (size_t i = 0; i < _imgSize; ++i)
 	{
 		_istream >> byte;
 		package->data[i] = (double)byte / 255;
