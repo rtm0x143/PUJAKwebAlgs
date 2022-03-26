@@ -191,11 +191,11 @@ private:
 	bool is_data_owner;
 };
 
-template <typename T>
-std::vector<T>& operator+=(std::vector<T>& v1, const std::vector<double>& v2) {
-	if (v1.size() != v2.size()) throw "Only equal sized vectors addition supported";
-
-	for (size_t i = 0; i < v1.size(); i++) v1[i] += v2[i];
-
-	return v1;
-}
+//template <typename T>
+//std::vector<T>& operator+=(std::vector<T>& v1, const std::vector<double>& v2) {
+//	if (v1.size() != v2.size()) throw "Only equal sized vectors addition supported";
+//
+//	for (size_t i = 0; i < v1.size(); i++) v1[i] += v2[i];
+//
+//	return v1;
+//}
