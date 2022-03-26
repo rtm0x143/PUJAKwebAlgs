@@ -4,26 +4,26 @@ import ClasterModel from '../Model/claster.model.js';
 import View from './View.js';
 
 class CanvasClasterView extends View {
-    private _body: HTMLBodyElement;
+    // private _body: HTMLBodyElement;
     private _canvas: HTMLCanvasElement;
     private _canvasContext: CanvasRenderingContext2D;
 
     private _regulatorButton: HTMLButtonElement;
-    private _regulator: HTMLDivElement;
+    // private _regulator: HTMLDivElement;
 
-    private _rangeInput: HTMLInputElement;
-    private _groupInput: HTMLInputElement;
+    // private _rangeInput: HTMLInputElement;
+    // private _groupInput: HTMLInputElement;
 
-    private _DBSCANButton: HTMLButtonElement;
-    private _Kmeansutton: HTMLButtonElement;
+    // private _DBSCANButton: HTMLButtonElement;
+    // private _Kmeansutton: HTMLButtonElement;
 
     private _clasterModel: ClasterModel;
     //private _brush: Brush;
 
     constructor(model: ClasterModel) {
-        super();
-
-        this._body = document.querySelector('body') ?? Errors.handleError('null');
+        super(document.querySelector('body') ?? Errors.handleError('null'),
+                document.querySelector('.regulator__button') ?? Errors.handleError('null'),
+                document.querySelector('.regulator__width-param') ?? Errors.handleError('null'));
 
         //Canvas element and context
         this._canvas = document.querySelector('.ui canvas') ?? Errors.handleError('null');
@@ -31,7 +31,6 @@ class CanvasClasterView extends View {
 
         //Elements fo change canvas
         this._regulatorButton = document.querySelector('.regulator__button') ?? Errors.handleError('null');
-        this._regulator = document.querySelector('.regulator__width-param') ?? Errors.handleError('null');
 
         //server data
         // this._rangeInput = document.querySelector('.range') ?? Errors.handleError('null');
@@ -45,8 +44,6 @@ class CanvasClasterView extends View {
         this._clasterModel = model;
         //this._brush = new Brush();    add Brush
         //this._subscribe();
-
-        this.changeSliderParams(this._body, this._regulatorButton, this._regulator);
     }
 
     getMousePosition(event: MouseEvent): Object {

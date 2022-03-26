@@ -4,6 +4,18 @@ import Errors from '../config/Errors.js';
 import Brush from '../Model/brush.model.js';
 
 class View {
+    body: HTMLBodyElement;
+    regulatorButton: HTMLButtonElement;
+    regulator: HTMLDivElement;
+
+    constructor(body: HTMLBodyElement, regulatorButton: HTMLButtonElement, regulator: HTMLDivElement) {
+        this.body = body;
+        this.regulatorButton = regulatorButton;
+        this.regulator = regulator;
+        
+        this.changeSliderParams(body, regulatorButton, regulator);
+    }
+
     changeSliderParams(body: HTMLBodyElement, regulatorButton: HTMLButtonElement, regulator: HTMLDivElement) {
         let height: number = -60;
         let currentHeight: number;
