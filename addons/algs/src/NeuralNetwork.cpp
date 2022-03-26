@@ -27,11 +27,19 @@ double* NeuralNetwork::feedForward(const std::vector<double>& input) const
 
 Matrix<double>* NeuralNetwork::backPropagation(const std::vector<double>& input, uint8_t expected) const
 {
-	Matrix<double>* gradient = new Matrix<double>[dims.size() - 1];
+	size_t lastLayInd = dims.size() - 1;
+	Matrix<double>* gradient = new Matrix<double>[lastLayInd];
 	
-	size_t lastI = dims.size() - 1;
 	for (size_t i = 0; i < dims.back(); i++) {
-		errors[lastI][i] = 2 * (neurons[lastI][i] - (i == expected ? 1 : 0));
+		errors[lastLayInd][i] = 2 * (neurons[lastLayInd][i] - (i == expected ? 1 : 0));
+	}
+
+	for (size_t i = lastLayInd - 1; i >= 0; --i)
+	{
+		Matrix<double>& weirgtsLay = weights[i];
+		Matrix<double>& gradientLay = gradient[i];
+
+
 	}
 
 	return gradient;

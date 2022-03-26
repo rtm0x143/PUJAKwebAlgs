@@ -11,3 +11,15 @@ namespace tools
 	double sigmoid(const double& x);
 	double derSig(const double& x); 
 }
+namespace vectorExtention
+{
+	template <typename T>
+	std::vector<T>& operator+=(std::vector<T>& v1, const std::vector<double>& v2);
+	template <typename T>
+	std::vector<T> operator+(const std::vector<T>& v1, const std::vector<double>& v2);
+
+	template <typename T>
+	std::vector<T>& operator*=(std::vector<T>& v1, const std::vector<double>& v2);
+	template <typename T>
+	std::vector<T> operator*(const std::vector<T>& v1, const std::vector<double>& v2);
+}

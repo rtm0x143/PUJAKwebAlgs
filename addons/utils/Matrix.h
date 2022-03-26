@@ -28,7 +28,7 @@ public:
 
 	Matrix(Matrix& other) : Matrix(other.r_count, other.c_count) {
 		for (size_t i = 0; i < r_count; i++) {
-			for (size_t j = 0; j < c_count; j++) data[i][j] = other[i][j];
+			for (size_t j = 0; j < c_count; j++) data[i][j] = other.data[i][j];
 		}
 	}
 
