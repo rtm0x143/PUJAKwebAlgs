@@ -4,7 +4,7 @@ import fs from "fs"
 
 export default Router()
     .get("/:view?", (req, res) => {
-        const p = path.join(req.app.get("views"), (req.params.view || "index" + ".html"))
+        const p = path.join(req.app.get("views"), ((req.params.view || "index") + ".html"))
         if (fs.existsSync(p)) {
             res.sendFile(p)
         }
