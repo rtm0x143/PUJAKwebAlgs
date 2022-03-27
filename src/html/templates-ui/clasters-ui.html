@@ -1,5 +1,13 @@
 <div class="ui">
-    @@include('canvas-regulator.html', {})
-    <canvas></canvas>
-    @@include('DBSCAN-regulator.html', {})
+  @@include('canvas-regulator.html', {})
+  <div class="canvas">
+    <canvas class="canvas__element"></canvas>
+    <div class="canvas__menu">
+      <div class="canvas__menu-container">
+        <button class="canvas__menu-button_DBSCAN">DBSCAN</button>
+        <button class="canvas__menu-button_kmeans">k-means</button>
+      </div>
+    </div>
   </div>
+  @@include('DBSCAN-regulator.html', {})
+</div>

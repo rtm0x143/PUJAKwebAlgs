@@ -17,37 +17,99 @@ $param-width: 40px;
     .regulator {
         display: flex;
         justify-content: center;
-        flex-grow: 1;
-        flex-basis: 0px;
-        height: 1053px;
+        width: 180px;
+        height: 780px;
         background: $black;
         border-radius: 30px;
 
         .regulator__block {
             display: block;
 
-            .regulator__paragraph {
+            .regulator__width-paragraph {
+                @include setFont('codenext', normal, 18px, 26px, 800, $greyTextColor);
+                margin-top: 16.23px;
+            }
+
+            .regulator__height-paragraph {
+                @include setFont('codenext', normal, 18px, 26px, 800, $greyTextColor);
+                margin-top: 16.23px;
+            }
+
+            .regulator__range-paragraph {
+                @include setFont('codenext', normal, 18px, 26px, 800, $greyTextColor);
+                margin-top: 16.23px;
+            }
+
+            .regulator__count-paragraph {
                 @include setFont('codenext', normal, 18px, 26px, 800, $greyTextColor);
                 margin-top: 16.23px;
             }
 
             .regulator__button {
+                cursor: pointer;
+                display: block;
+                position: relative;
+                z-index: 2;
                 width: $param-width;
                 height: 60px;
                 background: $black;
                 border: 4px solid $white;
-                margin-top: -60px;
+                margin-top: -260px;
                 border-radius: 20px;
-                display: block;
+            }
+
+            .regulator__button_height {
+                margin-top: -280px;   
+            }
+
+            .regulator__button_width {
+                margin-top: -220px;   
+            }
+
+            .regulator__button_range {
+                margin-top: -60px;   
+            }
+
+            .regulator__button_count {
+                margin-top: -60px;
+            }
+
+            .regulator__bar {
+                position: absolute;
+                width: 32px;
+                height: 205px;
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 20px;
+                bottom: 0;
+                border: 4px solid $white;
+                background-color: $black;
+                z-index: 1;
+            }
+
+            .regulator__bar_height {
+                height: 225px;
+            }
+
+            .regulator__bar_width {
+                height: 165px;
+            }
+
+            .regulator__bar_range {
+                height: 10px;
+            }
+
+            .regulator__bar_count {
+                height: 10px;
             }
 
             .regulator__width-param {
+                position: relative;
                 display: flex;
                 align-items: center;
                 justify-content: space-around;
                 background: $white;
                 width: $param-width;
-                height: 982px;
+                height: 700px;
                 border-radius: 30px;
 
                 .regulator__text {
@@ -60,12 +122,13 @@ $param-width: 40px;
             }
                 
             .regulator__height-param {
+                position: relative;
                 display: flex;
                 align-items: center;
                 justify-content: space-around;
                 background: $white;
                 width: $param-width;
-                height: 982px;
+                height: 700px;
                 border-radius: 30px;
 
                 .regulator__text {
@@ -83,14 +146,72 @@ $param-width: 40px;
         }
     }
 
-    canvas {
+    .canvas {
+        position: relative;
         margin-left: 28px;
         margin-right: 28px;
-        background: $black;
-        width: 0px;
-        height: 988px;
-        border-radius: 20px;
-        flex-grow: 6.8;
+        background: $white;
+        width: 400px;
+        height: 400px;
+
+        .canvas__element {
+            background: $black;
+            border-radius: 20px;
+        }
+
+        .canvas__menu {
+            display: flex;
+            justify-content: center;
+
+            .canvas__menu-container {
+                position: absolute;
+                bottom: 20px;
+
+                .canvas__menu-button_DBSCAN {
+                    cursor: pointer;
+                    width: 140px;
+                    height: 60px;
+                    border-radius: 10px;
+                    border: none;
+                    background: $white;
+
+                    @include setFont('codenext', normal, 24px, 32px, 800, $black);
+                }
+
+                .canvas__menu-button_DBSCAN:nth-child(2) {
+                    margin-left: 10px;
+                }
+
+                .canvas__menu-button_kmeans {
+                    cursor: pointer;
+                    width: 140px;
+                    height: 60px;
+                    border-radius: 10px;
+                    border: none;
+                    background: $white;
+
+                    @include setFont('codenext', normal, 24px, 32px, 800, $black);
+                }
+
+                .canvas__menu-button_kmeans:nth-child(2) {
+                    margin-left: 10px;
+                }
+
+                .canvas__menu-button_DBSCAN:hover {
+                    transition: 0.3s;
+                    color: $white;
+                    background: $black;
+                    border: 1px solid $white;
+                }
+
+                .canvas__menu-button_kmeans:hover {
+                    transition: 0.3s;
+                    color: $white;
+                    background: $black;
+                    border: 1px solid $white;
+                }
+            }
+        }
     }
 
     .buttons-menu {

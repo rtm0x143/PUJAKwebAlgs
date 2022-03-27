@@ -1,140 +1,3 @@
-/* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-}
-
-/* HTML5 display-role reset for older browsers */
-
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
-}
-
-body {
-  line-height: 1;
-}
-
-ol,
-ul {
-  list-style: none;
-}
-
-blockquote,
-q {
-  quotes: none;
-}
-
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: "";
-  content: none;
-}
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
 @font-face {
   font-family: "codenext";
   src: url("../fonts/codenext.otf");
@@ -397,9 +260,8 @@ table {
 .ui .regulator {
   display: flex;
   justify-content: center;
-  flex-grow: 1;
-  flex-basis: 0px;
-  height: 1053px;
+  width: 180px;
+  height: 780px;
   background: #303030;
   border-radius: 30px;
 }
@@ -408,7 +270,37 @@ table {
   display: block;
 }
 
-.ui .regulator .regulator__block .regulator__paragraph {
+.ui .regulator .regulator__block .regulator__width-paragraph {
+  font-family: "codenext", sans-serif;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 800;
+  color: #E8E8E8;
+  margin-top: 16.23px;
+}
+
+.ui .regulator .regulator__block .regulator__height-paragraph {
+  font-family: "codenext", sans-serif;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 800;
+  color: #E8E8E8;
+  margin-top: 16.23px;
+}
+
+.ui .regulator .regulator__block .regulator__range-paragraph {
+  font-family: "codenext", sans-serif;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 800;
+  color: #E8E8E8;
+  margin-top: 16.23px;
+}
+
+.ui .regulator .regulator__block .regulator__count-paragraph {
   font-family: "codenext", sans-serif;
   font-style: normal;
   font-size: 18px;
@@ -419,22 +311,70 @@ table {
 }
 
 .ui .regulator .regulator__block .regulator__button {
+  cursor: pointer;
+  display: block;
+  position: relative;
+  z-index: 2;
   width: 40px;
   height: 60px;
   background: #303030;
   border: 4px solid #FFFFFF;
-  margin-top: -60px;
+  margin-top: -260px;
   border-radius: 20px;
-  display: block;
+}
+
+.ui .regulator .regulator__block .regulator__button_height {
+  margin-top: -280px;
+}
+
+.ui .regulator .regulator__block .regulator__button_width {
+  margin-top: -220px;
+}
+
+.ui .regulator .regulator__block .regulator__button_range {
+  margin-top: -60px;
+}
+
+.ui .regulator .regulator__block .regulator__button_count {
+  margin-top: -60px;
+}
+
+.ui .regulator .regulator__block .regulator__bar {
+  position: absolute;
+  width: 32px;
+  height: 205px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  bottom: 0;
+  border: 4px solid #FFFFFF;
+  background-color: #303030;
+  z-index: 1;
+}
+
+.ui .regulator .regulator__block .regulator__bar_height {
+  height: 225px;
+}
+
+.ui .regulator .regulator__block .regulator__bar_width {
+  height: 165px;
+}
+
+.ui .regulator .regulator__block .regulator__bar_range {
+  height: 10px;
+}
+
+.ui .regulator .regulator__block .regulator__bar_count {
+  height: 10px;
 }
 
 .ui .regulator .regulator__block .regulator__width-param {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-around;
   background: #FFFFFF;
   width: 40px;
-  height: 982px;
+  height: 700px;
   border-radius: 30px;
 }
 
@@ -447,12 +387,13 @@ table {
 }
 
 .ui .regulator .regulator__block .regulator__height-param {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-around;
   background: #FFFFFF;
   width: 40px;
-  height: 982px;
+  height: 700px;
   border-radius: 30px;
 }
 
@@ -468,14 +409,80 @@ table {
   margin-left: 39px;
 }
 
-.ui canvas {
+.ui .canvas {
+  position: relative;
   margin-left: 28px;
   margin-right: 28px;
+  background: #FFFFFF;
+  width: 400px;
+  height: 400px;
+}
+
+.ui .canvas .canvas__element {
   background: #303030;
-  width: 0px;
-  height: 988px;
   border-radius: 20px;
-  flex-grow: 6.8;
+}
+
+.ui .canvas .canvas__menu {
+  display: flex;
+  justify-content: center;
+}
+
+.ui .canvas .canvas__menu .canvas__menu-container {
+  position: absolute;
+  bottom: 20px;
+}
+
+.ui .canvas .canvas__menu .canvas__menu-container .canvas__menu-button_DBSCAN {
+  cursor: pointer;
+  width: 140px;
+  height: 60px;
+  border-radius: 10px;
+  border: none;
+  background: #FFFFFF;
+  font-family: "codenext", sans-serif;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 800;
+  color: #303030;
+}
+
+.ui .canvas .canvas__menu .canvas__menu-container .canvas__menu-button_DBSCAN:nth-child(2) {
+  margin-left: 10px;
+}
+
+.ui .canvas .canvas__menu .canvas__menu-container .canvas__menu-button_kmeans {
+  cursor: pointer;
+  width: 140px;
+  height: 60px;
+  border-radius: 10px;
+  border: none;
+  background: #FFFFFF;
+  font-family: "codenext", sans-serif;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 800;
+  color: #303030;
+}
+
+.ui .canvas .canvas__menu .canvas__menu-container .canvas__menu-button_kmeans:nth-child(2) {
+  margin-left: 10px;
+}
+
+.ui .canvas .canvas__menu .canvas__menu-container .canvas__menu-button_DBSCAN:hover {
+  transition: 0.3s;
+  color: #FFFFFF;
+  background: #303030;
+  border: 1px solid #FFFFFF;
+}
+
+.ui .canvas .canvas__menu .canvas__menu-container .canvas__menu-button_kmeans:hover {
+  transition: 0.3s;
+  color: #FFFFFF;
+  background: #303030;
+  border: 1px solid #FFFFFF;
 }
 
 .ui .buttons-menu {
