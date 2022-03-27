@@ -20,8 +20,8 @@ class ClasterController extends Controller{
         this._clasterModel.pushObject(positionObject.y, positionObject.x);
     }
 
-    requestDBSCAN(range: number, groupSize: number) {
-        fetch(`alg/clasterisation?type=DBSCAN&range=${range}&gSize=${groupSize}`, {
+    requestDBSCAN(context: CanvasRenderingContext2D, range: number, groupSize: number) {
+        fetch(`${this.urlValue}/alg/clasterisation?type=DBSCAN&range=${range}&gSize=${groupSize}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/octet-stream'
@@ -32,8 +32,6 @@ class ClasterController extends Controller{
             let reader = responce.body?.getReader();
             reader?.read().then(({ done, value }) => {
                 console.log(value);
-                console.log(this._clasterModel.positions);
-
                 if (value == undefined) Errors.handleError('undefined');
                 let colorsArray = []
 
@@ -44,17 +42,18 @@ class ClasterController extends Controller{
                                 colorsArray.push(this.hsvToRGB(Math.floor(Math.random() * 361), 0.5 + Math.random() * 0.5, 0.5 + Math.random() * 0.5) ?? Errors.handleError('undefined'));
                             }
                             
-                            this._clasterView.changeCanvasView('', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], i);
+                            this._clasterView.drawCircle(context, '', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], 5);
                         }
                         else {
-                            this._clasterView.changeCanvasView('', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], i);
+                            this._clasterView.drawCircle(context, '', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], 5);
                         }
                     }
                     else {
-                        this._clasterView.changeCanvasView('', 'grey', this._clasterModel.positions[i], this._clasterModel.positions[i - 1], i);
+                        this._clasterView.drawCircle(context, '', 'grey', this._clasterModel.positions[i], this._clasterModel.positions[i - 1], 5);
                     }
                 }
-                console.log(colorsArray);
+
+                console.log(colorsArray)
             })
         })
     }
