@@ -17,7 +17,8 @@ public:
 		std::vector<double>* biasesGradient;
 		bool is_data_owner;
 
-		backPropagation_Result(bool bindData = false);
+		backPropagation_Result();
+		backPropagation_Result(size_t weightsGradientSize, size_t biasesGradientSize);
 		~backPropagation_Result();
 	};
 

@@ -8,6 +8,18 @@ namespace tools
 
 	Matrix<double>* randWeights(const std::vector<size_t>& dimensions);
 
+	void uploadWeights(const std::string& path, const Matrix<double>* weights,
+		const std::vector<size_t>& dimensions);
+
+	Matrix<double>* downloadWeights(const std::string& path, std::vector<size_t>& dimensions);
+
+	std::vector<double>* randBiases(const std::vector<size_t>& dimensions);
+
+	void uploadBiases(const std::string& path, const std::vector<double>* biases,
+		const std::vector<size_t>& dimensions);
+
+	Matrix<double>* downloadBiases(const std::string& path, std::vector<size_t>& dimensions);
+
 	double sigmoid(const double& x);
 	double derSig(const double& x); 
 }

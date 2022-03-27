@@ -5,11 +5,9 @@
 using namespace vectorExtention;
 
 LearningClient::LearningClient(MNIST_DSStream* stream, const NeuralNetwork& net, size_t workersCount)
-	: _stream(stream), workers(workersCount), resultSum(true),
-	tasksDone(0), sampleSize(0), layCount(net.dims.size()), run(true)
+	: _stream(stream), workers(workersCount), tasksDone(0), sampleSize(0),
+	layCount(net.dims.size()), resultSum(layCount - 1, layCount), run(true)
 {
-	resultSum.weightsGradient = new Matrix<double>[layCount - 1];
-	resultSum.biasesGradient = new std::vector<double>[layCount];
 	for (size_t i = 1; i < layCount; ++i) {
 		resultSum.weightsGradient[i - 1] = Matrix<double>(net.dims[i], net.dims[i - 1], 0);
 		resultSum.biasesGradient->assign(net.dims[i], 0);

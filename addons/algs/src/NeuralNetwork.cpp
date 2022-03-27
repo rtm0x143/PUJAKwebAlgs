@@ -15,17 +15,24 @@ NeuralNetwork::NeuralNetwork(const std::vector<size_t>& dimensions, Matrix<doubl
 
 NeuralNetwork::~NeuralNetwork() { delete[] neurons, errors, sums; }
 
-NeuralNetwork::backPropagation_Result::backPropagation_Result(bool bindData)
-	: is_data_owner(bindData) {};
+NeuralNetwork::backPropagation_Result::backPropagation_Result() : 
+	is_data_owner(false), weightsGradient(nullptr), biasesGradient(nullptr) {}
+
+NeuralNetwork::backPropagation_Result::backPropagation_Result(size_t weightsGradientSize, 
+	size_t biasesGradientSize) : is_data_owner(true) 
+{
+	weightsGradient = new Matrix<double>[weightsGradientSize];
+	biasesGradient = new std::vector<double>[biasesGradientSize];
+};
 
 NeuralNetwork::backPropagation_Result::~backPropagation_Result() {
-	delete[] weightsGradient, biasesGradient;
+	if (is_data_owner) delete[] weightsGradient, biasesGradient;
 }
 
 double* NeuralNetwork::feedForward(const std::vector<double>& input) const
 {
 	neurons[0] = input;
-	for (size_t l = 1; l < dims.size(); l++) {
+	for (size_t l = 1; l < dims.size(); ++l) {
 		sums[l] = weights[l - 1] * neurons[l - 1];
 		sums[l] += offsets[l];
 		neurons[l] = sums[l];
@@ -35,15 +42,13 @@ double* NeuralNetwork::feedForward(const std::vector<double>& input) const
 	return neurons[dims.size() - 1].data();
 }
 
-NeuralNetwork::backPropagation_Result NeuralNetwork::backPropagation(const std::vector<double>& input, 
-	uint8_t expected) const
+NeuralNetwork::backPropagation_Result NeuralNetwork::backPropagation(
+	const std::vector<double>& input, uint8_t expected) const
 {
 	feedForward(input);
 
 	size_t lastLayInd = dims.size() - 1;
-	backPropagation_Result result(true);
-	result.weightsGradient = new Matrix<double>[lastLayInd];
-	result.biasesGradient = new std::vector<double>[dims.size()];
+	backPropagation_Result result(lastLayInd, dims.size());
 	{
 		double* errorsLastLay = errors[lastLayInd][0];
 		for (size_t i = 0; i < dims.back(); i++) {
