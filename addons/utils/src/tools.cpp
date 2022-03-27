@@ -16,7 +16,7 @@ Matrix<double>* tools::randWeights(const std::vector<size_t>& dimensions) {
 	Matrix<double>* weights = new Matrix<double>[dimensions.size() - 1];
 	for (size_t i = 0; i < dimensions.size() - 1; i++) {
 		weights[i] = Matrix<double>(dimensions[i + 1], dimensions[i]);
-		weights[i].forEach([](double& el) { el = (double)rand() / RAND_MAX; });
+		weights[i].forEach([](double& el) { el = (double)rand() / RAND_MAX / 5; });
 	}
 	return weights;
 }
@@ -65,12 +65,50 @@ Matrix<double>* tools::downloadWeights(const std::string& path, std::vector<size
 
 std::vector<double>* tools::randBiases(const std::vector<size_t>& dimensions) {
 	std::vector<double>* biases = new std::vector<double>[dimensions.size()];
+	for (size_t l = 1; l < dimensions.size(); ++l)
+	{
+		std::vector<double>& biasesLay = biases[l];
+		biasesLay = std::vector<double>(dimensions[l]);
+		for (size_t i = 0; i < dimensions[l]; ++i) {
+			biasesLay[i] = (double)(rand() * 10) / RAND_MAX - 5;
+		}
+	}
+	return biases;
 }
 
 void tools::uploadBiases(const std::string& path, const std::vector<double>* biases,
-	const std::vector<size_t>& dimensions);
+	const std::vector<size_t>& dimensions)
+{
+	std::ofstream stream(path, std::ios::out | std::ios::binary);
+	{
+		size_t temp = dimensions.size() - 1;
+		stream.write((char*)&temp, sizeof(size_t));
+	}
+	for (size_t l = 1; l < dimensions.size(); ++l)
+	{
+		size_t size = biases[l].size();
+		stream.write((char*)&size, sizeof(size_t));
+		stream.write((char*)biases[l].data(), size * 8);
+	}
+	stream.close();
+}
 
-Matrix<double>* tools::downloadBiases(const std::string& path, std::vector<size_t>& dimensions);
+std::vector<double>* tools::downloadBiases(const std::string& path) {
+	std::ifstream stream(path, std::ios::in | std::ios::binary);
+	size_t count;
+	stream.read((char*)&count, sizeof(size_t));
+	std::vector<double>* biases = new std::vector<double>[count + 1];
+
+	for (size_t l = 1; l <= count; ++l)
+	{
+		size_t size;
+		stream.read((char*)&size, sizeof(size_t));
+		biases[l] = std::vector<double>(size);
+		stream.read((char*)biases[l].data(), size * 8);
+	}
+	stream.close();
+	return biases;
+}
 
 double tools::sigmoid(const double& x) { return 1 / (1 + exp(-x)); }
 double tools::derSig(const double& x) { return sigmoid(x) * (1 - sigmoid(x)); }

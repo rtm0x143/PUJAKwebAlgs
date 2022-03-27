@@ -131,7 +131,28 @@ MNIST_DSStream::Package* MNIST_DSStream::_read()
 	uint8_t byte;
 	_lstream >> byte;
 	Package* package = new Package(_imgSize, byte);
+	for (size_t i = 0; i < _imgSize; ++i)
+	{
+		_istream >> package->data[i];
+	}
 
+	return package;
+}
+
+MNIST_DSStream::Package::Package(size_t size, uint8_t label) : data(size), label(label)
+{}
+
+MNIST_DSStream::Package* MNIST_DSStream::nextPackage() {
+	return (MNIST_DSStream::Package*)DataSetStream::nextPackage();
+}
+
+NormarizedMNIST_DSStream::Package::Package(size_t size, uint8_t label)
+	: MNIST_DSStream::Package(size, label) {}
+
+NormarizedMNIST_DSStream::Package* NormarizedMNIST_DSStream::_read() {
+	uint8_t byte;
+	_lstream >> byte;
+	Package* package = new Package(_imgSize, byte);
 	for (size_t i = 0; i < _imgSize; ++i)
 	{
 		_istream >> byte;
@@ -139,11 +160,4 @@ MNIST_DSStream::Package* MNIST_DSStream::_read()
 	}
 
 	return package;
-}
-
-MNIST_DSStream::Package::Package(size_t size, uint8_t label) : data(size)
-{ this->label = label; }
-
-MNIST_DSStream::Package* MNIST_DSStream::nextPackage() {
-	return (MNIST_DSStream::Package*)DataSetStream::nextPackage();
 }

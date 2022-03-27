@@ -3,39 +3,48 @@
 #include <condition_variable>
 #include <vector>
 #include <mutex>
-#include "DataSetStream.h"
 #include "../algs/NeuralNetwork.h"
 
 class LearningClient
 {
 private:
-	bool run;
+	bool run, terminateFlag;
 	std::vector<std::thread*> workers;
+	std::vector<bool> is_workerFinished;
+	std::mutex callbackMutex;
 	std::condition_variable awakeWorkers;
 
-	MNIST_DSStream* _stream;
-	std::mutex streamMutex;
+	typedef std::pair<
+		Dataset::iterator,
+		Dataset::iterator> Region;
 
-	size_t tasksDone, sampleSize, layCount;
+	Dataset& dataset;
+	std::vector<Region> regions;
+
+	size_t tasksDone, layCount;
 	NeuralNetwork::backPropagation_Result resultSum;
 	std::mutex outputMutex;
 	std::condition_variable workDone;
 
-	static void workerRuntime(LearningClient* client, const NeuralNetwork& net);
+	static void workerFinishReport(LearningClient* client, const  std::thread::id& workerId);
+
+	static void workerRuntime(LearningClient* client, Region& region, 
+		NeuralNetwork& net);
 
 public:
-	LearningClient(MNIST_DSStream* stream, const NeuralNetwork& net,  size_t workersCount);
+	LearningClient(Dataset& dataset, NeuralNetwork& net, size_t workersCount);
 	LearningClient(LearningClient&) = delete;
 	LearningClient(LearningClient&&) = delete;
 	~LearningClient();
 
 
 	bool isDone();
-	void launch(size_t sampleSize);
 	void launch();
-	void calcAverage();
-	const NeuralNetwork::backPropagation_Result getResult();
+	void doDescent(Matrix<double>* weights, std::vector<double>* biases, double descentCoef = 1);
 	void abort();
-	void assignStream(MNIST_DSStream* stream);
+	void await();
+	void assignDataSet(const std::vector<NeuralNetwork::Package>& dataset);
 };
 
+std::vector<NeuralNetwork::Package> download_MNIST_Dataset_MultiThread(
+	const std::string& pathToImg, const std::string& pathTolabel, size_t workersCount);

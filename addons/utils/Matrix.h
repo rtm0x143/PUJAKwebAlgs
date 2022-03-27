@@ -29,7 +29,7 @@ public:
 
 	// represents vector as 1 row matrix
 	Matrix(std::vector<T>& other) {
-		data = (T**)other.data();
+		data = new T*(other.data());
 		c_count = other.size();
 		r_count = 1;
 		is_data_owner = false;
@@ -45,16 +45,17 @@ public:
 		c_count = other.c_count;
 		r_count = other.r_count;
 		data = other.data;
-		is_data_owner = true;
+		is_data_owner = other.is_data_owner;
 
-		other.is_data_owner = false;
 		other.c_count = 0;
 		other.r_count = 0;
+		other.is_data_owner = false;
+		other.data = nullptr;
 	}
 
 	~Matrix() {
-		if (!data || !is_data_owner) return;
-		for (size_t i = 0; i < r_count; i++) delete[] data[i];
+		if (is_data_owner)
+			for (size_t i = 0; i < r_count; ++i) delete[] data[i];
 		delete[] data;
 	}
 
@@ -73,14 +74,19 @@ public:
 		return *this;
 	}
 	Matrix& operator=(Matrix&& other) noexcept {
+		if (is_data_owner)
+			for (size_t i = 0; i < r_count; ++i) delete[] data[i];
+		delete[] data;
+
 		c_count = other.c_count;
 		r_count = other.r_count;
 		data = other.data;
-		is_data_owner = true;
+		is_data_owner = other.is_data_owner;
 
-		other.is_data_owner = false;
 		other.c_count = 0;
 		other.r_count = 0;
+		other.data = nullptr;
+		other.is_data_owner = false;
 		return *this;
 	}
 
@@ -166,9 +172,10 @@ public:
 		Matrix<T> m;
 		m.c_count = c_count - collumnOffset;
 		m.r_count = r_count - rowOffset;
-		m.data = data + rowOffset;
+		m.data = new T*[m.r_count];
+		T** shiftedData = data + rowOffset;
 		for (size_t i = 0; i < m.r_count; i++) {
-			m.data[i] += collumnOffset;
+			m.data[i] = shiftedData[i] + collumnOffset;
 		}
 		return m;
 	}
