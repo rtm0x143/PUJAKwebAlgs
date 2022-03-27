@@ -7,19 +7,26 @@ class View {
     body: HTMLBodyElement;
     regulatorButton: HTMLButtonElement;
     regulator: HTMLDivElement;
+    regulatorBar: HTMLDivElement;
+    canvasDiv: HTMLDivElement;
+    canvas: HTMLCanvasElement;
 
-    constructor(body: HTMLBodyElement, regulatorButton: HTMLButtonElement, regulator: HTMLDivElement) {
+    constructor(body: HTMLBodyElement, regulatorButton: HTMLButtonElement, regulator: HTMLDivElement, regulatorBar: HTMLDivElement, canvasDiv: HTMLDivElement, canvas: HTMLCanvasElement, heightParagrath: HTMLParagraphElement) {
         this.body = body;
         this.regulatorButton = regulatorButton;
         this.regulator = regulator;
+        this.regulatorBar = regulatorBar;
+        this.canvasDiv = canvasDiv;
+        this.canvas = canvas;
 
-        this.initSliderListeners(body, regulatorButton, regulator);
+        this.initSliderListeners(body, regulatorButton, regulator, regulatorBar, canvasDiv, canvas, heightParagrath);
     }
 
-    initSliderListeners(body: HTMLBodyElement, regulatorButton: HTMLButtonElement, regulator: HTMLDivElement) {
-        let height: number = -60;
+    initSliderListeners(body: HTMLBodyElement, regulatorButton: HTMLButtonElement, regulator: HTMLDivElement, regulatorBar: HTMLDivElement, canvasDiv: HTMLDivElement, canvas: HTMLCanvasElement, paragraph: HTMLParagraphElement) {
+        let height: number = -regulatorButton.offsetHeight - regulatorBar.offsetHeight;
         let currentHeight: number;
         let isDown: boolean = false;
+        let rate: number = canvasDiv.offsetHeight / -height;
 
         regulatorButton.addEventListener('mousedown', (e) => {
             currentHeight = e.clientY;
@@ -41,6 +48,16 @@ class View {
                 }
 
                 regulatorButton.style.marginTop = `${height}px`;
+                canvasDiv.style.height = ((height * -1) * rate) + 'px';
+                canvas.height = (height * -1) * rate;
+                paragraph.innerHTML = canvas.height.toString();
+                if (height >= -70) {
+                    regulatorBar.style.height = '10px'
+                }
+                else {
+                    regulatorBar.style.height = `${Math.abs(height) - 60}px`
+                }
+                
             }
         })
 
@@ -57,8 +74,6 @@ class View {
         canvasContext.stroke();
         canvasContext.fill();
     }
-
-
 }
 
 export default View;
