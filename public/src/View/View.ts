@@ -68,7 +68,7 @@ class View {
                     regulatorBar.style.height = `${-buttonMargin - regulatorButton.offsetHeight + 10}px`
                 }
 
-                this.drawGrid(canvasContext, 'grey', Math.floor(canvas.width / 30), Math.floor(canvas.height / 30));
+                this.drawGrid(canvas, canvasContext, 'grey', Math.floor(canvas.width / 30), Math.floor(canvas.height / 30));
             }
         })
 
@@ -315,11 +315,11 @@ class View {
     //     })
     // }
 
-    drawGrid(context: CanvasRenderingContext2D, color: string, columnCount: number, rowsCount: number) {
+    drawGrid(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, color: string, columnCount: number, rowsCount: number) {
         context.strokeStyle = color;
         for (let i = 0; i < columnCount; ++i) {
             for (let j = 0; j < rowsCount; ++j) {
-                context.strokeRect(i * this.canvas.width / columnCount, j * this.canvas.height / rowsCount, this.canvas.width / columnCount, this.canvas.height / rowsCount);
+                context.strokeRect(i * canvas.width / columnCount, j * canvas.height / rowsCount, canvas.width / columnCount, canvas.height / rowsCount);
             }
         }
     }

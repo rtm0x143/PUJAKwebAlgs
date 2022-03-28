@@ -139,7 +139,7 @@ class CanvasClasterView extends View {
             }
         })
         
-        this.drawGrid(this.canvasContext, 'grey', Math.floor(this.canvas.width / 30), Math.floor(this.canvas.height / 30));
+        this.drawGrid(this.canvas, this.canvasContext, 'grey', Math.floor(this.canvas.width / 30), Math.floor(this.canvas.height / 30));
     }
 
     getMousePosition(event: MouseEvent): Object {
