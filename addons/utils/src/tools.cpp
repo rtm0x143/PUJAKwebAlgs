@@ -16,7 +16,7 @@ Matrix<double>* tools::randWeights(const std::vector<size_t>& dimensions) {
 	Matrix<double>* weights = new Matrix<double>[dimensions.size() - 1];
 	for (size_t i = 0; i < dimensions.size() - 1; i++) {
 		weights[i] = Matrix<double>(dimensions[i + 1], dimensions[i]);
-		weights[i].forEach([](double& el) { el = (double)rand() / RAND_MAX / 5; });
+		weights[i].forEach([](double& el) { el = (double)rand() / RAND_MAX / 100; });
 	}
 	return weights;
 }
@@ -70,7 +70,7 @@ std::vector<double>* tools::randBiases(const std::vector<size_t>& dimensions) {
 		std::vector<double>& biasesLay = biases[l];
 		biasesLay = std::vector<double>(dimensions[l]);
 		for (size_t i = 0; i < dimensions[l]; ++i) {
-			biasesLay[i] = (double)(rand() * 10) / RAND_MAX - 5;
+			biasesLay[i] = (double)(rand() * -1) / RAND_MAX;
 		}
 	}
 	return biases;

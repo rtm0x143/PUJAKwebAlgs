@@ -149,8 +149,8 @@ void LearningClient::abort() { run = false; }
 void LearningClient::await() {
 	std::mutex _mutex;
 	std::unique_lock<std::mutex> selfLock(_mutex);
-	if (!isDone()) 
-		workDone.wait(selfLock);
+	while (!isDone()) 
+		workDone.wait_for(selfLock, std::chrono::milliseconds(100));
 }
 
 void LearningClient::assignDataSet(const std::vector<NeuralNetwork::Package>& dataset) {
@@ -229,6 +229,8 @@ Dataset download_MNIST_Dataset_MultiThread(const std::string& pathToImg,
 	int datasetSize = readInt32(istream),
 		row = readInt32(istream), col = readInt32(istream),
 		imgSize = row * col;
+
+	datasetSize = 10;
 
 	Dataset dataset(datasetSize);
 	std::vector<uint8_t> buffer(imgSize * datasetSize);
