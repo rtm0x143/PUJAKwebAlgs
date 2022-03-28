@@ -85,7 +85,7 @@ NeuralNetwork::backPropagation_Result* NeuralNetwork::backPropagation(Package& p
 		}
 
 		result->weightsGradient[l] = semiCalc * Matrix<double>(neurons[l]);
-
+		
 		result->biasesGradient[l + 1] = semiCalc;
 
 		if (l) errors[l] = Matrix<double>(semiCalc) * weightsLay;

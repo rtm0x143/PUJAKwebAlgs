@@ -30,7 +30,7 @@ LearningClient::LearningClient(Dataset& dataset, NeuralNetwork& net, size_t work
 		}
 	}
 
-	is_workerFinished.assign(workersCount, true);
+	workerStatuses.assign(workersCount, 2);
 	for (size_t i = 0; i < workersCount; ++i) {
 		workers[i] = new std::thread(workerRuntime, this, std::ref(regions[i]), std::ref(net));
 	}
@@ -40,9 +40,12 @@ LearningClient::~LearningClient() {
 	run = false;
 	terminateFlag = true;
 	awakeWorkers.notify_all();
-	for (std::thread* pthr : workers) {
-		if (pthr) if (pthr->joinable()) pthr->join();
-		delete pthr;
+	for (size_t i = 0; i < workers.size(); ++i)
+	{
+		workerStatuses[i] = 3;
+		if (workers[i]) 
+			if (workers[i]->joinable()) workers[i]->join();
+		delete workers[i];
 	}
 }
 
@@ -51,12 +54,16 @@ void LearningClient::workerFinishReport(LearningClient* client, const  std::thre
 	std::unique_lock<std::mutex> lock(client->callbackMutex);
 	for (size_t i = 0; i < client->workers.size(); ++i) {
 		if (client->workers[i]->get_id() == workerId) {
-			client->is_workerFinished[i] = true;
+			while (!client->workerStatuses.at(i))
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			client->workerStatuses.at(i) = 2;
 			break;
 		}
 	}
 	for (size_t i = 0; i < client->workers.size(); ++i) {
-		if (!client->is_workerFinished[i]) return;
+		while (!client->workerStatuses.at(i))
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		if (client->workerStatuses.at(i) == 1) return;
 	}
 	client->workDone.notify_one();
 }
@@ -94,8 +101,8 @@ void LearningClient::workerRuntime(LearningClient* client, Region& region,
 }
 
 bool LearningClient::isDone() { 
-	return std::find(is_workerFinished.begin(), 
-		is_workerFinished.end(), false) == is_workerFinished.end();
+	return std::find(workerStatuses.begin(), 
+		workerStatuses.end(), 1) == workerStatuses.end();
 }
 
 void LearningClient::launch() {
@@ -108,7 +115,7 @@ void LearningClient::launch() {
 		std::for_each(resultSum.biasesGradient[i].begin(), resultSum.biasesGradient[i].end(),
 			[](double& el) { el = 0; });
 	}
-	is_workerFinished.assign(is_workerFinished.size(), false);
+	workerStatuses.assign(workerStatuses.size(), 1);
 	run = true;
 	awakeWorkers.notify_all();
 }
@@ -142,13 +149,16 @@ void LearningClient::abort() { run = false; }
 void LearningClient::await() {
 	std::mutex _mutex;
 	std::unique_lock<std::mutex> selfLock(_mutex);
-	if (!isDone()) workDone.wait(selfLock);
+	if (!isDone()) 
+		workDone.wait(selfLock);
 }
 
 void LearningClient::assignDataSet(const std::vector<NeuralNetwork::Package>& dataset) {
 	run = false;
 	std::mutex _mutex;
 	std::unique_lock<std::mutex> selfLock(_mutex);
+	if (!isDone())
+		workDone.wait(selfLock);
 	workDone.wait(selfLock);
 	this->dataset = dataset;
 }

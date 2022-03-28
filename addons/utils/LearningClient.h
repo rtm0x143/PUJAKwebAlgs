@@ -10,7 +10,7 @@ class LearningClient
 private:
 	bool run, terminateFlag;
 	std::vector<std::thread*> workers;
-	std::vector<bool> is_workerFinished;
+	std::vector<uint8_t> workerStatuses; // 1 - running, 2 - waiting, 3 - terminated
 	std::mutex callbackMutex;
 	std::condition_variable awakeWorkers;
 
