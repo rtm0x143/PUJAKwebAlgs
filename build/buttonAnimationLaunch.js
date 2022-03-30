@@ -7,6 +7,9 @@ function openMenu(overlay) {
             overlay.className = 'navigation-opened'
         }
     });
+    // element.classList.remove('classname');
+    // void element.offsetWidth;
+    // element.classList.add('classname');
 }
 
 function closeMenu(overlay) {
