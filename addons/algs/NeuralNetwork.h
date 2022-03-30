@@ -14,6 +14,11 @@ public:
 
 	double* feedForward(const std::vector<double>& input) const;
 
+	struct Package {
+		std::vector<double> data;
+		uint8_t label;
+	};
+
 	struct backPropagation_Result {
 		Matrix<double>* weightsGradient;
 		std::vector<double>* biasesGradient;
