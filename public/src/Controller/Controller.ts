@@ -1,6 +1,7 @@
 import Model from '../Model/Model.js';
 
 class Controller {
+    urlValue: string = location.origin;
     hsvToRGB(h: number, s: number, v: number) {
         /// Parametres for convert 
         /// C = V * S
@@ -33,6 +34,8 @@ class Controller {
         else if (h < 360) {
             return `rgb(${(v * s + v - v * s) * 255},0,${(v * s * Math.abs(1 - (h / 60) % 2 - 1) + v - v * s) * 255})`;
         }
+
+        return ''
     }
 }
 

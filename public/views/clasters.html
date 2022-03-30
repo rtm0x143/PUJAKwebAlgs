@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.min.css">
+    <title>PUJAK</title>
+</head>
+<body>
+<p class="title">Clasterisation</p>
+<div class="ui">
+  <div class="regulator">
+    <div class="regulator__block">
+      <p class="regulator__height-paragraph">400</p>
+      <div class="regulator__width-param">
+        <p class="regulator__text">set height</p>
+        <div class="regulator__bar regulator__bar_height"></div>
+      </div>
+      <button class="regulator__button regulator__button_height"></button>
+    </div>
+    <div class="regulator__block">
+      <p class="regulator__width-paragraph">400</p>
+      <div class="regulator__height-param">
+        <p class="regulator__text">set weight</p>
+        <div class="regulator__bar regulator__bar_width"></div>
+      </div>
+      <button class="regulator__button regulator__button_width"></button>
+    </div>
+  </div>
+  <div class="canvas">
+    <canvas class="canvas__element"></canvas>
+    <div class="canvas__menu">
+      <div class="canvas__menu-container">
+        <button class="canvas__menu-button_DBSCAN">DBSCAN</button>
+        <button class="canvas__menu-button_kmeans">k-means</button>
+      </div>
+    </div>
+  </div>
+  <div class="regulator">
+    <div class="regulator__block">
+      <p class="regulator__range-paragraph">0</p>
+      <div class="regulator__width-param">
+        <p class="regulator__text">set range</p>
+        <div class="regulator__bar regulator__bar_range"></div>
+      </div>
+      <button class="regulator__button regulator__button_range"></button>
+    </div>
+    <div class="regulator__block">
+      <p class="regulator__count-paragraph">0</p>
+      <div class="regulator__height-param">
+        <p class="regulator__text">set points count</p>
+        <div class="regulator__bar regulator__bar_count"></div>
+      </div>
+      <button class="regulator__button regulator__button_count"></button>
+    </div>
+  </div>
+</div>
+<!-- <footer></footer> -->
+<script src="../dist/clasters.js" type="module"></script>
+</body>
+</html>
