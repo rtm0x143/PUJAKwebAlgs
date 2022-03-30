@@ -2,9 +2,10 @@
 #include "clasterisation.h"
 
 #include <iostream>
-
+int a = 0;
 Napi::Value DBSCAN(const Napi::CallbackInfo& args) 
 {
+    std::cout << a++ << ' ';
     Napi::Env env = args.Env();
     
     if (args.Length() < 3) {

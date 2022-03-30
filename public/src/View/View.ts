@@ -4,43 +4,65 @@ import Errors from '../config/Errors.js';
 import Brush from '../Model/brush.model.js';
 
 class View {
-    private _regulatorButton: HTMLButtonElement;
-    private _widthRegulator: HTMLDivElement;
-    private _heightRegulator: HTMLDivElement;
-    private _regulatorText: HTMLParagraphElement;
-    private _height: number = -60;
-    private _currentHeight!: number;
-    private _isDown = false;
+    body: HTMLBodyElement;
+    regulatorButton: HTMLButtonElement;
+    regulator: HTMLDivElement;
+    regulatorBar: HTMLDivElement;
+    canvasDiv: HTMLDivElement;
+    canvas: HTMLCanvasElement;
 
-    constructor() {
-        this._regulatorButton = document.querySelector('.regulator__button') ?? Errors.handleError('null')
-        this._widthRegulator = document.querySelector('.regulator__width-param') ?? Errors.handleError('null');
-        this._heightRegulator = document.querySelector('.regulator__height-param') ?? Errors.handleError('null');
-        this._regulatorText = document.querySelector('.regulator__text') ?? Errors.handleError('null');
+    constructor(body: HTMLBodyElement, regulatorButton: HTMLButtonElement, regulator: HTMLDivElement, regulatorBar: HTMLDivElement, canvasDiv: HTMLDivElement, canvas: HTMLCanvasElement, heightParagrath: HTMLParagraphElement) {
+        this.body = body;
+        this.regulatorButton = regulatorButton;
+        this.regulator = regulator;
+        this.regulatorBar = regulatorBar;
+        this.canvasDiv = canvasDiv;
+        this.canvas = canvas;
 
-        this._regulatorButton.addEventListener('mousedown', (e) => {
-            this._currentHeight = e.offsetY;
-            console.log(this._currentHeight);
-            this._isDown = true;
+        this.initSliderListeners(body, regulatorButton, regulator, regulatorBar, canvasDiv, canvas, heightParagrath);
+    }
+
+    initSliderListeners(body: HTMLBodyElement, regulatorButton: HTMLButtonElement, regulator: HTMLDivElement, regulatorBar: HTMLDivElement, canvasDiv: HTMLDivElement, canvas: HTMLCanvasElement, paragraph: HTMLParagraphElement) {
+        let height: number = -regulatorButton.offsetHeight - regulatorBar.offsetHeight;
+        let currentHeight: number;
+        let isDown: boolean = false;
+        let rate: number = canvasDiv.offsetHeight / -height;
+
+        regulatorButton.addEventListener('mousedown', (e) => {
+            currentHeight = e.clientY;
+            isDown = true;
         })
 
-        this._regulatorButton.addEventListener('mousemove', (e) => {
-            if (this._isDown) {
-                this._height -= Math.abs(this._currentHeight - e.offsetY)
-                this._regulatorButton.style.marginTop = `${this._height}px`;
+        body.addEventListener('mousemove', (e) => {
+            if (isDown) {
+                let change = currentHeight - e.clientY;
+                currentHeight -= change;
+                height -= change
+                
+                if (height > -60) {
+                    height = -60;
+                }
+
+                if (height < -regulator.offsetHeight) {
+                    height = -regulator.offsetHeight;
+                }
+
+                regulatorButton.style.marginTop = `${height}px`;
+                canvasDiv.style.height = ((height * -1) * rate) + 'px';
+                canvas.height = (height * -1) * rate;
+                paragraph.innerHTML = canvas.height.toString();
+                if (height >= -70) {
+                    regulatorBar.style.height = '10px'
+                }
+                else {
+                    regulatorBar.style.height = `${Math.abs(height) - 60}px`
+                }
+                
             }
         })
 
-        this._regulatorText.onselectstart = () => {
-            return false;
-          };
-
-        this._regulatorButton.addEventListener('mouseup', (e) => {
-            if (this._isDown) {
-                console.log(e.offsetX, e.offsetY);
-            }
-
-            this._isDown = false;
+        body.addEventListener('mouseup', _ => {
+            isDown = false;
         })
     }
 
@@ -52,8 +74,6 @@ class View {
         canvasContext.stroke();
         canvasContext.fill();
     }
-
-
 }
 
 export default View;

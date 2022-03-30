@@ -96,7 +96,7 @@ void DataSetStream_Async::_readerRuntime(DataSetStream_Async* bond)
 
 uint8_t buf4[4];
 
-int readInt32(std::ifstream& stream) {
+int readBegInt32(std::ifstream& stream) {
 	for (int i = 3; i >= 0; --i)
 		stream >> buf4[i];
 	return *(int*)&buf4;
@@ -115,9 +115,9 @@ MNIST_DSStream::MNIST_DSStream(const std::string& pathToImg, const std::string& 
 		_lstream.read((char*)buf4, 4);
 	}
 
-	this->_packageLeft = readInt32(_istream);
+	this->_packageLeft = readBegInt32(_istream);
 
-	int row = readInt32(_istream), col = readInt32(_istream);
+	int row = readBegInt32(_istream), col = readBegInt32(_istream);
 	this->_imgSize = row * col;
 }
 
@@ -131,7 +131,28 @@ MNIST_DSStream::Package* MNIST_DSStream::_read()
 	uint8_t byte;
 	_lstream >> byte;
 	Package* package = new Package(_imgSize, byte);
+	for (size_t i = 0; i < _imgSize; ++i)
+	{
+		_istream >> package->data[i];
+	}
 
+	return package;
+}
+
+MNIST_DSStream::Package::Package(size_t size, uint8_t label) : data(size), label(label)
+{}
+
+MNIST_DSStream::Package* MNIST_DSStream::nextPackage() {
+	return (MNIST_DSStream::Package*)DataSetStream::nextPackage();
+}
+
+NormarizedMNIST_DSStream::Package::Package(size_t size, uint8_t label)
+	: MNIST_DSStream::Package(size, label) {}
+
+NormarizedMNIST_DSStream::Package* NormarizedMNIST_DSStream::_read() {
+	uint8_t byte;
+	_lstream >> byte;
+	Package* package = new Package(_imgSize, byte);
 	for (size_t i = 0; i < _imgSize; ++i)
 	{
 		_istream >> byte;
@@ -139,11 +160,4 @@ MNIST_DSStream::Package* MNIST_DSStream::_read()
 	}
 
 	return package;
-}
-
-MNIST_DSStream::Package::Package(size_t size, uint8_t label) : data(size)
-{ this->label = label; }
-
-MNIST_DSStream::Package* MNIST_DSStream::nextPackage() {
-	return (MNIST_DSStream::Package*)DataSetStream::nextPackage();
 }

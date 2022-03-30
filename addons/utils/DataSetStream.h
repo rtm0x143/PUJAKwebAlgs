@@ -50,16 +50,14 @@ public:
 	~MNIST_DSStream();
 
 	struct Package : DataSetStream::Package {
-		std::vector<double> data;
+		std::vector<uint8_t> data;
 		uint8_t label;
-
 		Package(size_t size, uint8_t label);
-		Package(Package&& other) = default;
 	};
 
 	Package* nextPackage();
 
-private:
+protected:
 	Package* _read();
 
 	std::ifstream _istream;
@@ -67,3 +65,13 @@ private:
 	size_t _imgSize;
 };
 
+class NormarizedMNIST_DSStream : public MNIST_DSStream {
+public:
+	struct Package : MNIST_DSStream::Package {
+		std::vector<double> data;
+		uint8_t label;
+		Package(size_t size, uint8_t label);
+	};
+private:
+	Package* _read();
+};
