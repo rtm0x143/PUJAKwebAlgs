@@ -1,4 +1,5 @@
 #include "../NeuralNetworkV.h"
+#include <iostream>
 
 NeuralNetworkV::Layer::Layer() :
 	weights(nullptr),
@@ -13,16 +14,18 @@ NeuralNetworkV::Layer::Layer(double** weights, double* bias, size_t size) :
 	size(size) 
 {
 	weightedSums = (double*)malloc(size * 8);
-	voidPtr = (double*)malloc(size * 8);
-	activationValues = (double*)voidPtr;
+	activationValues = (double*)malloc(size * 8);
 }
 
 NeuralNetworkV::Layer::Layer(Layer& other) : Layer(other.weights, other.biases, other.size)
 {
-	for (size_t i = 0; i < size; ++i)
-	{
-		activationValues[i] = other.activationValues[i];
-		weightedSums[i] = other.weightedSums[i];
+	if (other.activationValues) {
+		for (size_t i = 0; i < size; ++i)
+			activationValues[i] = other.activationValues[i];
+	}
+	if (other.weightedSums) {
+		for (size_t i = 0; i < size; ++i)
+			weightedSums[i] = other.weightedSums[i];
 	}
 }
 
@@ -37,7 +40,7 @@ NeuralNetworkV::Layer::Layer(Layer&& other) noexcept :
 
 NeuralNetworkV::Layer::~Layer()
 {
-	free(voidPtr);
+	free(activationValues);
 	if (weightedSums) free(weightedSums);
 }
 
@@ -75,7 +78,9 @@ NeuralNetworkV::Layer& NeuralNetworkV::Layer::operator=(Layer& other)
 
 void NeuralNetworkV::initializeLayers(const std::vector<size_t>& dimensions, double*** weights, double** biases)
 {
-	for (size_t i = 0; i < dimensions.size(); i++)
+	layers[0].weights = weights[0];
+	layers[0].size = dimensions[0];
+	for (size_t i = 1; i < dimensions.size(); ++i)
 	{
 		layers[i] = Layer(weights[i], biases[i],  dimensions[i]);
 	}
@@ -115,7 +120,7 @@ NeuralNetworkV::NeuralNetworkV(const std::vector<size_t>& dimensions) : layers(d
 		biases[l] = new double[dimensions[l]];
 		for (size_t i = 0; i < dimensions[l]; i++)
 		{
-			biases[l][i] = gen();
+			biases[l][i] = (double)gen() / gen.max();
 		}
 	}
 
@@ -124,6 +129,10 @@ NeuralNetworkV::NeuralNetworkV(const std::vector<size_t>& dimensions) : layers(d
 }
 
 NeuralNetworkV::NeuralNetworkV(NeuralNetworkV& other) : layers(other.layers) {}
+
+NeuralNetworkV::~NeuralNetworkV() {
+	layers[0].activationValues = nullptr;
+}
 
 void NeuralNetworkV::ReLU(Layer& layer)
 {
@@ -243,11 +252,11 @@ uint8_t NeuralNetworkV::feedForward(std::vector<double>& input)
 }
 
 NeuralNetworkV::BackpropResult& NeuralNetworkV::BackpropResult::operator+=(BackpropResult& other) {
-	for (size_t l = 1; l < dimensions.size(); l++)
+	for (size_t l = 0; l < dimensions.size() - 1; l++)
 	{
-		for (size_t i = 0; i < dimensions[l - 1]; i++)
+		for (size_t i = 0; i < dimensions[l]; i++)
 		{
-			for (size_t j = 0; j < dimensions[l]; j++)
+			for (size_t j = 0; j < dimensions[l + 1]; j++)
 			{
 				weights[l][i][j] += other.weights[l][i][j];
 			}
@@ -280,7 +289,7 @@ NeuralNetworkV::BackpropResult& NeuralNetworkV::BackpropResult::operator/=(int c
 
 	for (size_t l = 1; l < dimensions.size(); l++)
 	{
-		for (size_t i = 0; i < dimensions[i]; i++)
+		for (size_t i = 0; i < dimensions[l]; i++)
 		{
 			biases[l][i] /= countOfImages;
 		}
@@ -301,10 +310,10 @@ NeuralNetworkV::BackpropResult::BackpropResult(const std::vector<Layer>& layers)
 
 		if (i < dimensions.size() - 1)
 		{
-			weights[i] = (double**)malloc(dimensions[i] * sizeof(double*));
+			weights[i] = new double*[dimensions[i]];
 			for (size_t j = 0; j < dimensions[i]; ++j)
 			{
-				weights[i][j] = (double*)malloc(layers[i + 1].size * 8);
+				weights[i][j] = new double[layers[i + 1].size];
 				if (!*weights[i][j])
 				{
 					free(weights[i][j]);
@@ -401,14 +410,15 @@ NeuralNetworkV::BackpropResult* NeuralNetworkV::backporp(int expectedResult)
  
 	for (size_t l = 0; l < layers.size() - 1; l++)
 	{
-		for (size_t i = 0; i < layers[l].size; i++)
+		for (size_t i = 0; i < layers[l + 1].size; i++)
 		{
-			for (size_t j = 0; j < layers[l + 1].size; j++)
+			for (size_t j = 0; j < layers[l].size; j++)
 			{
-				backpropResult->weights[l][i][j] = layers[l].activationValues[i] * deltas[l + 1][j]; //* learningRate;
+				backpropResult->weights[l][j][i] = layers[l].activationValues[j] * deltas[l + 1][i]; //* learningRate;
 			}
 
 			backpropResult->biases[l + 1][i] = deltas[l + 1][i]; //* learningRate;
+			//std::cout << backpropResult->biases[l + 1][i] << ' ';
 		}
 	}
 
@@ -426,11 +436,11 @@ void NeuralNetworkV::shiftWeightAndBiases(BackpropResult* backpropResult)
 {
 	for (size_t l = 0; l < layers.size() - 1; l++)
 	{
-		for (size_t i = 0; i < layers[l].size; i++)
+		for (size_t i = 0; i < layers[l + 1].size; i++)
 		{
-			for (size_t j = 0; j < layers[l + 1].size; j++)
+			for (size_t j = 0; j < layers[l].size; j++)
 			{
-				layers[l].weights[i][j] -= backpropResult->weights[l][i][j];
+				layers[l].weights[j][i] -= backpropResult->weights[l][j][i];
 			}
 
 			layers[l + 1].biases[i] -= backpropResult->biases[l + 1][i];

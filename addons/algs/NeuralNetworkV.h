@@ -12,7 +12,6 @@ private:
 		// it's z
 		double* weightedSums;
 		double* activationValues;
-		void* voidPtr;
 		size_t size;
 
 		Layer();
@@ -69,6 +68,8 @@ public:
 	NeuralNetworkV(const std::vector<size_t>& dimensions);
 	
 	NeuralNetworkV(NeuralNetworkV& other);
+
+	~NeuralNetworkV();
 
 	uint8_t feedForward(std::vector<double>& input);
 
