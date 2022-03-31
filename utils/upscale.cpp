@@ -1,18 +1,9 @@
 #include <iostream>
 #include <string>
-//#include "LearningClientV.h"
-//#include "D:/reposD/PUJAKwebAlgs/addons/utils/LearningClient.h"
-#include "D:/reposD/PUJAKwebAlgs/addons/utils/tools.h"
-//#include "D:/reposD/PUJAKwebAlgs/addons/algs/NeuralNetwork.h"
 #include "BinImage.h"
 
-const std::string datasetDir = "C:/Users/russi/source/repos/TryToNeuraWebInterface/networkArchive";
-const std::string resDir = "D:/reposD/PUJAKwebAlgs/resources";
+const std::string datasetDir = "C:/Users/vsuha/source/repos/Neural network C++/Neural network C++/MNIST dataset";
 
-const double descentCoef = 0.5;
-const size_t resourseIndex = -1;
-
-using namespace vectorExtention;
 namespace cringe {
 	uint8_t buf4[4];
 
@@ -31,24 +22,26 @@ namespace cringe {
 
 int main()
 {   
-	std::ifstream istream(datasetDir + "/wide-train-images.idx3-ubyte", std::ios::in | std::ios::binary);
+	std::ifstream istream(datasetDir + "/t10k-images.idx3-ubyte", std::ios::in | std::ios::binary);
 	int magicNumber = cringe::readBegInt32(istream),
 		datasetSize = cringe::readBegInt32(istream),
 		row = cringe::readBegInt32(istream), col = cringe::readBegInt32(istream);
 
-	/*std::ofstream ostream(datasetDir + "/wide-train-images.idx3-ubyte", std::ios::out | std::ios::binary);
+	std::ofstream ostream(datasetDir + "/wide-t10k-images.idx3-ubyte", std::ios::out | std::ios::binary);
 	cringe::writeBegInt32(ostream, magicNumber);
 	cringe::writeBegInt32(ostream, datasetSize);
 	cringe::writeBegInt32(ostream, 50);
-	cringe::writeBegInt32(ostream, 50);*/
+	cringe::writeBegInt32(ostream, 50);
 
 	for (size_t i = 0; i < datasetSize; ++i)
 	{
 		BinImage image = BinImage::readImage(istream, row, col, 1);
-		image.console_log();
-		printf("\n");
+		image.rescale(50, 50);
+		
+		ostream.write(image.data(), image.height() * image.width() * image.pxSize());
 	}
 
 	istream.close();
+	ostream.close();
     return 0;
 }

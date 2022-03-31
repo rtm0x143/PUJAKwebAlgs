@@ -1,5 +1,5 @@
-#include "LearningClientV.h"
-#include "D:/reposD/PUJAKwebAlgs/addons/algs/NeuralNetwork.h"
+#include "../LearningClientV.h"
+#include "../../algs/NeuralNetworkV.h"
 #include <fstream>
 
 template <class NeuralNetwork, typename BackpropResult>
@@ -108,7 +108,7 @@ void LearningClientV<NeuralNetwork, BackpropResult>::workerRuntime(
 
 		for (; region.first < region.second && !client->terminateFlag; ++region.first)
 		{
-			const DataSetPackage& package = *region.first;
+			DataSetPackage& package = *region.first;
 			BackpropResult* result = _net.train(package.data, package.label);
 			{
 				std::unique_lock<std::mutex> selfLock(client->outputMutex);
@@ -204,4 +204,4 @@ Dataset LearningClientV<NeuralNetwork, BackpropResult>::download_MNIST_Dataset_M
 	return dataset;
 }
 
-template class LearningClientV<NeuralNetwork, NeuralNetwork::backPropagation_Result>;
+template class LearningClientV<NeuralNetworkV, NeuralNetworkV::BackpropResult>;
