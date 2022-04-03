@@ -1,6 +1,8 @@
 #include "napi.h"
 #include <fstream>
-#include "algs/NeuralNetworkV.h"
+#include "NeuralNetwork.h"
+#include "tools.h"
+#include "NetIO.h"
 
 double*** downloadWeights(const std::string& path, std::vector<size_t>& dimensions) {
 	std::ifstream stream(path, std::ios::in | std::ios::binary);
@@ -49,7 +51,7 @@ double** downloadBiases(const std::string& path) {
 	return biases;
 }
 
-NeuralNetworkV* net = nullptr;
+NeuralNetwork* net = nullptr;
 
 void init(const Napi::CallbackInfo& info) 
 {
@@ -64,13 +66,13 @@ void init(const Napi::CallbackInfo& info)
     }     
 
     std::vector<size_t> dimensions;
-    double*** weights = downloadWeights(info[0].As<Napi::String>(), dimensions);
-    double** biases = downloadBiases(info[0].As<Napi::String>());
+    Matrix<double>* weights = NetIO::downloadWeights(info[0].As<Napi::String>(), dimensions);
+    std::vector<double>* biases = NetIO::downloadBiases(info[1].As<Napi::String>());
 
-    net = new NeuralNetworkV(dimensions, weights, biases);
+    net = new NeuralNetwork(dimensions, weights, biases, tools::sigmoid, tools::derSigByValue);
 }
 
-Napi::Value feedForward(const Napi::CallbackInfo& info) 
+Napi::Value findDigit(const Napi::CallbackInfo& info) 
 {
     Napi::Env env = info.Env();
     if (!net) {
@@ -83,16 +85,22 @@ Napi::Value feedForward(const Napi::CallbackInfo& info)
         Napi::TypeError::New(env, "Invalid arguments types; TypedArray expected").ThrowAsJavaScriptException();
         return env.Null();
     }
-    
-    double* input = (double*)info[0].As<Napi::ArrayBuffer>().Data();
-    Napi::Number result = Napi::Number::New(env, net->FeedForward(input));
+
+    Napi::ArrayBuffer img = info[0].As<Napi::ArrayBuffer>();
+    if (img.ByteLength() != 10000) {
+        Napi::Error::New(env, "Invalid image size").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    std::vector<double> normalized = tools::normalizeRGBA_Img((uint8_t*)img.Data(), img.ByteLength() / 4);
+    Napi::Number result = Napi::Number::New(env, (int)net->feedForward(normalized));
 
     return result;
 }
 
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-    exports.Set(Napi::String::New(env, "feedForward"), Napi::Function::New(env, feedForward));
+    exports.Set(Napi::String::New(env, "findDigit"), Napi::Function::New(env, findDigit));
     exports.Set(Napi::String::New(env, "init"), Napi::Function::New(env, init));
     return exports;
 }

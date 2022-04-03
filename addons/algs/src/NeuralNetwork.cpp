@@ -1,67 +1,34 @@
 #include <algorithm>
-#include "../NeuralNetwork.h"
-#include "../../utils/tools.h"
+#include <iostream>
+#include "NeuralNetwork.h"
+#include "vectorExtention.cpp"
 
 using namespace vectorExtention;
 
-NeuralNetwork::NeuralNetwork(const std::vector<size_t>& dimensions, Matrix<double>* weights, 
-	std::vector<double>* biases, double(*activFunc)(const double&), double(*derivActivFunc)(const double&)) 
-	: dims(dimensions), 
-	weights(weights), 
-	offsets(biases),
-	activate(activFunc), 
-	derActivate(derivActivFunc), 
-	activateLast(activFunc),
-	derActivateLast(derivActivFunc),
-	softMax(false)
-{
-	sums = new std::vector<double>[dims.size()];
-	neurons = new std::vector<double>[dims.size()];
-	errors = new Matrix<double>[dims.size()];
-	errors[dims.size() - 1] = Matrix<double>(1, dims.back());
-}
+NeuralNetwork::backPropagation_Result::backPropagation_Result() 
+	: weightsGradient(nullptr), biasesGradient(nullptr), layersCount(0), _is_data_owner(false) {}
 
-void NeuralNetwork::useSoftMax() { softMax = true; }
-
-NeuralNetwork::NeuralNetwork(NeuralNetwork& other) :
-	dims(other.dims),
-	weights(other.weights),
-	activate(other.activate),
-	derActivate(other.derActivate),
-	offsets(other.offsets),
-	softMax(other.softMax)
-{
-	sums = new std::vector<double>[dims.size()];
-	neurons = new std::vector<double>[dims.size()];
-	errors = new Matrix<double>[dims.size()];
-	errors[dims.size() - 1] = Matrix<double>(1, dims.back());
-}
-
-NeuralNetwork::~NeuralNetwork() {
-	delete[] neurons;
-	delete[] errors;
-	delete[] sums;
-}
-
-NeuralNetwork::backPropagation_Result::backPropagation_Result() : 
-	is_data_owner(false), weightsGradient(nullptr), biasesGradient(nullptr), layersCount(0) {}
-
-NeuralNetwork::backPropagation_Result::backPropagation_Result(size_t layersCount) 
-	: is_data_owner(true), layersCount(layersCount)
+NeuralNetwork::backPropagation_Result::backPropagation_Result(const std::vector<size_t>& dims)
+	: layersCount(dims.size()), _is_data_owner(true)
 {
 	weightsGradient = new Matrix<double>[layersCount - 1];
 	biasesGradient = new std::vector<double>[layersCount];
-};
+	for (size_t l = 0; l < dims.size() - 1; ++l)
+	{
+		weightsGradient[l] = Matrix<double>(dims[l + 1], dims[l], 0);
+		biasesGradient[l + 1] = std::vector<double>(dims[l + 1], 0);
+	}
+}
 
 NeuralNetwork::backPropagation_Result::~backPropagation_Result() {
-	if (is_data_owner) {
-		delete[] weightsGradient; 
+	if (_is_data_owner) {
+		delete[] weightsGradient;
 		delete[] biasesGradient;
 	}
 }
 
 NeuralNetwork::backPropagation_Result&
-	NeuralNetwork::backPropagation_Result::operator+=(backPropagation_Result& other)
+NeuralNetwork::backPropagation_Result::operator+=(backPropagation_Result& other)
 {
 	for (size_t i = 1; i < layersCount; ++i)
 	{
@@ -71,96 +38,136 @@ NeuralNetwork::backPropagation_Result&
 	return *this;
 }
 
-NeuralNetwork::backPropagation_Result& 
-	NeuralNetwork::backPropagation_Result::operator/=(double divider)
+NeuralNetwork::backPropagation_Result&
+NeuralNetwork::backPropagation_Result::operator/=(double divider)
 {
 	for (size_t i = 1; i < layersCount; ++i)
 	{
-		weightsGradient[i - 1].forEach([&divider](double& el) { el /= divider; });
-		std::vector<double>& bGradient = biasesGradient[i];
-		for (size_t j = 0; j < bGradient.size(); j++) {
-			bGradient[j] /= divider;
-		}
+		weightsGradient[i - 1] /= divider;
+		biasesGradient[i] /= divider;
 	}
 	return *this;
 }
 
-double* NeuralNetwork::feedForward(const std::vector<double>& input) const
-{
-	neurons[0] = input;
-	size_t lastLay = dims.size() - 1;
-	for (size_t l = 1; l < lastLay; ++l) {
-		sums[l] = weights[l - 1] * neurons[l - 1];
-		sums[l] += offsets[l];
-		neurons[l] = sums[l];
-		std::for_each(neurons[l].begin(), neurons[l].end(),
-			[func = activate](double& el) { el = func(el); });
-	}
 
-	sums[lastLay] = weights[lastLay - 1] * neurons[lastLay - 1];
-	sums[lastLay] += offsets[lastLay];
-	if (!softMax) {
-		neurons[lastLay] = sums[lastLay];
-		std::for_each(neurons[lastLay].begin(), neurons[lastLay].end(),
-			[func = activate](double& el) { el = func(el); });
+NeuralNetwork::NeuralNetwork(const std::vector<size_t>& dimentions,
+	Matrix<double>* weights, std::vector<double>* biases,
+	double(*activate)(double), double(*derActivByValue)(double))
+	: dims(dimentions), 
+	weights(weights), biases(biases),
+	activate(activate), derActivByValue(derActivByValue)
+{
+	neurons = new std::vector<double>[dims.size()];
+	errors = new std::vector<double>[dims.size()];
+
+	for (size_t l = 0; l < dims.size(); ++l)
+	{
+		neurons[l] = std::vector<double>(dims[l]);
+		errors[l] = std::vector<double>(dims[l]);
 	}
-	else {
-		std::vector<double>& _sums = sums[lastLay];
-		std::vector<double> exponents(dims.back());
-		double expSum = 0;
-		for (size_t i = 0; i < dims.back(); ++i) {
-			exponents[i] = exp(_sums[i]);
-			expSum += exponents[i];
-		}
-		std::vector<double>& _neurons = neurons[lastLay];
-		_neurons = std::vector<double>(dims.back());
-		for (size_t i = 0; i < dims.back(); ++i) {
-			_neurons[i] = exponents[i] / expSum;
-		}
-	}
-	return neurons[dims.size() - 1].data();
 }
 
-// using func value aas input
-double derSoftMax(const double& f) { return f * (1 - f); }
+NeuralNetwork::NeuralNetwork(NeuralNetwork& other) : 
+	NeuralNetwork(other.dims, other.weights, other.biases, 
+		other.activate, other.derActivByValue) {}
 
-NeuralNetwork::backPropagation_Result* NeuralNetwork::train(
-	const std::vector<double>& data, uint8_t label) const
+NeuralNetwork::~NeuralNetwork()
 {
-	feedForward(data);
+	delete[] neurons;
+	delete[] errors;
+}
 
-	size_t lastLayInd = dims.size() - 1;
-	backPropagation_Result* result = new backPropagation_Result(dims.size());
+
+uint8_t NeuralNetwork::feedForward(const std::vector<double>& input)
+{
+	neurons[0] = input;
+	for (size_t l = 1; l < dims.size(); ++l)
 	{
-		double* errorsLastLay = errors[lastLayInd][0];
-		for (size_t i = 0; i < dims.back(); i++) {
-			errorsLastLay[i] = 2 * (neurons[lastLayInd][i] - (i == label ? 1 : 0));
+		weights[l - 1].multiply(neurons[l - 1], neurons[l]);
+
+		neurons[l] += biases[l];
+
+		std::for_each(neurons[l].begin(), neurons[l].end(),
+			[func = activate](double& n) { n = func(n); });
+	}
+
+	std::vector<double>& outputLay = neurons[dims.size() - 1];
+	uint8_t bestNeuron = '\0';
+	for (size_t i = 1; i < dims.back(); ++i)
+	{
+		if (outputLay[i] > outputLay[bestNeuron]) bestNeuron = i;
+	}
+
+	return bestNeuron;
+}
+
+void NeuralNetwork::backPropagation(uint8_t expected, backPropagation_Result* resultSum,
+	double learningRate)
+{
+	size_t lastInd = dims.size() - 1;
+	{
+		std::vector<double>& lastErrors = errors[lastInd];
+		std::vector<double>& lastNeurons = neurons[lastInd];
+		for (size_t i = 0; i < dims.back(); ++i)
+		{
+			if (i != expected) {
+				lastErrors[i] = -lastNeurons[i] * derActivByValue(lastNeurons[i]);
+			}
+			else {
+				lastErrors[i] = (1.0 - lastNeurons[i]) * derActivByValue(lastNeurons[i]);
+			}
 		}
 	}
 
-	for (int l = lastLayInd - 1; l >= 0; --l)
+	for (size_t i = lastInd - 1; i > 0; --i)
 	{
-		Matrix<double>& weightsLay = weights[l];
-		double* errorsLay = errors[l + 1][0];
-		
-		std::vector<double> semiCalc = sums[l + 1];
-		std::for_each(semiCalc.begin(), semiCalc.end(),
-			[func = ((softMax && l == lastLayInd - 1) ? derSoftMax : derActivate)] 
-				(double& el) { el = func(el); });
-
-		if (!semiCalc[0] && semiCalc[0] != 0)
-			std::cout << "bruh";
-
-		for (size_t i = 0; i < semiCalc.size(); ++i) {
-			semiCalc[i] *= errorsLay[i];
-		}
-
-		result->weightsGradient[l] = semiCalc * Matrix<double>(neurons[l]);
-		
-		result->biasesGradient[l + 1] = semiCalc;
-
-		if (l) errors[l] = Matrix<double>(semiCalc) * weightsLay;
+		weights[i].multiply_t(errors[i + 1], errors[i]);
+		for (int j = 0; j < dims[i]; ++j)
+			errors[i][j] *= derActivByValue(neurons[i][j]);
 	}
 
-	return result;
+	for (int i = 0; i < lastInd; ++i) 
+	{
+		Matrix<double>& curWG = resultSum->weightsGradient[i];
+
+		size_t rowCount = dims[i + 1];
+
+		errors[i + 1] *= learningRate;
+
+		double *nLay = neurons[i].data(),
+			* eLay = errors[i + 1].data();
+
+		for (int j = 0; j < rowCount; ++j) 
+		{
+			double* row = curWG.getRow(j);
+			size_t colCount = dims[i];
+
+			for (int k = 0; k < colCount; ++k)
+			{
+				row[k] += nLay[k] * eLay[j];
+			}
+		}
+
+		resultSum->biasesGradient[i + 1] += errors[i + 1];
+	}
+}
+
+void NeuralNetwork::train(const std::vector<double>& input, uint8_t expected, 
+	backPropagation_Result* resultSum, double learningRate)
+{
+	feedForward(input);
+	backPropagation(expected, resultSum, learningRate);
+}
+
+void NeuralNetwork::printNeurons()
+{
+	for (size_t l = 1; l < dims.size(); l++)
+	{
+		std::cout << "\t L - " << l << '\n';
+		for (double n : neurons[l])
+		{
+			std::cout << n << ' ';
+		}
+		std::cout << '\n';
+	}
 }
