@@ -1,25 +1,57 @@
 #include "napi.h"
-// #include "algs/..."
+#include "astar.h"
 
-
-// field encoding : 0 - void, 1 - wall, 2 - start, 3 - end; 
+// gets (start{x, y}, end{x, y}, fieldData = Uint8Array[height, width, ...fieldCells...])
+// field encoding : 0 - void, 1 - wall; 
+// returns ArrayBuffer[yxyxyxyxyxyxyxyxyx...FinalX?_FinalY?xyxyxyxyxy]
+//                     ^^^^^^^^^^^^^^^^^^                   ^^^^^^^^
+//                      alg's steps                         result path
 Napi::Value astrar(const Napi::CallbackInfo& info) 
 {
     Napi::Env env = info.Env();
     
-    if (info.Length() < 1) {
+    if (info.Length() < 3) {
         Napi::TypeError::New(env, "Invalid arguments count").ThrowAsJavaScriptException();
         return env.Undefined();
-    } else if(!info[0].IsTypedArray()) {
+    } 
+    else if(!info[0].IsObject() || !info[1].IsObject() || !info[2].IsTypedArray()) {
         Napi::TypeError::New(env, "Invalid arguments type").ThrowAsJavaScriptException();
         return env.Undefined();
+    } 
+
+    uint8_t* fieldData = info[2].As<Napi::Uint8Array>().Data();
+
+    uint8_t height = fieldData[0], 
+        width = fieldData[1];
+
+    uint8_t** field = (uint8_t**)malloc(height);
+    field[0] = fieldData + 2; 
+    for (size_t i = 1; i < height; i++)
+    {
+        field[i] = field[i - 1] + width;
+    }
+    
+    Grid grid(field, width, height);
+
+    Napi::Object start = info[0].ToObject(),
+        end =  info[1].ToObject();
+
+    PathfinderResult result = Pathfinder::findPath(
+        grid, 
+        { start.Get('x').ToNumber(), start.Get('y').ToNumber() }, 
+        { end.Get('x').ToNumber(), end.Get('y').ToNumber() });
+
+    size_t byteSize = result.stepsAndPath.size();
+    uint8_t* normalizedData = (uint8_t*)malloc(byteSize);
+    for (size_t i = 0; i < byteSize; ++i)
+    {
+        normalizedData[i] = result.stepsAndPath[i].y;
+        normalizedData[++i] = result.stepsAndPath[i].x;
     }
 
-    uint8_t* field = info[0].As<Napi::Uint8Array>().Data(); 
-
-    //
-
-    return env.Null();
+    free(field);
+    return Napi::ArrayBuffer::New(env, (void*)normalizedData, byteSize, 
+        [](Napi::Env env, void* data) { delete[] data; });
 }
 
 

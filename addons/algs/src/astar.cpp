@@ -65,22 +65,25 @@ int Cell::getDistanceSum() const
 #pragma endregion
 
 #pragma region Grid
-Grid::Grid(int width, int height)
-{
-	_width = width;
-	_height = height;
-	_field = new char *[_width];
+// Grid::Grid(int width, int height)
+// {
+// 	_width = width;
+// 	_height = height;
+// 	_field = new uint8_t *[_width];
 
-	for (size_t i = 0; i < _width; i++)
-	{
-		_field[i] = new char[_height];
+// 	for (size_t i = 0; i < _width; i++)
+// 	{
+// 		_field[i] = new uint8_t[_height];
 
-		for (size_t j = 0; j < _height; j++)
-		{
-			_field[i][j] = 'p';
-		}
-	}
-}
+// 		for (size_t j = 0; j < _height; j++)
+// 		{
+// 			_field[i][j] = 0;
+// 		}
+// 	}
+// }
+
+Grid::Grid(uint8_t **field, int width, int height) :
+	_field(field), _width(width), _height(height) {};
 
 int Grid::getWidth()
 {
@@ -92,7 +95,7 @@ int Grid::getHeight()
 	return _height;
 }
 
-void Grid::setGridValue(std::vector<Point*> points, char value)
+void Grid::setGridValue(std::vector<Point*> points, uint8_t value)
 {
 	for (size_t i = 0; i < points.size(); i++)
 	{
@@ -100,13 +103,13 @@ void Grid::setGridValue(std::vector<Point*> points, char value)
 	}
 }
 
-void Grid::setGridValue(Point *point, char value)
+void Grid::setGridValue(Point *point, uint8_t value)
 {
 	_field[point->x][point->y] = value;
 }
 
 
-void Grid::setGridValue(Point point, char value)
+void Grid::setGridValue(Point point, uint8_t value)
 {
 	_field[point.x][point.y] = value;
 }
@@ -124,7 +127,7 @@ void Grid::printGrid()
 	}
 }
 
-char* Grid::operator[](int i)
+uint8_t* Grid::operator[](int i)
 {
 	return _field[i];
 }
@@ -169,7 +172,7 @@ std::vector <Cell*> Pathfinder::findCellNeighbors(
 			if ((moveX >= 0 && moveX < grid.getWidth()) && 
 				(moveY >= 0 && moveY < grid.getHeight()))
 			{
-				if (grid[moveX][moveY] != 'w')
+				if (grid[moveX][moveY] != 1) // 'w'
 				{
 					neighbors.push_back(
 						new Cell(
@@ -291,6 +294,8 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 				availableCells[neighborIndex] = neighbor;
 			}
 		}
+
+		for (Cell* neighbor : neighbors) delete neighbor;
 	}
 
 	for (size_t i = 0; i < availableCells.size(); i++)
