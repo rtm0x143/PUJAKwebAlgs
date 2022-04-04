@@ -1,12 +1,10 @@
-import { Router } from "express"
-import { Stream } from "stream"
+import { Router, application } from "express"
 import { checkQuery } from "../middlewares.js"
-// import pAlgs from "../pureAlgs.cjs"
-import pAlgs from "../_build.cjs"
+import nAlgs from "../algorithms.cjs"
 
 export default Router()
     .post("/clasterisation", [checkQuery(["type"]), (req, res) => {
-        if (pAlgs[req.query.type]) 
+        if (nAlgs[req.query.type]) 
         {
             const params = [new Uint16Array(req.body[0])]
             if (req.query.type === "k_means") 
@@ -32,7 +30,7 @@ export default Router()
 
             let result
             try {
-                result = pAlgs[req.query.type](...params)
+                result = nAlgs[req.query.type](...params)
             } catch (error) {
                 console.log("Algorithm internal Error!\n", error);
                 res.status(400)
@@ -52,7 +50,7 @@ export default Router()
         }
     }])
     .get("/labgen", [checkQuery(["height", "width"]), (req, res) => {
-        const result = pAlgs.labGen({height: +req.query.height, width: +req.query.width})
+        const result = nAlgs.labGen({height: +req.query.height, width: +req.query.width})
         res.header({
             "Content-Type": "application/octet-stream",
             "Content-Length": Object.keys(result).length * result[0].byteLength
@@ -66,11 +64,20 @@ export default Router()
         let raw = Buffer.from(req.body["fieldData"])
         let fieldData = new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength)
 
-        let result = new Uint8Array(pAlgs.astar(req.body["start"], req.body["end"], 
+        let result = new Uint8Array(nAlgs.astar(req.body["start"], req.body["end"], 
             new Uint8Array(fieldData.buffer, fieldData.byteOffset, fieldData.byteLength)));
 
         res.setHeader("Content-Type", "application/octet-stream")
         res.setHeader("Content-Lenght", result.length)
         res.write(result)
         res.end()
+    })
+    .post("/neuralNet", (req, res) => {
+        if (req.header("content-type") !== "application/octet-stream") res.sendStatus(400)
+        if (+req.header("Content-Length") !== 10000) {
+            res.status(400)
+            res.send("Invalid stream dimension")
+        }
+        
+        res.send(nAlgs.findDigit(req.body[0]).toString())
     })

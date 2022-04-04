@@ -19,7 +19,7 @@ export function binStreamParser(req, res, next) {
     if (req.headers["content-type"] === "application/octet-stream") {
         req.body = [];
         req.on("data", data => {
-            req.body.push(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength)) 
+            req.body.push(new Uint8Array(data.buffer, data.byteOffset, data.byteLength)) 
         })
         
         req.on("end", next)
