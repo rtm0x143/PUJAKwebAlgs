@@ -6,6 +6,7 @@ class NeuronView extends View {
     constructor() {
         super();
 
+
     }
 }
 
