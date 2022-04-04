@@ -29,7 +29,10 @@ uint8_t* clast::DBSCAN(int16_t* points, uint32_t pNum, double inclusionRange, ui
 	std::vector<uint32_t>* neighborhoods = calcNeighborhoods(points, pNum, inclusionRange);
 
 	std::list<uint32_t> unmarcked;
-	for (uint32_t i = 0; i < pNum; i++) unmarcked.push_back(i);
+	for (uint32_t i = 0; i < pNum; i++) {
+		if (rand() % 2) unmarcked.push_back(i);
+		else unmarcked.push_front(i);
+	} 
 
 	while (!unmarcked.empty())
 	{
