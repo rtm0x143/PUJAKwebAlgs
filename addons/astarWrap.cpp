@@ -6,7 +6,7 @@
 // returns ArrayBuffer[yxyxyxyxyxyxyxyxyx...FinalX?_FinalY?xyxyxyxyxy]
 //                     ^^^^^^^^^^^^^^^^^^                   ^^^^^^^^
 //                      alg's steps                         result path
-Napi::Value astrar(const Napi::CallbackInfo& info) 
+Napi::Value astar(const Napi::CallbackInfo& info) 
 {
     Napi::Env env = info.Env();
     
@@ -32,14 +32,19 @@ Napi::Value astrar(const Napi::CallbackInfo& info)
     }
     
     Grid grid(field, width, height);
+    grid.printGrid();
 
     Napi::Object start = info[0].ToObject(),
         end =  info[1].ToObject();
+
+    std::cout << "objects\n";
 
     PathfinderResult result = Pathfinder::findPath(
         grid, 
         { start.Get('x').ToNumber(), start.Get('y').ToNumber() }, 
         { end.Get('x').ToNumber(), end.Get('y').ToNumber() });
+
+    std::cout << "found\n";
 
     size_t byteSize = result.stepsAndPath.size();
     uint8_t* normalizedData = (uint8_t*)malloc(byteSize);
@@ -56,7 +61,7 @@ Napi::Value astrar(const Napi::CallbackInfo& info)
 
 
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-    exports.Set(Napi::String::New(env, "astrar"), Napi::Function::New(env, astrar));
+    exports.Set(Napi::String::New(env, "astar"), Napi::Function::New(env, astar));
     return exports;
 }
 
