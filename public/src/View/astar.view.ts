@@ -3,7 +3,7 @@ import CanvasModel from '../Model/canvas.model.js';
 import CanvasView from "./canvas.view.js";
 import Brush from '../Model/brush.model.js';
 
-class CanvasAstarView extends CanvasView {
+class AstarView extends CanvasView {
     private _gridSizeXInput: number;
     private _gridSizeYInput: number;
     //private _drawGridButton: HTMLInputElement;
@@ -55,4 +55,4 @@ class CanvasAstarView extends CanvasView {
     }
 }
 
-export default CanvasAstarView;
+export default AstarView;

@@ -7,15 +7,7 @@ class CanvasController {
 
     constructor(model: CanvasModel) {
         this._model = model;
-        this._view = new CanvasView(model);
-
-        this._view.handleButtonClick(this.changeCanvasParams.bind(this));
-    }
-
-    changeCanvasParams(width: number, height: number) {
-        console.log("Change");
-        this._model.changeCanvasParams(width, height);
-        console.log(this._model.width);
+        this._view = new CanvasView();
     }
 }
 

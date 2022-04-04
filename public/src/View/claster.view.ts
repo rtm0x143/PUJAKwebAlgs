@@ -3,7 +3,7 @@ import Brush from '../Model/brush.model.js';
 import ClasterModel from '../Model/claster.model.js';
 import View from './View.js';
 
-class CanvasClasterView extends View {
+class ClasterView extends View {
     private _regulatorButton: HTMLButtonElement;
     // private _regulator: HTMLDivElement;
 
@@ -72,7 +72,7 @@ class CanvasClasterView extends View {
         this.canvas.setAttribute('width', this.canvasDiv.offsetWidth.toString());
         this.regulatorButtons.forEach((item) => {
             if (item.className == "regulator__button regulator__button_height") {
-                this.initCanvasSliderListener(
+                this.changeCanvasSize(
                     item.offsetHeight + this.heightRegulatorBar.offsetHeight,
                     -item.offsetHeight - this.heightRegulatorBar.offsetHeight,
                     this.canvasDiv.offsetHeight / -(item.offsetHeight + this.heightRegulatorBar.offsetHeight),
@@ -88,7 +88,7 @@ class CanvasClasterView extends View {
                 )
             }
             else if (item.className == "regulator__button regulator__button_width") {
-                this.initCanvasSliderListener(
+                this.changeCanvasSize(
                     item.offsetHeight + this.widthRegulatorBar.offsetHeight,
                     -item.offsetHeight - this.widthRegulatorBar.offsetHeight,
                     this.canvasDiv.offsetWidth / -(item.offsetHeight + this.widthRegulatorBar.offsetHeight),
@@ -104,7 +104,7 @@ class CanvasClasterView extends View {
                 )
             }
             else if (item.className == "regulator__button regulator__button_range") {
-                this.initDBSCANSliderListener(
+                this.changeDBSCANSParams(
                     this.rangeRegulatorBar.offsetHeight,
                     -item.offsetHeight - this.rangeRegulatorBar.offsetHeight,
                     1.5,
@@ -121,7 +121,7 @@ class CanvasClasterView extends View {
                 )
             }
             else if (item.className == "regulator__button regulator__button_count") {
-                this.initDBSCANSliderListener(
+                this.changeDBSCANSParams(
                     this.countRegulatorBar.offsetHeight,
                     -item.offsetHeight - this.rangeRegulatorBar.offsetHeight,
                     1 / ((this.heightRegulator.offsetHeight - 60) / 255),
@@ -140,6 +140,133 @@ class CanvasClasterView extends View {
         })
         
         this.drawGrid(this.canvas, this.canvasContext, 'grey', Math.floor(this.canvas.width / 30), Math.floor(this.canvas.height / 30));
+    }
+
+    changeCanvasSize(
+        size: number,
+        buttonMargin: number,
+        rate: number,
+        body: HTMLBodyElement,
+        regulatorButton: HTMLButtonElement,
+        regulator: HTMLDivElement,
+        regulatorBar: HTMLDivElement,
+        canvasDiv: HTMLDivElement,
+        canvas: HTMLCanvasElement,
+        canvasContext: CanvasRenderingContext2D,
+        paragraph: HTMLParagraphElement,
+        selectedObject: string
+    ) {
+        //2 another params
+        let currentSize: number;
+        let isDown: boolean = false;
+
+        regulatorButton.addEventListener('mousedown', (e) => {
+            currentSize = e.clientY;
+            isDown = true;
+        })
+
+        body.addEventListener('mousemove', (e) => {
+            if (isDown) {
+                //try to find change
+                let change = currentSize - e.clientY;
+                currentSize -= change;
+                size += change
+                buttonMargin -= change;
+
+                if (buttonMargin > -regulatorButton.offsetHeight) {
+                    size -= change;
+                    buttonMargin = -regulatorButton.offsetHeight;
+                }
+
+                if (buttonMargin < -regulator.offsetHeight) {
+                    size -= change;
+                    buttonMargin = -regulator.offsetHeight;
+                }
+
+                regulatorButton.style.marginTop = `${buttonMargin}px`;
+
+                if (selectedObject == 'height') {
+                    canvasDiv.style.height = ((size * -1) * rate) + 'px';
+                    canvas.height = (size * -1) * rate;
+                    paragraph.innerHTML = canvas.height.toString();
+                }
+                else if (selectedObject == 'width') {
+                    canvasDiv.style.width = ((size * -1) * rate) + 'px';
+                    canvas.width = (size * -1) * rate;
+                    paragraph.innerHTML = canvas.width.toString();
+                }
+                else {
+                    paragraph.innerHTML = Math.floor((size * -1) * rate).toString();
+                }
+
+                if (buttonMargin >= -70) {
+                    regulatorBar.style.height = '10px'
+                }
+                else {
+                    regulatorBar.style.height = `${-buttonMargin - regulatorButton.offsetHeight + 10}px`
+                }
+
+                this.drawGrid(canvas, canvasContext, 'grey', Math.floor(canvas.width / 30), Math.floor(canvas.height / 30));
+            }
+        })
+
+        body.addEventListener('mouseup', _ => {
+            isDown = false;
+        })
+    }
+
+    changeDBSCANSParams(
+        size: number,
+        buttonMargin: number,
+        rate: number,
+        body: HTMLBodyElement,
+        regulatorButton: HTMLButtonElement,
+        regulator: HTMLDivElement,
+        regulatorBar: HTMLDivElement,
+        canvasDiv: HTMLDivElement,
+        canvas: HTMLCanvasElement,
+        canvasContext: CanvasRenderingContext2D,
+        paragraph: HTMLParagraphElement,
+        selectedObject: string,
+        maxValue: number
+    ) {
+        //2 another params
+        let currentSize: number;
+        let isDown: boolean = false;
+
+        regulatorButton.addEventListener('mousedown', (e) => {
+            currentSize = e.clientY;
+            isDown = true;
+        })
+
+        body.addEventListener('mousemove', (e) => {
+            if (isDown) {
+                //try to find change
+                let change = currentSize - e.clientY;
+                currentSize -= change;
+                size += change
+                buttonMargin -= change;
+
+                if (buttonMargin > -regulatorButton.offsetHeight) {
+                    size = 0;
+                    buttonMargin = -regulatorButton.offsetHeight;
+                }
+
+                if (buttonMargin < -regulator.offsetHeight) {
+                    size = maxValue / rate;
+                    buttonMargin = -regulator.offsetHeight;
+                }
+
+                regulatorButton.style.marginTop = `${buttonMargin}px`;
+                regulatorBar.style.height = `${-buttonMargin - 55}px`;
+
+                paragraph.innerHTML = Math.floor(size * rate).toString();
+
+                if (buttonMargin >= -70) {
+                    regulatorBar.style.height = `${10}px`;
+                }
+            }
+        })
     }
 
     getMousePosition(event: MouseEvent): Object {
@@ -183,4 +310,4 @@ class CanvasClasterView extends View {
     }   
 }
 
-export default CanvasClasterView;
+export default ClasterView;
