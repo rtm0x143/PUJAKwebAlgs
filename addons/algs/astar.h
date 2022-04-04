@@ -39,7 +39,7 @@ public:
 class Grid
 {
 private: 
-	char **_field;
+	uint8_t **_field;
 	int _width;
 	int _height;
 
@@ -47,14 +47,15 @@ public:
 	int getWidth();
 	int getHeight();
 
-	Grid(int width, int height);
+	Grid(uint8_t **field, int width, int height);
+	// Grid(int width, int height);
 
-	void setGridValue(std::vector<Point*> points, char value);
-	void setGridValue(Point point, char value);
-	void setGridValue(Point *point, char value);
+	void setGridValue(std::vector<Point*> points, uint8_t value);
+	void setGridValue(Point point, uint8_t value);
+	void setGridValue(Point *point, uint8_t value);
 	void printGrid();
 
-	char *operator[](int i);
+	uint8_t *operator[](int i);
 };
 
 struct PathfinderResult

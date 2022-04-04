@@ -1,16 +1,11 @@
 const _build = require("./_build.cjs")
 
-let a = 33;
-let b = a >> 2
-console.log(b);
+let str = "123"
 
-// const array = new Uint16Array([1, 2, 3, 4])
-// fetch("http://localhost:8000/alg/clasterisation?type=DBSCAN&range=2&gSize=2", {
-//     method: "POST",
-//     headers: {
-//         "Content-Type": "application/octet-stream"
-//     },
-//     body: array.buffer
-// }).then(res => {
-//     res.body.getReader().read().then(data => console.log(data));
-// })
+let buf = Buffer.from(str)
+console.log(buf.byteOffset);
+let arr = new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength)
+buf[0] = 9;
+
+console.log(buf);
+console.log(arr);
