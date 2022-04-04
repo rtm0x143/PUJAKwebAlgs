@@ -1,6 +1,5 @@
 import Errors from '../config/Errors.js';
 import CanvasModel from '../Model/canvas.model.js';
-import CanvasView from "./canvas.view.js";
 import Brush from '../Model/brush.model.js';
 
 class AstarView {}

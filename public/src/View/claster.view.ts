@@ -267,6 +267,10 @@ class ClasterView extends View {
                 }
             }
         })
+
+        body.addEventListener('mouseup', _ => {
+            isDown = false;
+        })
     }
 
     getMousePosition(event: MouseEvent): Object {

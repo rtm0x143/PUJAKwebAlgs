@@ -12,11 +12,11 @@ class ClasterController extends Controller{
 
         this._clasterModel = clasterModel;
         this._clasterView = new ClasterView(this._clasterModel);
-        this._clasterView.handleButtonClick(this.AddObjectCalback.bind(this));
+        this._clasterView.handleButtonClick(this.AddObjectCallback.bind(this));
         this._clasterView.handleDBSCANFetch(this.requestDBSCAN.bind(this));
     }
     
-    AddObjectCalback(positionObject: {x: number, y: number}) {
+    AddObjectCallback(positionObject: {x: number, y: number}) {
         this._clasterModel.pushObject(positionObject.y, positionObject.x);
     }
 

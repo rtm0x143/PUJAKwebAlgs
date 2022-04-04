@@ -1,15 +1,15 @@
 import Errors from "../config/Errors.js";
-import CanvasClasterView from "../View/canvas.claster.view.js";
+import ClasterView from "../View/claster.view.js";
 import Controller from "./Controller.js";
 class ClasterController extends Controller {
     constructor(clasterModel) {
         super();
         this._clasterModel = clasterModel;
-        this._clasterView = new CanvasClasterView(this._clasterModel);
-        this._clasterView.handleButtonClick(this.AddObjectCalback.bind(this));
+        this._clasterView = new ClasterView(this._clasterModel);
+        this._clasterView.handleButtonClick(this.AddObjectCallback.bind(this));
         this._clasterView.handleDBSCANFetch(this.requestDBSCAN.bind(this));
     }
-    AddObjectCalback(positionObject) {
+    AddObjectCallback(positionObject) {
         this._clasterModel.pushObject(positionObject.y, positionObject.x);
     }
     requestDBSCAN(context, range, groupSize) {
@@ -44,7 +44,6 @@ class ClasterController extends Controller {
                         this._clasterView.drawCircle(context, '', 'grey', this._clasterModel.positions[i], this._clasterModel.positions[i - 1], 5);
                     }
                 }
-                console.log(colorsArray);
             });
         });
     }

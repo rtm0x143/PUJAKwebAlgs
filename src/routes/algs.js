@@ -2,10 +2,12 @@ import { Router } from "express"
 import { checkQuery } from "../middlewares.js"
 // import pAlgs from "../pureAlgs.cjs"
 import pAlgs from "../_build.cjs"
+console.log(pAlgs);
 
 export default Router()
     .post("/clasterisation", [checkQuery(["type"]), (req, res) => {
-        if (pAlgs[req.query.type]) 
+        console.log(req.query);
+        if (pAlgs[req.query.type])
         {
             const params = [new Uint16Array(req.body[0])]
             if (req.query.type === "k_means") 
