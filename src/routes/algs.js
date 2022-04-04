@@ -3,6 +3,8 @@ import { checkQuery } from "../middlewares.js"
 // import pAlgs from "../pureAlgs.cjs"
 import pAlgs from "../_build.cjs"
 
+console.log(pAlgs);
+
 export default Router()
     .post("/clasterisation", [checkQuery(["type"]), (req, res) => {
         if (pAlgs[req.query.type]) 
@@ -59,3 +61,16 @@ export default Router()
         Object.values(result).forEach(arrayBuffer => res.write(Buffer(arrayBuffer)))
         res.end()
     }]) // http://localhost:8000/alg/labgen?height=50&width=50
+    .post("/astar", (req, res) => {
+        if (!req.body["start"] || !req.body["end"] || !req.body["fieldData"]) res.sendStatus(400);
+        
+        console.log(req.body);
+        let raw = Buffer.from(req.body["fieldData"])
+        let fieldData = new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength)
+        console.log(fieldData);
+
+        let result = pAlgs.astar(req.body["start"], req.body["end"], 
+            new Uint8Array(fieldData.buffer, fieldData.byteOffset, fieldData.byteLength));
+
+        console.log(result);
+    })

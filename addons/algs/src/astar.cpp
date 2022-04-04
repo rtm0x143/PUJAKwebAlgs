@@ -120,7 +120,7 @@ void Grid::printGrid()
 	{
 		for (size_t j = 0; j < _width; j++)
 		{
-			std::cout << _field[j][i] << " ";
+			std::cout << (int)_field[j][i] << " ";
 		}
 
 		std::cout << "\n";
@@ -207,6 +207,8 @@ void Pathfinder::retracePath(
 
 PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoint)
 {
+	std::cout << "started with " << grid.getHeight() << ' ' << grid.getWidth() << '\n';
+	grid.printGrid();
 	// Cell current;
 	std::vector<Point> stepsAndPath;
 	std::vector<Cell*> availableCells;
@@ -295,7 +297,7 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 			}
 		}
 
-		for (Cell* neighbor : neighbors) delete neighbor;
+		// for (Cell* neighbor : neighbors) delete neighbor;
 	}
 
 	for (size_t i = 0; i < availableCells.size(); i++)
