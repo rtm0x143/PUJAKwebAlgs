@@ -19,6 +19,36 @@ $greyTextColor: #E8E8E8;
     src: url("../fonts/codenext.otf");
 }
 
+// body::-webkit-scrollbar {
+//     display: none;
+// }
+
+// body {
+//     -ms-overflow-style: none;  /* IE and Edge */
+//     scrollbar-width: none;
+// }
+
+// Возможно временная мера. Лучше сделать div/span и добавить на него listener "scroll":
+// так можно будет применять различные анимации.
+
+
+.stop-scrolling {
+    height: 100%;
+    overflow: hidden;
+}
+
+body::-webkit-scrollbar {
+    width: 14px;
+    overflow: auto;
+}
+
+body::-webkit-scrollbar-thumb {
+    border: 3px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    border-radius: 100px;
+    background-color: #aaaaaa;
+} 
+
 @import "mainPage";
 @import "menu";
 @import "header";

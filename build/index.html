@@ -9,26 +9,41 @@
 </head>
 <body>
 <header class="header">
-    <div class="nav-button cursor" id="#nav-circle-button" onclick="showMenu();">
-        
+    <div class="nav-button cursor" id="nav-trigger">
         <svg class="nav-icon" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle class="nav-icon__circle" cx="41.5" cy="41.5" r="41.5"/>
             <path class="nav-icon__line" d="M19.5 32.9048L61.5 31L64 39L18 37.0952L19.5 32.9048Z"/>
             <path class="nav-icon__line" d="M18.5155 44.5L66 48L64.4845 51.5L17 50.3333L18.5155 44.5Z"/>
         </svg>
     </div>
-
-    <!-- Не подключается через src???  -->
-    <script>
-        function showMenu() {
-            var element = document.getElementsByClassName("navigaton")[0];
-            element.style.visibility = "visible";
-            // void element.offsetWidth;
-            //element.classList.add('nav-button__animation');
-            //element.classList.remove('nav-button__animation');
-        }
-    </script>
 </header> 
+<div class="navigation-closed" id="navigation-screen">
+    <div class="navigation-overlay">
+        <div class="nav-button-close cursor" id="nav-close">
+            <svg class="nav-icon" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle class="nav-icon__circle" cx="41.5" cy="41.5" r="41.5"/>
+                <path class="nav-icon__line" d="M19.5 32.9048L61.5 31L64 39L18 37.0952L19.5 32.9048Z"/>
+                <path class="nav-icon__line" d="M18.5155 44.5L66 48L64.4845 51.5L17 50.3333L18.5155 44.5Z"/>
+            </svg>
+        </div>
+        <div class="main-menu">
+            <ul class="main-menu__nav">
+                <li>
+                    <a class="main-menu__nav__link" href="../algorithms.html">
+                        <span class="main-menu__nav__link__text">Algorithms</span><br>
+                        <span class="separator-line">
+                    </a>
+                    </span>
+                </li>
+                <li>
+                    <a class="main-menu__nav__link" href="#">
+                        <span class="main-menu__nav__link__text">About us</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 <div class="welcome-screen">
     <span class="team-name__text">PUJAK</span>
     <span class="team-name__blinking-line"></span>
@@ -49,33 +64,11 @@
     </svg>
 </div>
 
-<div class="navigaton" id="someId">
-    <div class="navigaton-overlay">
-        <div class="nav-button-close">
-            <svg class="nav-icon" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle class="nav-icon__circle" cx="41.5" cy="41.5" r="41.5"/>
-                <path class="nav-icon__line" d="M19.5 32.9048L61.5 31L64 39L18 37.0952L19.5 32.9048Z"/>
-                <path class="nav-icon__line" d="M18.5155 44.5L66 48L64.4845 51.5L17 50.3333L18.5155 44.5Z"/>
-            </svg>
-        </div>
-        <div class="main-menu">
-            <ul>
-                <li>
-                    <span class="main-menu__link">Algorithms</span><br>
-                    <span class="separator-line">
-                    </span>
-                </li>
-                <li>
-                    <span class="main-menu__link">About us</span>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
 
 <!-- <h1>PUJAK</h1>
 <a href="algorithms.html">go algs</a>
 <p>ssss</p> -->
+<script src="./buttonAnimationLaunch.js"></script>
 <!-- <footer></footer> -->
 </body>
 </html>

@@ -14,7 +14,17 @@ $white: #FFFFFF;
 
 // }
 
-.navigaton {
+.navigation-opened {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    visibility: visible;
+}
+
+.navigation-closed {
     position: fixed;
     width: 100%;
     height: 100%;
@@ -24,7 +34,7 @@ $white: #FFFFFF;
     visibility: hidden;
 }
 
-.navigaton-overlay {
+.navigation-overlay {
     background-color: $gray;
     position: fixed;
     width: 100%;
@@ -36,6 +46,8 @@ $white: #FFFFFF;
 
 .nav-button-close {
     position: fixed;
+    left: 10px;
+    top: 10px;
     z-index: 100;
     visibility: inherit;
 }
@@ -58,16 +70,87 @@ $white: #FFFFFF;
     justify-content: flex-start;
     align-items: center;
     visibility: inherit;
+    height: 100%;
 }
 
-.main-menu__link {
+.main-menu__nav {
+    list-style: none;
+}
+
+.main-menu__nav__link__text {
+    display: inline-block;
+    position: relative;
     font-family: 'garet';
     font-size: 96px;
     color: $white;
 }
 
+.main-menu__nav__link__text:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 8px;
+    bottom: 0;
+    left: 0;
+    background-color: $white;
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+  }
+
+  .main-menu__nav__link__text:hover:after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+
 .separator-line {
     height: 2px;
-    width: 1000px;
+    width: 100px;
     color: $white;
+}
+
+
+.main-menu__nav__link:link, .main-menu__nav__link:visited {
+    text-decoration: none;
+}
+
+.main-menu__nav__link:hover {
+    // background-color: $gray;
+    text-decoration: none;
+    // transition: text-decoration 200ms ease-out;
+    // text-decoration-thickness: 10px;
+    // animation: color_shift 5s linear infinite;
+}
+
+@keyframes color_shift {
+    0% {
+        filter: drop-shadow(5px 5px 80px rgba(61, 174, 255, 1));
+    }
+    20% {
+        filter: drop-shadow(5px 5px 60px rgba(158, 125, 255, 1));
+    }
+    30% {
+        filter: drop-shadow(5px 5px 40px rgba(238, 99, 255, 1));
+    }
+    40% {
+        filter: drop-shadow(5px 5px 30px rgba(255, 14, 122, 1));
+    }
+    50% {
+        filter: drop-shadow(5px 5px 20px rgba(253, 25, 25, 1));
+    }
+    60% {
+        filter: drop-shadow(5px 5px 40px rgba(255, 153, 46, 1));
+    }
+    70% {
+        filter: drop-shadow(5px 5px 80px rgba(255, 245, 39, 1));
+    }
+    80% {
+        filter: drop-shadow(5px 5px 70px rgba(103, 255, 55, 1));
+    }
+    90% {
+        filter: drop-shadow(5px 5px 60px rgba(46, 255, 111, 1));
+    }
+    100% {
+        filter: drop-shadow(5px 5px 80px rgba(61, 174, 255, 1));
+    }
 }
