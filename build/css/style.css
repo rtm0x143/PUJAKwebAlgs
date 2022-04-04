@@ -643,3 +643,87 @@ body::-webkit-scrollbar-thumb {
   display: block;
   border-radius: 30px;
 }
+
+.ui .canvas.canvas_astar {
+  display: block;
+  width: 600px;
+  height: 600px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  margin: 0;
+}
+
+.ui .canvas.canvas_astar .canvas__element_astar {
+  vertical-align: middle;
+  width: 100%;
+  height: 100%;
+}
+
+.ui .canvas.canvas_astar .heuristics-switcher-menu {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  white-space: nowrap;
+}
+
+.ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button {
+  cursor: pointer;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: #303030;
+}
+
+.ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button .button-wrap {
+  font-family: "gatet-book", sans-serif;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 0px;
+  font-weight: 600;
+  color: #303030;
+  color: #FFFFFF;
+  vertical-align: middle;
+}
+
+.ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button:hover {
+  transition: 0.3s;
+  background-color: #FFFFFF;
+}
+
+.ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button:hover .button-wrap {
+  transition: 0.3s;
+  color: #303030;
+}
+
+.ui .canvas.canvas_astar .resize-block {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
+
+.ui .canvas.canvas_astar .resize-block .resize-icon {
+  width: 35px;
+  height: 35px;
+}
+
+.ui .canvas.canvas_astar .heuristics-menu {
+  list-style: none;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.ui .canvas.canvas_astar .heuristics-menu-heading {
+  font-family: "gatet-book", sans-serif;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 400;
+  color: #303030;
+  color: #FFFFFF;
+  margin: 0px;
+}
