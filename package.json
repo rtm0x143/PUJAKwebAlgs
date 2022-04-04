@@ -7,9 +7,9 @@
   "scripts": {
     "test": "node index.js",
     "demon": "nodemon index.js",
-    "ngyp": "node-gyp",
-    "build:start": "node-gyp build && node index.js",
-    "rebuild:demon": "node-gyp rebuild && nodemon index.js"
+    "ngyp": "node-pre-gyp",
+    "build:start": "node-pre-gyp build && node index.js",
+    "rebuild:demon": "node-pre-gyp rebuild && nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -26,13 +26,13 @@
     "express": "^4.17.3",
     "express-handlebars": "^6.0.3",
     "node": "^17.7.2",
-    "node-gyp": "^9.0.0",
-    "nopt": "^5.0.0",
+    "node-pre-gyp": "^0.17.0",
     "typescript": "^4.6.3",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
     "node-addon-api": "^4.3.0",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "nopt": "^5.0.0"
   }
 }

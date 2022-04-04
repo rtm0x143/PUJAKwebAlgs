@@ -2,7 +2,7 @@ import Errors from "../config/Errors";
 import ClasterModel from '../Model/claster.model.js';
 import View from './View.js';
 
-class NeuronView extends View {
+class NeuralView extends View {
     constructor() {
         super();
 
@@ -10,4 +10,4 @@ class NeuronView extends View {
     }
 }
 
-export default NeuronView;
+export default NeuralView;

@@ -1,7 +1,7 @@
 import CanvasModel from "./canvas.model.js";
 
-class NeuronModel extends CanvasModel {
+class NeuralModel extends CanvasModel {
     picture: Array<number> = [];
 }
 
-export default NeuronModel;
+export default NeuralModel;

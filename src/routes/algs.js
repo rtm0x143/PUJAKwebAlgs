@@ -1,7 +1,7 @@
 import { Router } from "express"
 import { checkQuery } from "../middlewares.js"
-// import pAlgs from "../pureAlgs.cjs"
-import pAlgs from "../_build.cjs"
+import pAlgs from "../pureAlgs.cjs"
+//import pAlgs from "../_build.cjs"
 console.log(pAlgs);
 
 console.log(pAlgs);
