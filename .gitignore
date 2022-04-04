@@ -10,7 +10,8 @@ node_modules/
 .vscode/
 .env
 build/
-public/dist/
+public/dist
+resources/
 
 # Executables
 *.swf

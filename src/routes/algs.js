@@ -33,7 +33,7 @@ export default Router()
             try {
                 result = pAlgs[req.query.type](...params)
             } catch (error) {
-                console.log("My Error!\n", error);
+                console.log("Algorithm internal Error!\n", error);
                 res.status(400)
                 res.send(error.toString())
                 return

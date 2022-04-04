@@ -1,3 +1,0 @@
-class CanvasAstarController {
-}
-export {};

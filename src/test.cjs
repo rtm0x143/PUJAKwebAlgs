@@ -1,6 +1,8 @@
 const _build = require("./_build.cjs")
 
-
+let a = 33;
+let b = a >> 2
+console.log(b);
 
 // const array = new Uint16Array([1, 2, 3, 4])
 // fetch("http://localhost:8000/alg/clasterisation?type=DBSCAN&range=2&gSize=2", {
