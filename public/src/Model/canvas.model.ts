@@ -1,4 +1,4 @@
-import ICanvas from "./interface/ICanvas";
+import ICanvas from "./interfaces/ICanvas";
 import Brush from "./brush.model.js";
 
 class CanvasModel extends EventTarget implements ICanvas {

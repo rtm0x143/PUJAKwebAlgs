@@ -1,22 +1,22 @@
 import Errors from "../config/Errors.js";
 import ClasterModel from "../Model/claster.model";
-import CanvasClasterView from "../View/canvas.claster.view.js";
+import ClasterView from "../View/claster.view.js";
 import Controller from "./Controller.js";
 
 class ClasterController extends Controller{
-    private _clasterView: CanvasClasterView;
+    private _clasterView: ClasterView;
     private _clasterModel: ClasterModel;
 
     constructor(clasterModel: ClasterModel) {
         super();
 
         this._clasterModel = clasterModel;
-        this._clasterView = new CanvasClasterView(this._clasterModel);
-        this._clasterView.handleButtonClick(this.AddObjectCalback.bind(this));
+        this._clasterView = new ClasterView(this._clasterModel);
+        this._clasterView.handleButtonClick(this.AddObjectCallback.bind(this));
         this._clasterView.handleDBSCANFetch(this.requestDBSCAN.bind(this));
     }
     
-    AddObjectCalback(positionObject: {x: number, y: number}) {
+    AddObjectCallback(positionObject: {x: number, y: number}) {
         this._clasterModel.pushObject(positionObject.y, positionObject.x);
     }
 
@@ -39,21 +39,46 @@ class ClasterController extends Controller{
                     if (value[i] >= 2) {
                         if (value[i - 1] > colorsArray.length) {
                             for (let j = colorsArray.length; j < value[i - 1]; ++j) {
-                                colorsArray.push(this.hsvToRGB(Math.floor(Math.random() * 361), 0.5 + Math.random() * 0.5, 0.5 + Math.random() * 0.5) ?? Errors.handleError('undefined'));
+                                colorsArray.push(this.hsvToRGB(
+                                    Math.floor(
+                                        Math.random() * 361
+                                    ),
+                                    0.5 + Math.random() * 0.5,
+                                    0.5 + Math.random() * 0.5) ?? Errors.handleError('undefined')
+                                );
                             }
                             
-                            this._clasterView.drawCircle(context, '', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], 5);
+                            this._clasterView.drawCircle(
+                                context,
+                                '',
+                                colorsArray[value[i - 1] - 1],
+                                this._clasterModel.positions[i],
+                                this._clasterModel.positions[i - 1],
+                                5
+                            );
                         }
                         else {
-                            this._clasterView.drawCircle(context, '', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], 5);
+                            this._clasterView.drawCircle(
+                                context,
+                                '',
+                                colorsArray[value[i - 1] - 1],
+                                this._clasterModel.positions[i],
+                                this._clasterModel.positions[i - 1],
+                                5
+                            );
                         }
                     }
                     else {
-                        this._clasterView.drawCircle(context, '', 'grey', this._clasterModel.positions[i], this._clasterModel.positions[i - 1], 5);
+                        this._clasterView.drawCircle(
+                            context,
+                            '',
+                            'grey',
+                            this._clasterModel.positions[i],
+                            this._clasterModel.positions[i - 1],
+                            5
+                        );
                     }
                 }
-
-                console.log(colorsArray)
             })
         })
     }

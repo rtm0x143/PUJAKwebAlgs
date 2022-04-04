@@ -1,5 +1,5 @@
 class View {
-    drawGrid(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, color: string, columnCount: number, rowsCount: number) {
+    drawGrid(canvas, context, color, columnCount, rowsCount) {
         context.strokeStyle = color;
         for (let i = 0; i < columnCount; ++i) {
             for (let j = 0; j < rowsCount; ++j) {
@@ -7,8 +7,7 @@ class View {
             }
         }
     }
-
-    drawCircle(canvasContext: CanvasRenderingContext2D, strokeColor: string, fillColor: string, x: number, y: number, radius: number) {
+    drawCircle(canvasContext, strokeColor, fillColor, x, y, radius) {
         canvasContext.strokeStyle = strokeColor;
         canvasContext.fillStyle = fillColor;
         canvasContext.beginPath();
@@ -17,5 +16,4 @@ class View {
         canvasContext.fill();
     }
 }
-
 export default View;

@@ -1,5 +1,4 @@
-import ICanvas from "./interface/ICanvas";
-import IModel from "./interface/IModel";
+import IModel from "./interfaces/IModel";
 
 
 class Model extends EventTarget implements IModel {
