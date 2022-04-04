@@ -1,9 +1,8 @@
 import { Router } from "express"
+import { Stream } from "stream"
 import { checkQuery } from "../middlewares.js"
 // import pAlgs from "../pureAlgs.cjs"
 import pAlgs from "../_build.cjs"
-
-console.log(pAlgs);
 
 export default Router()
     .post("/clasterisation", [checkQuery(["type"]), (req, res) => {
@@ -64,13 +63,14 @@ export default Router()
     .post("/astar", (req, res) => {
         if (!req.body["start"] || !req.body["end"] || !req.body["fieldData"]) res.sendStatus(400);
         
-        console.log(req.body);
         let raw = Buffer.from(req.body["fieldData"])
         let fieldData = new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength)
-        console.log(fieldData);
 
-        let result = pAlgs.astar(req.body["start"], req.body["end"], 
-            new Uint8Array(fieldData.buffer, fieldData.byteOffset, fieldData.byteLength));
+        let result = new Uint8Array(pAlgs.astar(req.body["start"], req.body["end"], 
+            new Uint8Array(fieldData.buffer, fieldData.byteOffset, fieldData.byteLength)));
 
-        console.log(result);
+        res.setHeader("Content-Type", "application/octet-stream")
+        res.setHeader("Content-Lenght", result.length)
+        res.write(result)
+        res.end()
     })

@@ -207,8 +207,9 @@ void Pathfinder::retracePath(
 
 PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoint)
 {
-	std::cout << "started with " << grid.getHeight() << ' ' << grid.getWidth() << '\n';
-	grid.printGrid();
+	// std::cout << "started with " << grid.getHeight() << ' ' << grid.getWidth() << '\n';
+	// grid.printGrid();
+	
 	// Cell current;
 	std::vector<Point> stepsAndPath;
 	std::vector<Cell*> availableCells;
