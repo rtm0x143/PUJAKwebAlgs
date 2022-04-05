@@ -54,6 +54,18 @@ body::-webkit-scrollbar-thumb {
     background-color: #aaaaaa;
 } 
 
+.resize-block {
+    position: absolute;
+    cursor: pointer;
+    bottom: 15px;
+    right: 15px;
+
+    .resize-icon {
+        width: 35px;
+        height: 35px;
+    }
+}
+
 @import "mainPage";
 @import "menu";
 @import "header";
