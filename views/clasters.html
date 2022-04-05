@@ -12,7 +12,7 @@
 <div class="ui">
   <div class="regulator">
     <div class="regulator__block">
-      <p class="regulator__height-paragraph">400</p>
+      <p class="regulator__height-paragraph">600</p>
       <div class="regulator__width-param">
         <p class="regulator__text">set height</p>
         <div class="regulator__bar regulator__bar_height"></div>
@@ -20,7 +20,7 @@
       <button class="regulator__button regulator__button_height"></button>
     </div>
     <div class="regulator__block">
-      <p class="regulator__width-paragraph">400</p>
+      <p class="regulator__width-paragraph">800</p>
       <div class="regulator__height-param">
         <p class="regulator__text">set weight</p>
         <div class="regulator__bar regulator__bar_width"></div>
@@ -37,13 +37,26 @@
         <button class="canvas__menu-button_send">send</button>
       </div>
     </div>
+    <div class="kmeans-menu">
+      <div class="kmeans-menu-container">
+        <select class="kmeans-menu__select">
+          <option value="1">Euclidean</option>
+          <option value="2">Manhattan</option>
+          <option value="3">EuclideanCubes</option>
+          <option value="4">Chebyshev</option>
+        </select>
+        <div class="kmeans-menu__input">
+          <input type="text" placeholder="clasters count">
+        </div>
+      </div>
+    </div>
     <div class="brush-menu">
       <div class="brush-menu-container">
-        <select>
+        <select class="brush-menu-container__select">
           <option value="1">circle</option>
         </select>
-        <input type="text" placeholder="radius">
-        <input type="text" placeholder="color">
+        <input class="brush-menu-container__input brush-menu-container__input_radius" type="text" placeholder="radius">
+        <input class="brush-menu-container__input brush-menu-container__input_color" type="text" placeholder="color">
       </div>
     </div>
     <span class="resize-block">
