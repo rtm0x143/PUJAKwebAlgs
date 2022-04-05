@@ -14,7 +14,6 @@ void init(const Napi::CallbackInfo& info)
 {
     Napi::Env env = info.Env();
     
-    std::cout << (std::string)info[0].ToString() << ' ' << (std::string)info[1].ToString() << '\n';
     if (info.Length() != 2) {
         Napi::TypeError::New(env, "Invalid arguments count").ThrowAsJavaScriptException();
         return;

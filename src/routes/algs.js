@@ -59,13 +59,16 @@ export default Router()
         res.end()
     }]) // http://localhost:8000/alg/labgen?height=50&width=50
     .post("/astar", (req, res) => {
-        if (!req.body["start"] || !req.body["end"] || !req.body["fieldData"]) res.sendStatus(400);
+        if (!req.body["start"] || !req.body["end"] || !req.body["fieldData"] ||
+            !req.body["height"], !req.body["width"]) res.sendStatus(400);
         
         let raw = Buffer.from(req.body["fieldData"])
-        let fieldData = new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength)
 
-        let result = new Uint8Array(nAlgs.astar(req.body["start"], req.body["end"], 
-            new Uint8Array(fieldData.buffer, fieldData.byteOffset, fieldData.byteLength)));
+        let result = new Uint8Array(nAlgs.astar(
+                req.body["start"], 
+                req.body["end"], 
+                { width: req.body["width"], height: req.body["height"] },
+                new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength)));
 
         res.setHeader("Content-Type", "application/octet-stream")
         res.setHeader("Content-Lenght", result.length)
