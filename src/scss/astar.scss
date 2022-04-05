@@ -31,7 +31,7 @@
 
             .button-wrap {
                 @include setFont('garet-book', normal, 14px, 0px, 400, $black);
-                color: $creamyWhite;
+                color: $white;
                 vertical-align: middle;
                 mix-blend-mode: exclusion;
             }
