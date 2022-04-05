@@ -3,6 +3,7 @@
 $black: #303030;
 $white: #CFCFCF;
 $greyTextColor: #E8E8E8;
+$creamyWhite: #CFCFCF;
 
 //Default MIXIN FOR FONTPARAMS
 @mixin setFont($fontFamily, $fontStyle, $fontSize, $lineHeight, $fontWeight, $color) {
@@ -22,6 +23,11 @@ $greyTextColor: #E8E8E8;
 @font-face {
     font-family: "garet-book";
     src: url("../fonts/garet-book.otf");
+}
+
+body {
+    margin: 0;
+    padding: 0;
 }
 
 // body::-webkit-scrollbar {

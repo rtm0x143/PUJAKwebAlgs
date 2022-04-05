@@ -17,6 +17,7 @@ import { scss } from './gulp/tasks/scss.js';
 import { images } from './gulp/tasks/images.js';
 // import { fontConvert, convertTtfToOff } from './gulp/tasks/fonts.js';
 import { fontStyle } from './gulp/tasks/fonts.js';
+import { js } from './gulp/tasks/js.js';
 
 function watcher() {
     gulp.watch(path.watch.files, copy);
@@ -24,11 +25,12 @@ function watcher() {
     gulp.watch(path.watch.templates, html);
     gulp.watch(path.watch.scss, scss);
     gulp.watch(path.watch.images, images);
+    gulp.watch(path.watch.js, js);
 }
 
 // const fonts = gulp.series(fontConvert, convertTtfToOff);
 
-const mainTask = gulp.series(fontStyle, gulp.parallel(copy, html, scss, images));
+const mainTask = gulp.series(fontStyle, gulp.parallel(copy, html, scss, js, images));
 const dev = gulp.series(reset, mainTask, gulp.parallel(watcher, server));
 
 gulp.task('default', dev);

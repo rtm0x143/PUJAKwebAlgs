@@ -151,8 +151,12 @@ $param-width: 40px;
         margin-left: 28px;
         margin-right: 28px;
         background: $white;
-        width: 400px;
+        width: 500px;
         height: 400px;
+        min-width: 300px;
+        min-height: 300px;
+        max-width: 900px;
+        max-height: 900px;
 
         .canvas__element {
             background: $black;

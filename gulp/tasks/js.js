@@ -8,6 +8,6 @@ export const js = () => {
         }))
     )
     // .pipe(uglify())
-    .pipe(dest(app.gulp.dest(app.path.build.js)))
+    .pipe(app.gulp.dest(app.path.build.js))
     .pipe(app.plugins.browserSync.stream());
 }

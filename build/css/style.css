@@ -8,6 +8,11 @@
   src: url("../fonts/garet-book.otf");
 }
 
+body {
+  margin: 0;
+  padding: 0;
+}
+
 .stop-scrolling {
   height: 100%;
   overflow: hidden;
@@ -568,8 +573,12 @@ body::-webkit-scrollbar-thumb {
   margin-left: 28px;
   margin-right: 28px;
   background: #FFFFFF;
-  width: 400px;
+  width: 500px;
   height: 400px;
+  min-width: 300px;
+  min-height: 300px;
+  max-width: 900px;
+  max-height: 900px;
 }
 
 .ui .canvas .canvas__element {
@@ -669,7 +678,7 @@ body::-webkit-scrollbar-thumb {
 .ui .canvas.canvas_astar .heuristics-switcher-menu {
   position: absolute;
   top: 5px;
-  left: 10px;
+  left: 5px;
   white-space: nowrap;
 }
 
@@ -677,14 +686,14 @@ body::-webkit-scrollbar-thumb {
   cursor: pointer;
   border: none;
   padding: 8px;
-  border-radius: 8px;
+  border-radius: 13px;
   background-color: #303030;
 }
 
 .ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button .button-wrap {
   font-family: "garet-book", sans-serif;
   font-style: normal;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 0px;
   font-weight: 400;
   color: #303030;
@@ -700,13 +709,29 @@ body::-webkit-scrollbar-thumb {
 
 .ui .canvas.canvas_astar .resize-block {
   position: absolute;
-  bottom: 15px;
-  right: 15px;
+  bottom: 10px;
+  right: 10px;
 }
 
 .ui .canvas.canvas_astar .resize-block .resize-icon {
+  border-radius: 5px;
   width: 35px;
   height: 35px;
+}
+
+.ui .canvas.canvas_astar .resize-block .resize-icon .resize-icon-path {
+  fill: #CFCFCF;
+}
+
+.ui .canvas.canvas_astar .resize-block:hover .resize-icon,
+.ui .canvas.canvas_astar .resize-block:active .resize-icon {
+  transition: background 0.3s;
+  background-color: #CFCFCF;
+}
+
+.ui .canvas.canvas_astar .resize-block:hover .resize-icon .resize-icon-path,
+.ui .canvas.canvas_astar .resize-block:active .resize-icon .resize-icon-path {
+  fill: #303030;
 }
 
 .ui .canvas.canvas_astar .heuristics-menu {
