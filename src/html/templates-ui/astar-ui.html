@@ -1,30 +1,33 @@
 <div class="ui ui_astar">
-  <div class="canvas canvas_astar">
-    <canvas class="canvas__element canvas__element_astar"></canvas>
-    <div class="canvas_buttons">
-      @@include('html/templates-ui/resize-button.html')
-      <div class="cursor heuristics-switcher-menu">
-        <button class="heuristics-switcher-menu heuristics-switcher-button">
-          <span class="button-wrap">Manhattan heuristics</span>
-        </button>
-        <!-- <ul class="heuristics-menu">
-              <li class="link-container">
-                <p class="heuristics-menu-heading">Manhattan heurisitcs</p>
-              </li>
-              <li class="link-container">
-                <p class="heuristics-menu-heading">Euclidian heurisitcs</p>
-              </li>
-              <li class="link-container">
-                <p class="heuristics-menu-heading">Octile heurisitcs</p>
-              </li>
-              <li class="link-container">
-                <p class="heuristics-menu-heading">Chebyshev heurisitcs</p>
-              </li>
-            </ul> -->
-      </div>
-    </div>
-    <!-- <div class="canvas__menu canvas__menu_astar">
+    <div class="canvas canvas_astar">
+        <canvas class="canvas__element canvas__element_astar"></canvas>
+        <div class="canvas_buttons">
+            @@include('resize-button.html')
+            <div class="cursor heuristics-switcher-menu">
+                <button
+                    class="heuristics-switcher-menu heuristics-switcher-button"
+                >
+                    <span class="button-wrap">Manhattan heuristics</span>
+                </button>
+                <!-- <ul class="heuristics-menu">
+					<li class="link-container">
+						<p class="heuristics-menu-heading">Manhattan heurisitcs</p>
+					</li>
+					<li class="link-container">
+						<p class="heuristics-menu-heading">Euclidian heurisitcs</p>
+					</li>
+					<li class="link-container">
+						<p class="heuristics-menu-heading">Octile heurisitcs</p>
+					</li>
+					<li class="link-container">
+						<p class="heuristics-menu-heading">Chebyshev heurisitcs</p>
+					</li>
+					</ul> -->
+            </div>
+        </div>
+        <!-- <div class="canvas__menu canvas__menu_astar">
             <div class="canvas__menu-container canvas__menu-container_astar"></div>
         </div> -->
-  </div>
+    </div>
+    @@include('buttons-menu.html')
 </div>

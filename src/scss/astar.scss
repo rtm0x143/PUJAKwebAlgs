@@ -31,7 +31,7 @@
 
             .button-wrap {
                 @include setFont('garet-book', normal, 14px, 0px, 400, $black);
-                color: $white;
+                color: $creamyWhite;
                 vertical-align: middle;
                 mix-blend-mode: exclusion;
             }
@@ -60,9 +60,9 @@
         padding: 0px;
     }
 
-    .link-container {
+    // .link-container {
         
-    }
+    // }
 
     .heuristics-menu-heading {
         @include setFont('gatet-book', normal, 24px, 32px, 400, $black);

@@ -1,0 +1,46 @@
+.ui .buttons-menu {
+    display: block;
+    background-color: $black;
+    width: 199px;
+    height: 500px;
+    // padding: 34px 46px 34px 46px;
+    
+    .buttons-menu__buttons-bar {
+        display: flex;
+        flex-direction: column;
+        height: 93%;
+        width: 22px;
+        background-color: $creamyWhite;
+        border-radius: 15px;
+        
+        .buttons-menu__button {
+            transform: rotate(90deg);
+            // padding-top: 10px;
+            // padding-bottom: 19px;
+            // padding-left: 10px;
+            // padding-right: 10px;
+            white-space: nowrap;
+            // height: fit-content;
+            margin-bottom: 54px;
+            border: 2px solid $black;
+            border-radius: 10px;
+            background-color: $creamyWhite;
+    
+            .buttons-menu__button__text {
+                @include setFont('codenext', normal, 16px, 0px, 400, $black);
+                color: $black;
+            }
+        }
+
+        .buttons-menu__button:hover {
+            border: 2px solid $creamyWhite;
+            background-color: $black;
+    
+            .buttons-menu__button__text {
+                color: $creamyWhite;
+                transition: background 0.3s;
+            }
+        }
+    }
+    
+}
