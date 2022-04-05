@@ -1,4 +1,4 @@
-const canvas = document.querySelector(".canvas_astar");
+const canvas = document.querySelector(".canvas");
 const resizeIcon = document.querySelector(".resize-block");
 const BORDER_SIZE_X = 4;
 const BORDER_SIZE_Y = 4;
@@ -12,7 +12,7 @@ function resize(e) {
     mousePosX = e.x;
     mousePosY = e.y;
 
-    canvas.style.width = parseInt(getComputedStyle(canvas, '').width) + dx + "px";
+    canvas.style.width = parseInt(getComputedStyle(canvas, '').width) + 2 * dx + "px";
     canvas.style.height = parseInt(getComputedStyle(canvas, '').height) + dy + "px";
 }
 

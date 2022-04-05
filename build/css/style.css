@@ -3,6 +3,11 @@
   src: url("../fonts/codenext.otf");
 }
 
+@font-face {
+  font-family: "garet-book";
+  src: url("../fonts/garet-book.otf");
+}
+
 .stop-scrolling {
   height: 100%;
   overflow: hidden;
@@ -390,12 +395,12 @@ body::-webkit-scrollbar-thumb {
 .title {
   font-family: "codenext", sans-serif;
   font-style: normal;
-  font-size: 180px;
-  line-height: 264px;
+  font-size: 108px;
+  line-height: 128px;
   font-weight: 800;
   color: #303030;
   text-align: center;
-  margin: 44px 0px 33px 0px;
+  margin: 12px 0px 24px 0px;
 }
 
 .ui {
@@ -646,8 +651,8 @@ body::-webkit-scrollbar-thumb {
 
 .ui .canvas.canvas_astar {
   display: block;
-  width: 600px;
-  height: 600px;
+  width: 400px;
+  height: 400px;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
@@ -677,24 +682,20 @@ body::-webkit-scrollbar-thumb {
 }
 
 .ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button .button-wrap {
-  font-family: "gatet-book", sans-serif;
+  font-family: "garet-book", sans-serif;
   font-style: normal;
   font-size: 16px;
   line-height: 0px;
-  font-weight: 600;
+  font-weight: 400;
   color: #303030;
   color: #FFFFFF;
   vertical-align: middle;
+  mix-blend-mode: exclusion;
 }
 
 .ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button:hover {
   transition: 0.3s;
-  background-color: #FFFFFF;
-}
-
-.ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button:hover .button-wrap {
-  transition: 0.3s;
-  color: #303030;
+  background-color: #CFCFCF;
 }
 
 .ui .canvas.canvas_astar .resize-block {
@@ -726,4 +727,37 @@ body::-webkit-scrollbar-thumb {
   color: #303030;
   color: #FFFFFF;
   margin: 0px;
+}
+
+.ui .canvas.canvas_neural-net {
+  display: block;
+  width: 600px;
+  height: 600px;
+  min-width: 200px;
+  min-height: 200px;
+  max-width: 900px;
+  max-height: 900px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  margin: 0;
+}
+
+.ui .canvas.canvas_neural-net .canvas__element_neural-net {
+  vertical-align: middle;
+  width: 100%;
+  height: 100%;
+}
+
+.ui .canvas.canvas_neural-net .resize-block {
+  position: absolute;
+  cursor: pointer;
+  bottom: 15px;
+  right: 15px;
+}
+
+.ui .canvas.canvas_neural-net .resize-block .resize-icon {
+  width: 35px;
+  height: 35px;
 }

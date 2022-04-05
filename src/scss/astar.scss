@@ -1,7 +1,7 @@
 .ui .canvas.canvas_astar {
     display: block;
-    width: 600px;
-    height: 600px;
+    width: 400px;
+    height: 400px;
     user-select: none;
     margin: 0;
     // resize: both;
@@ -30,22 +30,23 @@
             background-color: $black;
 
             .button-wrap {
-                @include setFont('gatet-book', normal, 16px, 0px, 600, $black);
+                @include setFont('garet-book', normal, 16px, 0px, 400, $black);
                 color: $white;
-                vertical-align: middle;    
+                vertical-align: middle;
+                mix-blend-mode: exclusion;
             }
         }
 
         .heuristics-switcher-button:hover {
             transition: 0.3s;
-            background-color: $white;
+            background-color: #CFCFCF;
             // border: 1px solid $white;
             
             // Same as .heuristics-switcher-button:hover .button-wrap
-            .button-wrap {
-                transition: 0.3s;
-                color: $black;
-            }
+            // .button-wrap {
+            //     transition: 0.3s;
+            //     color: $black;
+            // }
         }
         
     }

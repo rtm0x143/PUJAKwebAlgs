@@ -19,6 +19,11 @@ $greyTextColor: #E8E8E8;
     src: url("../fonts/codenext.otf");
 }
 
+@font-face {
+    font-family: "garet-book";
+    src: url("../fonts/garet-book.otf");
+}
+
 // body::-webkit-scrollbar {
 //     display: none;
 // }
@@ -55,3 +60,4 @@ body::-webkit-scrollbar-thumb {
 @import "algs/algorithms";
 @import "ui";
 @import "astar";
+@import "neural-net";
