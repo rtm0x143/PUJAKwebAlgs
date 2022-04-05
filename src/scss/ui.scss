@@ -248,6 +248,35 @@ $param-width: 40px;
                 top: 20px;
             }
         }
+
+        .resize-block {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            
+            .resize-icon {
+                border-radius: 5px;
+                width: 35px;
+                height: 35px;
+    
+                .resize-icon-path {
+                    fill: $creamyWhite;
+                }
+            }
+        }
+    
+        .resize-block:hover, .resize-block:active {
+            
+            .resize-icon {
+                transition: background 0.3s;
+                background-color: $creamyWhite;
+    
+                .resize-icon-path {
+                    fill: $black;
+                }
+            }
+            
+        }
     }
 
     .canvas_genetic {

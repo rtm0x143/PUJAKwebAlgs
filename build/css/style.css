@@ -741,6 +741,33 @@ body::-webkit-scrollbar-thumb {
   top: 20px;
 }
 
+.ui .canvas .resize-block {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.ui .canvas .resize-block .resize-icon {
+  border-radius: 5px;
+  width: 35px;
+  height: 35px;
+}
+
+.ui .canvas .resize-block .resize-icon .resize-icon-path {
+  fill: #CFCFCF;
+}
+
+.ui .canvas .resize-block:hover .resize-icon,
+.ui .canvas .resize-block:active .resize-icon {
+  transition: background 0.3s;
+  background-color: #CFCFCF;
+}
+
+.ui .canvas .resize-block:hover .resize-icon .resize-icon-path,
+.ui .canvas .resize-block:active .resize-icon .resize-icon-path {
+  fill: #303030;
+}
+
 .ui .canvas_genetic {
   width: 1200px;
   height: 800px;
@@ -803,33 +830,6 @@ body::-webkit-scrollbar-thumb {
 .ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button:hover {
   transition: 0.3s;
   background-color: #CFCFCF;
-}
-
-.ui .canvas.canvas_astar .resize-block {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-}
-
-.ui .canvas.canvas_astar .resize-block .resize-icon {
-  border-radius: 5px;
-  width: 35px;
-  height: 35px;
-}
-
-.ui .canvas.canvas_astar .resize-block .resize-icon .resize-icon-path {
-  fill: #CFCFCF;
-}
-
-.ui .canvas.canvas_astar .resize-block:hover .resize-icon,
-.ui .canvas.canvas_astar .resize-block:active .resize-icon {
-  transition: background 0.3s;
-  background-color: #CFCFCF;
-}
-
-.ui .canvas.canvas_astar .resize-block:hover .resize-icon .resize-icon-path,
-.ui .canvas.canvas_astar .resize-block:active .resize-icon .resize-icon-path {
-  fill: #303030;
 }
 
 .ui .canvas.canvas_astar .heuristics-menu {
