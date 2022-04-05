@@ -7,7 +7,7 @@
 
 .nav-button__animation {
     animation: cssAnimation 2s ease 0s 1 forwards;
-    animation: name duration timing-function delay iteration-count direction fill-mode;
+    //animation: name duration timing-function delay iteration-count direction fill-mode;
     // -webkit-animation: cssAnimation 2s ease 0s 1 forwards;
 }
 // @-webkit-keyframes cssAnimation {
@@ -42,6 +42,7 @@
 .nav-icon {
     width: 70px;
     height: 70px;
+    user-select: none;
 }
 
 .nav-icon__circle {

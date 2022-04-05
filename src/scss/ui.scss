@@ -1,9 +1,9 @@
 $param-width: 40px;
 
 .title {
-    @include setFont('codenext', normal, 180px, 264px, 800, $black);
+    @include setFont('codenext', normal, 108px, 128px, 800, $black);
     text-align: center;
-    margin: 44px 0px 33px 0px;
+    margin: 12px 0px 24px 0px;
 }
 
 .ui {
