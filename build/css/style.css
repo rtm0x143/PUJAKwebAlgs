@@ -30,6 +30,18 @@ body::-webkit-scrollbar-thumb {
   background-color: #aaaaaa;
 }
 
+.resize-block {
+  position: absolute;
+  cursor: pointer;
+  bottom: 15px;
+  right: 15px;
+}
+
+.resize-block .resize-icon {
+  width: 35px;
+  height: 35px;
+}
+
 .welcome-screen {
   display: flex;
   justify-content: center;
@@ -353,30 +365,49 @@ body::-webkit-scrollbar-thumb {
 }
 
 .preview {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .preview__image {
+  width: 1400px;
   position: absolute;
   z-index: 0;
+  top: -100px;
 }
 
-.preview__text.preview__text_type_header {
+.preview__text.preview__text_header {
   position: relative;
-  font-size: 270px;
   z-index: 1;
+  font-family: "codenext", sans-serif;
+  font-style: normal;
+  font-size: 170px;
+  line-height: 200px;
+  font-weight: 800;
   color: #303030;
 }
 
 .visualisations {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
   margin-top: 70px;
+  max-width: 1200px;
 }
 
 .visualisations .visualisations__paragraph {
   display: block;
   font-size: 128px;
+  text-align: center;
+  font-family: "codenext", sans-serif;
+  font-style: normal;
+  font-size: 110px;
+  line-height: 120px;
+  font-weight: 800;
+  color: #303030;
+  margin-bottom: 40px;
 }
 
 .visualisations .container {
@@ -386,15 +417,38 @@ body::-webkit-scrollbar-thumb {
 
 .visualisations .container .algorithm-block .algorithm-block__image {
   background: #F2F9E6;
-  width: 390.12px;
+  width: 330px;
   height: 225.26px;
 }
 
 .visualisations .container .algorithm-block .algorithm-block__container {
-  width: 390.12px;
-  height: 75.51px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  width: 330px;
+  height: 50px;
   background: #879E94;
   border-radius: 0px 0px 10px 10px;
+}
+
+.visualisations .container .algorithm-block .algorithm-block__container .algorithm-block__text {
+  font-family: "codenext", sans-serif;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 800;
+  color: #FFFFFF;
+  padding: 10px 0px 0px 10px;
+  margin-top: 0px;
+}
+
+.visualisations .container .algorithm-block .algorithm-block__container .algorithm-block__link {
+  position: absolute;
+  right: 10px;
+}
+
+.visualisations .container_bottom {
+  margin-top: 40px;
 }
 
 .title {
@@ -573,15 +627,21 @@ body::-webkit-scrollbar-thumb {
   margin-left: 28px;
   margin-right: 28px;
   background: #FFFFFF;
-  width: 500px;
-  height: 400px;
+  width: 800px;
+  height: 600px;
   min-width: 300px;
   min-height: 300px;
   max-width: 900px;
   max-height: 900px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .ui .canvas .canvas__element {
+  width: 100%;
+  height: 100%;
   background: #303030;
   border-radius: 20px;
 }
@@ -630,6 +690,22 @@ body::-webkit-scrollbar-thumb {
   color: #303030;
 }
 
+.ui .canvas .canvas__menu .canvas__menu-container .canvas__menu-button_send {
+  cursor: pointer;
+  width: 140px;
+  height: 60px;
+  border-radius: 10px;
+  border: none;
+  margin-left: 10px;
+  background: #12C97A;
+  font-family: "codenext", sans-serif;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
 .ui .canvas .canvas__menu .canvas__menu-container .canvas__menu-button_kmeans:nth-child(2) {
   margin-left: 10px;
 }
@@ -646,6 +722,28 @@ body::-webkit-scrollbar-thumb {
   color: #FFFFFF;
   background: #303030;
   border: 1px solid #FFFFFF;
+}
+
+.ui .canvas .canvas__menu .canvas__menu-container .canvas__menu-button_send:hover {
+  transition: 0.3s;
+  color: #FFFFFF;
+  background: #303030;
+  border: 1px solid #FFFFFF;
+}
+
+.ui .canvas .brush-menu {
+  display: flex;
+  justify-content: center;
+}
+
+.ui .canvas .brush-menu .brush-menu-container {
+  position: absolute;
+  top: 20px;
+}
+
+.ui .canvas_genetic {
+  width: 1200px;
+  height: 800px;
 }
 
 .ui .buttons-menu {
@@ -773,16 +871,4 @@ body::-webkit-scrollbar-thumb {
   vertical-align: middle;
   width: 100%;
   height: 100%;
-}
-
-.ui .canvas.canvas_neural-net .resize-block {
-  position: absolute;
-  cursor: pointer;
-  bottom: 15px;
-  right: 15px;
-}
-
-.ui .canvas.canvas_neural-net .resize-block .resize-icon {
-  width: 35px;
-  height: 35px;
 }
