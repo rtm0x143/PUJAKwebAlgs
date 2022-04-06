@@ -82,5 +82,5 @@ export default Router()
             res.send("Invalid stream dimension")
         }
         
-        res.send(nAlgs.findDigit(req.body[0]).toString())
+        res.send(nAlgs.neuralNet.findDigit(req.body[0]).toString())
     })

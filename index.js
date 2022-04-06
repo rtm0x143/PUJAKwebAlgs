@@ -10,10 +10,10 @@ import algorithms from "./src/algorithms.cjs"
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
-algorithms.init({
-    netWeightsPath : path.join(__dirname, "resources", process.env.weightsName),
-    netBiasesPath : path.join(__dirname, "resources", process.env.biasesName)
-})
+algorithms.neuralNet.init(
+    path.join(__dirname, "resources", process.env.weightsName),
+    path.join(__dirname, "resources", process.env.biasesName)
+)
 
 const app = express()
 // const hbs = handlebars.create({
