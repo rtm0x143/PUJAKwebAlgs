@@ -1,9 +1,9 @@
 import Errors from '../config/Errors.js';
 //import Brush from '../Model/brush.model.js';
 import ClasterModel from '../Model/claster.model.js';
-import canvasView from './canvas.view.js';
+import CanvasView from './canvas.view.js';
 
-class ClasterView extends canvasView {
+class ClasterView extends CanvasView {
     private _regulatorButton: HTMLButtonElement;
     private currentAlg: string = 'DBSCAN';
     // private _regulator: HTMLDivElement;
@@ -27,7 +27,7 @@ class ClasterView extends canvasView {
     private readonly rangeRegulatorBar: HTMLDivElement;
     private readonly countRegulatorBar: HTMLDivElement;
     private readonly canvasDiv: HTMLDivElement;
-    private readonly canvas: HTMLCanvasElement;
+    // private readonly canvas: HTMLCanvasElement;
     private readonly canvasContext: CanvasRenderingContext2D;
     private readonly heightParagraph: HTMLParagraphElement;
     private readonly widthParagraph: HTMLParagraphElement;
@@ -39,7 +39,7 @@ class ClasterView extends canvasView {
     private readonly kmeansMenu: HTMLDivElement;
 
     constructor(model: ClasterModel) {
-        super();
+        super(model);
 
         this.body = document.querySelector('body') ?? Errors.handleError('null');
         this.regulatorButtons = document.querySelectorAll('.regulator__button') ?? Errors.handleError('null');

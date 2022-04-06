@@ -7,9 +7,11 @@ class CanvasController {
         this._model = model;
     }
 
-    handleResizeEvent(dx: number, dy: number, canvas: HTMLCanvasElement) {
-        canvas.style.width = parseInt(getComputedStyle(canvas, '').width, 10) + 2 * dx + "px";
-        canvas.style.height = parseInt(getComputedStyle(canvas, '').height, 10) + 2 * dy + "px";
+    handleResizeEvent(canvas: HTMLCanvasElement, dx: number, dy: number) {
+        let newWidth: number = parseInt(getComputedStyle(canvas, '').width, 10) + 2 * dx;
+        let newHeight: number = parseInt(getComputedStyle(canvas, '').height, 10) + dy;
+
+        this._model.changeCanvasParams(newWidth, newHeight);
     }
 }
 
