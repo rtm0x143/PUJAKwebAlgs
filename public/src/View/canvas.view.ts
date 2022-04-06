@@ -7,7 +7,7 @@ class CanvasView {
     public resizeIcon: HTMLDivElement;
 
     constructor() {
-        this.resizeIcon = document.querySelector('.resizeIcon') ?? Errors.handleError('null');
+        this.resizeIcon = document.querySelector('.resize-icon') ?? Errors.handleError('null');
     }
 
     resize(canvas: HTMLCanvasElement, e: MouseEvent, callback: Function): void {

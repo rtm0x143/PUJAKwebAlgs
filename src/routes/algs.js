@@ -81,6 +81,9 @@ export default Router()
             res.status(400)
             res.send("Invalid stream dimension")
         }
-        
-        res.send(nAlgs.findDigit(req.body[0]).toString())
+
+        console.log(req.body[0]);
+        let result = nAlgs.findDigit(req.body[0])
+        console.log(result);
+        res.send(result)
     })

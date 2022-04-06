@@ -1,4 +1,4 @@
-import View from './View';
+import View from './canvas.view';
 import Errors from "../config/Errors";
 
 class GraphView extends View{
