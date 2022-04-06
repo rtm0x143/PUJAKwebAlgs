@@ -3,13 +3,16 @@ import NeuralModel from "../Model/neural.model";
 import Controller from "./Controller.js";
 
 class NeuralController extends Controller {
+    // class Objects
     private _neuralView: NeuralView;
     private _neuralModel: NeuralModel;
+
     private _isDrawing: Boolean;
 
     constructor(neuralView: NeuralView, neuralModel: NeuralModel) {
         super();
 
+        //class Objects
         this._neuralView = neuralView;
         this._neuralModel = neuralModel;
 
@@ -27,8 +30,8 @@ class NeuralController extends Controller {
         })
 
         //MouseUpEvent
-        this._neuralView.mouseUpHandler((e: MouseEvent) => {
-            this.mouseUp(e);
+        this._neuralView.mouseUpHandler(() => {
+            this.mouseUp();
         })
 
         //fetchEvent
@@ -37,24 +40,29 @@ class NeuralController extends Controller {
         })
     }
 
-    mouseDown(e: MouseEvent) {
+    mouseDown(e: MouseEvent): void {
         this._isDrawing = true;
         this._neuralModel.addCoords(e.offsetX, e.offsetY, false);
     }
 
-    mouseMove(e: MouseEvent) {
+    mouseMove(e: MouseEvent): void {
         if (this._isDrawing) {
             this._neuralModel.addCoords(e.offsetX, e.offsetY, true);
         }
     }
 
-    mouseUp(e: MouseEvent) {
+    mouseUp(): void {
         if (this._isDrawing) {
             this._isDrawing = false;
         }
     }
 
-    sendData(imageData: ImageData) {
+    /**
+     * function that fetch server and get data
+     *
+     * @param imageData - ImageData from canvas
+     */
+    sendData(imageData: ImageData): void {
         fetch(`${this.urlValue}/alg/neuralNet/`, {
             method: 'POST',
             headers: {
@@ -62,8 +70,8 @@ class NeuralController extends Controller {
                 'Content-Length': `${imageData.data.length}`
             },
             body: imageData.data
-        }).then((responce: Response) => {
-            console.log(responce);
+        }).then((response: Response) => {
+            console.log(response);
         });
     }
 }
