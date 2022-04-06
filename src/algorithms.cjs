@@ -7,10 +7,6 @@ const astar = require(path.join(algsDir, "astar")),
     neuralNet = require(path.join(algsDir, "neuralNetwork")), // { init, findDigit }
     labGen = require(path.join(algsDir, "labGen")) // labGen
 
-function _init(config = { netWeightsPath, netBiasesPath }) {
-    neuralNet.init(config.netWeightsPath, config.netBiasesPath)
-}
-
 module.exports = {
-    ...astar, ...clasterisation, ...labGen, findDigit : neuralNet.findDigit, init : _init
+    ...astar, ...clasterisation, ...labGen, neuralNet
 }
