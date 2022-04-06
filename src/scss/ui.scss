@@ -59,11 +59,11 @@ $param-width: 40px;
             }
 
             .regulator__button_height {
-                margin-top: -280px;   
+                margin-top: -580px;   
             }
 
             .regulator__button_width {
-                margin-top: -220px;   
+                margin-top: -560px;   
             }
 
             .regulator__button_range {
@@ -87,11 +87,11 @@ $param-width: 40px;
             }
 
             .regulator__bar_height {
-                height: 225px;
+                height: 525px;
             }
 
             .regulator__bar_width {
-                height: 165px;
+                height: 505px;
             }
 
             .regulator__bar_range {
@@ -172,13 +172,15 @@ $param-width: 40px;
 
                 .canvas__menu-button_DBSCAN {
                     cursor: pointer;
-                    width: 140px;
-                    height: 60px;
-                    border-radius: 10px;
+                    width: 120px;
+                    height: 50px;
                     border: none;
+                    text-shadow: none;
+                    border-radius: 10px;
+                    outline: 0;
                     background: $white;
-
-                    @include setFont('codenext', normal, 24px, 32px, 800, $black);
+                    outline-offset: 0;
+                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
                 }
 
                 .canvas__menu-button_DBSCAN:nth-child(2) {
@@ -187,25 +189,29 @@ $param-width: 40px;
 
                 .canvas__menu-button_kmeans {
                     cursor: pointer;
-                    width: 140px;
-                    height: 60px;
-                    border-radius: 10px;
+                    width: 120px;
+                    height: 50px;
                     border: none;
+                    text-shadow: none;
+                    border-radius: 10px;
+                    outline: 0;
                     background: $white;
-
-                    @include setFont('codenext', normal, 24px, 32px, 800, $black);
+                    outline-offset: 0;
+                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
                 }
 
                 .canvas__menu-button_send {
-                    cursor: pointer;
-                    width: 140px;
-                    height: 60px;
-                    border-radius: 10px;
-                    border: none;
                     margin-left: 10px;
+                    cursor: pointer;
+                    width: 120px;
+                    height: 50px;
+                    border: none;
+                    text-shadow: none;
+                    border-radius: 10px;
+                    outline: 0;
                     background: #12C97A;
-
-                    @include setFont('codenext', normal, 24px, 32px, 800, $white);
+                    outline-offset: 0;
+                    @include setFont('codenext', normal, 16px, 16px, 800, $white);
                 }
 
                 .canvas__menu-button_kmeans:nth-child(2) {
@@ -242,6 +248,65 @@ $param-width: 40px;
             .brush-menu-container {
                 position: absolute;
                 top: 20px;
+
+                .brush-menu-container__select {
+                    width: 120px;
+                    height: 50px;
+                    border: none;
+                    text-shadow: none;
+                    border-radius: 10px;
+                    outline: 0;
+                    outline-offset: 0;
+                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
+                }
+
+                .brush-menu-container__input {
+                    width: 120px;
+                    height: 50px;
+                    border: none;
+                    text-shadow: none;
+                    border-radius: 10px;
+                    outline: 0;
+                    outline-offset: 0;
+                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
+                    margin-left: 10px;
+                }
+            }
+        }
+
+        .kmeans-menu {
+            display: flex;
+            align-items: center;
+
+            .kmeans-menu-container {
+                position: absolute;
+                transform:translateY(-50%);
+                display: block;
+                top: 50%;
+                left: 2px;
+
+                .kmeans-menu__select {
+                    width: 120px;
+                    height: 50px;
+                    border: none;
+                    text-shadow: none;
+                    border-radius: 10px;
+                    outline: 0;
+                    outline-offset: 0;
+                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
+                }
+
+                .kmeans-menu__input input {
+                    width: 120px;
+                    height: 50px;
+                    border: none;
+                    text-shadow: none;
+                    border-radius: 10px;
+                    outline: 0;
+                    outline-offset: 0;
+                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
+                    margin-top: 10px;
+                }
             }
         }
     }

@@ -9,13 +9,26 @@
         <button class="canvas__menu-button_send">send</button>
       </div>
     </div>
+    <div class="kmeans-menu">
+      <div class="kmeans-menu-container">
+        <select class="kmeans-menu__select">
+          <option value="Euclidean">Euclidean</option>
+          <option value="Manhattan">Manhattan</option>
+          <option value="EuclideanCubes">EuclideanCubes</option>
+          <option value="Chebyshev">Chebyshev</option>
+        </select>
+        <div class="kmeans-menu__input">
+          <input type="text" placeholder="clasters count">
+        </div>
+      </div>
+    </div>
     <div class="brush-menu">
       <div class="brush-menu-container">
-        <select>
+        <select class="brush-menu-container__select">
           <option value="1">circle</option>
         </select>
-        <input type="text" placeholder="radius">
-        <input type="text" placeholder="color">
+        <input class="brush-menu-container__input brush-menu-container__input_radius" type="text" placeholder="radius">
+        <input class="brush-menu-container__input brush-menu-container__input_color" type="text" placeholder="color">
       </div>
     </div>
     <span class="resize-block">
@@ -25,4 +38,5 @@
     </span>
   </div>
   @@include('DBSCAN-regulator.html', {})
+  @@include('kmeans-regulator.html', {})
 </div>
