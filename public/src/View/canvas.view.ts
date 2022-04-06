@@ -29,11 +29,14 @@ class CanvasView {
         // canvas.style.height = parseInt(getComputedStyle(canvas, '').height, 10) + 2 * dy + "px";
     }
 
-    handeResizeIconElement(callback: Function) {
+    handleResizeEvent(callback: Function) {
         this.resizeIcon.addEventListener('mousedown', (e: MouseEvent) => {
             this._mousePosX = e.clientX;
             this._mousePosY = e.clientY;
-            // this._resize(e, callback);
+            
+            this.canvas.addEventListener('mousemove', (e: MouseEvent) => {
+                
+            });
         });
         this.resizeIcon.addEventListener('mousemove', (e: MouseEvent) => {
 
