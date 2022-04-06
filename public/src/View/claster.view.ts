@@ -1,9 +1,9 @@
 import Errors from '../config/Errors.js';
 //import Brush from '../Model/brush.model.js';
 import ClasterModel from '../Model/claster.model.js';
-import View from './View.js';
+import canvasView from './canvas.view.js';
 
-class ClasterView extends View {
+class ClasterView extends canvasView {
     private _regulatorButton: HTMLButtonElement;
     private currentAlg: string = 'DBSCAN';
     // private _regulator: HTMLDivElement;
