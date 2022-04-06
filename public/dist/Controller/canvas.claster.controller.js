@@ -1,9 +1,9 @@
 import Errors from "../config/Errors.js";
 import ClasterView from "../View/claster.view.js";
-import Controller from "./Controller.js";
-class ClasterController extends Controller {
+import CanvasController from "../Controller/canvas.controller.js";
+class ClasterController extends CanvasController {
     constructor(clasterModel) {
-        super();
+        super(clasterModel);
         this._clasterModel = clasterModel;
         this._clasterView = new ClasterView(this._clasterModel);
         this._clasterView.handleButtonClick(this.AddObjectCallback.bind(this));
@@ -43,7 +43,7 @@ class ClasterController extends Controller {
                         if (value[i] >= 2) {
                             if (value[i - 1] > colorsArray.length) {
                                 for (let j = colorsArray.length; j < value[i - 1]; ++j) {
-                                    colorsArray.push((_a = this.hsvToRGB(Math.floor(Math.random() * 361), 1, 0.8 + Math.random() * 0.2)) !== null && _a !== void 0 ? _a : Errors.handleError('undefined'));
+                                    colorsArray.push((_a = this._clasterView.hsvToRGB(Math.floor(Math.random() * 361), 1, 0.8 + Math.random() * 0.2)) !== null && _a !== void 0 ? _a : Errors.handleError('undefined'));
                                 }
                                 this._clasterView.drawCircle(context, '', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], radius);
                             }
@@ -81,7 +81,7 @@ class ClasterController extends Controller {
                     for (let i = 0, k = 0; i < value.length; ++i, k += 2) {
                         if (value[i] + 1 > colorsArray.length) {
                             for (let j = colorsArray.length; j < value[i] + 1; ++j) {
-                                colorsArray.push((_a = this.hsvToRGB(Math.floor(Math.random() * 361), 1, 1)) !== null && _a !== void 0 ? _a : Errors.handleError('undefined'));
+                                colorsArray.push((_a = this._clasterView.hsvToRGB(Math.floor(Math.random() * 361), 1, 1)) !== null && _a !== void 0 ? _a : Errors.handleError('undefined'));
                             }
                             this._clasterView.drawCircle(context, '', colorsArray[value[i]], this._clasterModel.positions[k + 1], this._clasterModel.positions[k], radius);
                         }
