@@ -4,22 +4,38 @@ import canvasView from './canvas.view.js';
 
 class NeuralView extends canvasView {
     private _neuralModel: NeuralModel;
+
+    // canvas elements
     private readonly _neuralCanvas: HTMLCanvasElement;
     private _neuralData: HTMLCanvasElement;
-    private _sendButton: HTMLButtonElement;
+
+    // context elements
     private _neuralContext: CanvasRenderingContext2D;
     private _dataContext: CanvasRenderingContext2D;
+
+    // button elements
+    private _sendButton: HTMLButtonElement;
 
     constructor(neuralModel: NeuralModel) {
         super();
 
         this._neuralModel = neuralModel;
+
+        // canvas elements initialise
         this._neuralCanvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
         this._neuralData = document.querySelector('.ui__canvas-data') ?? Errors.handleError('null');
+
+        // button elements initialise
         this._sendButton = document.querySelector('.send-button') ?? Errors.handleError('null');
+
+        // contexts
         this._neuralContext = this._neuralCanvas.getContext('2d') ?? Errors.handleError('null');
         this._dataContext = this._neuralData.getContext('2d') ?? Errors.handleError('null');
+
+        // subscribe to model events
         this._subscribe();
+
+        // initialise canvas params
         this._neuralCanvas.height = 600;
         this._neuralCanvas.width = 600;
     }
@@ -32,6 +48,7 @@ class NeuralView extends canvasView {
     mouseDownHandler(callback: Function): void {
         this._neuralCanvas.addEventListener('mousedown', (e) => {
             e.preventDefault();
+
             callback(e);
         })
     }
@@ -44,6 +61,7 @@ class NeuralView extends canvasView {
     mouseMoveHandler(callback: Function): void {
         this._neuralCanvas.addEventListener('mousemove', (e) => {
             e.preventDefault();
+
             callback(e);
         })
     }
@@ -56,25 +74,29 @@ class NeuralView extends canvasView {
     mouseUpHandler(callback: Function): void {
         window.addEventListener('mouseup', (e) => {
             e.preventDefault();
-            callback(e);
+
+            callback();
         })
     }
 
     /**
-     *function after mouseclick event, which send data to server
+     * function after mouseclick event, which send data to server
      *
      * @param callback - Function from controller
      */
    sendButtonHandler(callback: Function): void {
         this._sendButton.addEventListener('click', (e) => {
-            console.log(this._dataContext.getImageData(0, 0, 50, 50));
             e.preventDefault();
+
             callback(this._dataContext.getImageData(0, 0, 50, 50));
         })
     }
 
-    private _subscribe() {
-        this._neuralModel.addEventListener('neuralcoordschange', () => {
+    /**
+     * registry listeners for model events
+     */
+    private _subscribe(): void {
+        this._neuralModel.addEventListener('neuralcoordschange', _ => {
             if (this._neuralModel.coords.length > 1) {
                 this.drawLine(
                     this._neuralModel.coords[this._neuralModel.coords.length - 4],
@@ -91,7 +113,7 @@ class NeuralView extends canvasView {
     /**
      * function that drawLine on canvas
      */
-    drawLine(x1: number, y1: number, x2: number, y2: number) {
+    drawLine(x1: number, y1: number, x2: number, y2: number): void {
         this._neuralContext.beginPath();
         this._neuralContext.strokeStyle = 'white';
         this._neuralContext.lineWidth = 15;
