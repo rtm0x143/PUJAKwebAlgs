@@ -1,0 +1,118 @@
+.ui .canvas .canvas__menu {
+    display: flex;
+    justify-content: center;
+
+    .kmeans-menu {
+        display: flex;
+        align-items: center;
+
+        .kmeans-menu-container {
+            position: absolute;
+            transform: translateY(-50%);
+            display: block;
+            top: 50%;
+            left: 2px;
+
+            .kmeans-menu__select {
+                width: 120px;
+                height: 50px;
+                border: none;
+                text-shadow: none;
+                border-radius: 10px;
+                outline: 0;
+                outline-offset: 0;
+                font-family: codenext, sans-serif;
+                font-style: normal;
+                font-size: 16px;
+                line-height: 16px;
+                font-weight: 800;
+                color: $black;
+            }
+
+            .kmeans-menu__input input {
+                width: 120px;
+                height: 50px;
+                border: none;
+                text-shadow: none;
+                border-radius: 10px;
+                outline: 0;
+                outline-offset: 0;
+                font-family: codenext, sans-serif;
+                font-style: normal;
+                font-size: 16px;
+                line-height: 16px;
+                font-weight: 800;
+                color: #303030;
+                margin-top: 10px;
+            }
+        }
+    }
+
+    .canvas__menu-container {
+        position: absolute;
+        bottom: 20px;
+
+        .canvas__menu-button_DBSCAN {
+            cursor: pointer;
+            width: 140px;
+            height: 60px;
+            border-radius: 10px;
+            border: none;
+            background: $white;
+
+            @include setFont('codenext', normal, 24px, 32px, 800, $black);
+        }
+
+        .canvas__menu-button_DBSCAN:nth-child(2) {
+            margin-left: 10px;
+        }
+
+        .canvas__menu-button_kmeans {
+            cursor: pointer;
+            width: 140px;
+            height: 60px;
+            border-radius: 10px;
+            border: none;
+            background: $white;
+
+            @include setFont('codenext', normal, 24px, 32px, 800, $black);
+        }
+
+        .canvas__menu-button_send {
+            cursor: pointer;
+            width: 140px;
+            height: 60px;
+            border-radius: 10px;
+            border: none;
+            margin-left: 10px;
+            background: #12C97A;
+
+            @include setFont('codenext', normal, 24px, 32px, 800, $white);
+        }
+
+        .canvas__menu-button_kmeans:nth-child(2) {
+            margin-left: 10px;
+        }
+
+        .canvas__menu-button_DBSCAN:hover {
+            transition: 0.3s;
+            color: $white;
+            background: $black;
+            border: 1px solid $white;
+        }
+
+        .canvas__menu-button_kmeans:hover {
+            transition: 0.3s;
+            color: $white;
+            background: $black;
+            border: 1px solid $white;
+        }
+
+        .canvas__menu-button_send:hover {
+            transition: 0.3s;
+            color: $white;
+            background: $black;
+            border: 1px solid $white;
+        }
+    }
+}
