@@ -4,52 +4,9 @@
 #include "tools.h"
 #include "NetIO.h"
 
-double*** downloadWeights(const std::string& path, std::vector<size_t>& dimensions) {
-	std::ifstream stream(path, std::ios::in | std::ios::binary);
-	
-	size_t layCount;
-	stream.read((char*)&layCount, sizeof(size_t));
-	double*** weights = (double***)malloc((layCount - 1) * sizeof(double**));
-	dimensions = std::vector<size_t>(layCount);
-
-	stream.read((char*)dimensions.data(), sizeof(size_t));
-
-	for (size_t l = 1; l < layCount; ++l)
-	{
-		stream.read((char*)(dimensions.data() + l), sizeof(size_t));
-
-		double** weightsLay = weights[l - 1];
-        weightsLay = (double**)malloc(dimensions[l] * sizeof(double*));
-        weightsLay[0] = (double*)malloc(dimensions[l] * dimensions[l - 1] * 8);
-        for (size_t i = 1; i < dimensions[l]; ++i) {
-            weightsLay[i] = weightsLay[i - 1] + dimensions[l - 1];
-        }
-        
-		stream.read((char*)weightsLay[0], dimensions[l] * dimensions[l - 1] * 8);
-		
-	}
-	stream.close();
-	return weights;
-}
-
-double** downloadBiases(const std::string& path) {
-	std::ifstream stream(path, std::ios::in | std::ios::binary);
-
-	size_t count;
-	stream.read((char*)&count, sizeof(size_t));
-	double** biases = (double**)malloc((count + 1) * sizeof(double*));
-
-	for (size_t l = 1; l <= count; ++l)
-	{
-		size_t size;
-		stream.read((char*)&size, sizeof(size_t));
-		biases[l] = (double*)malloc(size * 8);
-		stream.read((char*)biases[l], size * 8);
-	}
-
-	stream.close();
-	return biases;
-}
+#include <iostream>
+#include "vectorExtention.cpp"
+using namespace vectorExtention;
 
 NeuralNetwork* net = nullptr;
 
@@ -63,12 +20,13 @@ void init(const Napi::CallbackInfo& info)
     } else if (!info[0].IsString() || !info[1].IsString()) {
         Napi::TypeError::New(env, "Invalid arguments types; string expected").ThrowAsJavaScriptException();
         return;
-    }     
+    }
 
     std::vector<size_t> dimensions;
     Matrix<double>* weights = NetIO::downloadWeights(info[0].As<Napi::String>(), dimensions);
     std::vector<double>* biases = NetIO::downloadBiases(info[1].As<Napi::String>());
 
+    delete net;
     net = new NeuralNetwork(dimensions, weights, biases, tools::sigmoid, tools::derSigByValue);
 }
 
@@ -86,7 +44,7 @@ Napi::Value findDigit(const Napi::CallbackInfo& info)
         return env.Null();
     }
 
-    Napi::ArrayBuffer img = info[0].As<Napi::ArrayBuffer>();
+    Napi::Uint8Array img = info[0].As<Napi::Uint8Array>();
     if (img.ByteLength() != 10000) {
         Napi::Error::New(env, "Invalid image size").ThrowAsJavaScriptException();
         return env.Null();

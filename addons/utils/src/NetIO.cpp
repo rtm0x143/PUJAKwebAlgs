@@ -2,18 +2,23 @@
 #include <fstream>
 #include <thread>
 
+
 void NetIO::uploadWeights(const std::string& path, const Matrix<double>* weights,
 	const std::vector<size_t>& dimensions)
 {
 	std::ofstream stream(path, std::ios::out | std::ios::binary);
-	size_t layCount = dimensions.size();
+	int layCount = dimensions.size(), temp;
 	stream.write((char*)&layCount, sizeof(layCount));
-	stream.write((char*)dimensions.data(), sizeof(size_t) * layCount);
+
+	for (size_t i = 0; i < layCount; i++)
+	{
+		temp = dimensions[i];
+		stream.write((char*)&temp, 4);
+	}
 
 	for (size_t l = 0; l < layCount - 1; ++l)
 	{
 		const Matrix<double>& weightsLay = weights[l];
-
 		stream.write((char*)weightsLay.getRow(0), dimensions[l + 1] * dimensions[l] * 8);
 	}
 	stream.close();
@@ -22,19 +27,24 @@ void NetIO::uploadWeights(const std::string& path, const Matrix<double>* weights
 Matrix<double>* NetIO::downloadWeights(const std::string& path, std::vector<size_t>& dimensions) {
 	std::ifstream stream(path, std::ios::in | std::ios::binary);
 
-	size_t layCount;
-	stream.read((char*)&layCount, sizeof(size_t));
+	int layCount;
+	stream.read((char*)&layCount, sizeof(int));
 	Matrix<double>* weights = new Matrix<double>[layCount - 1];
 	
 	dimensions = std::vector<size_t>(layCount);
-	stream.read((char*)dimensions.data(), sizeof(size_t) * layCount);
-
+	for (size_t i = 0; i < layCount; i++)
+	{
+		int temp;
+		stream.read((char*)&temp, 4);
+		dimensions[i] = temp;
+	}
+	
 	for (size_t l = 0; l < layCount - 1; ++l)
 	{
 		weights[l] = Matrix<double>(dimensions[l + 1], dimensions[l]);
-
 		stream.read((char*)weights[l].getRow(0), dimensions[l + 1] * dimensions[l] * 8);
 	}
+		
 	stream.close();
 	return weights;
 }
@@ -44,13 +54,13 @@ void NetIO::uploadBiases(const std::string& path, std::vector<double>* biases,
 {
 	std::ofstream stream(path, std::ios::out | std::ios::binary);
 	{
-		size_t temp = dimensions.size() - 1;
-		stream.write((char*)&temp, sizeof(size_t));
+		int temp = dimensions.size() - 1;
+		stream.write((char*)&temp, 4);
 	}
 	for (size_t l = 1; l < dimensions.size(); ++l)
 	{
-		size_t size = biases[l].size();
-		stream.write((char*)&size, sizeof(size_t));
+		int size = biases[l].size();
+		stream.write((char*)&size, 4);
 		stream.write((char*)biases[l].data(), size * 8);
 	}
 	stream.close();
@@ -59,21 +69,20 @@ void NetIO::uploadBiases(const std::string& path, std::vector<double>* biases,
 std::vector<double>* NetIO::downloadBiases(const std::string& path) {
 	std::ifstream stream(path, std::ios::in | std::ios::binary);
 
-	size_t count;
-	stream.read((char*)&count, sizeof(size_t));
+	int count;
+	stream.read((char*)&count, 4);
 	std::vector<double>* biases = new std::vector<double>[count + 1];
 
 	for (size_t l = 1; l <= count; ++l)
 	{
-		size_t size;
-		stream.read((char*)&size, sizeof(size_t));
+		int size;
+		stream.read((char*)&size, 4);
 		biases[l] = std::vector<double>(size);
 		stream.read((char*)biases[l].data(), size * 8);
 	}
 	stream.close();
 	return biases;
 }
-
 
 
 
@@ -84,7 +93,7 @@ int readBegInt32(std::ifstream& stream) {
 		stream >> buf4[i];
 	return *(int*)&buf4;
 }
-			#include <iostream>
+			
 void normalize_MultiThread(std::vector<uint8_t>& buffer, size_t imgSize,
 	Dataset& output, size_t workersCount)
 {

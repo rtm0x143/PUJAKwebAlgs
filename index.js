@@ -6,8 +6,14 @@ import express from "express";
 import pagesRouter from "./src/routes/pages.js"
 import algsRouter from "./src/routes/algs.js"
 import { binStreamParser } from "./src/middlewares.js"
+import algorithms from "./src/algorithms.cjs"
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
+
+algorithms.init({
+    netWeightsPath : path.join(__dirname, "resources", process.env.weightsName),
+    netBiasesPath : path.join(__dirname, "resources", process.env.biasesName)
+})
 
 const app = express()
 // const hbs = handlebars.create({
@@ -18,6 +24,7 @@ const app = express()
 // app.engine("hbs", hbs.engine)
 //     .set("view engine", "hbs")
 app.set("views", path.join(__dirname, "views"))
+    .set("rootPath", __dirname)
 
 app.use(express.json())
     .use(express.static(path.join(__dirname, "public")))
