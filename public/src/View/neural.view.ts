@@ -1,8 +1,8 @@
 import Errors from "../config/Errors";
 import ClasterModel from '../Model/claster.model.js';
-import View from './View.js';
+import canvasView from './canvas.view.js';
 
-class NeuralView extends View {
+class NeuralView extends canvasView {
     constructor() {
         super();
 
