@@ -19,7 +19,7 @@ class GraphView extends View{
     }
 
     calcHandler(callback: Function) {
-        this._sendButton.addEventListener('click', (e) => {
+        this._sendButton.addEventListener('click', () => {
             callback();
         })
     }

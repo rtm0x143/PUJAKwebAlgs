@@ -1,5 +1,5 @@
 import Errors from '../config/Errors.js';
-import Brush from '../Model/brush.model.js';
+//import Brush from '../Model/brush.model.js';
 import ClasterModel from '../Model/claster.model.js';
 import View from './View.js';
 
@@ -18,25 +18,25 @@ class ClasterView extends View {
     private _clasterModel: ClasterModel;
     //private _brush: Brush;
 
-    private body: HTMLBodyElement;
-    private regulatorButtons: NodeListOf<HTMLButtonElement>;
-    private widthRegulator: HTMLDivElement;
-    private heightRegulator: HTMLDivElement;
-    private heightRegulatorBar: HTMLDivElement;
-    private widthRegulatorBar: HTMLDivElement;
-    private rangeRegulatorBar: HTMLDivElement;
-    private countRegulatorBar: HTMLDivElement;
-    private canvasDiv: HTMLDivElement;
-    private canvas: HTMLCanvasElement;
-    private canvasContext: CanvasRenderingContext2D;
-    private heightParagrapth: HTMLParagraphElement;
-    private widthParagrapth: HTMLParagraphElement;
-    private rangeParagrapth: HTMLParagraphElement;
-    private countParagrapth: HTMLParagraphElement;
-    private kmeansSelect: HTMLSelectElement;
+    private readonly body: HTMLBodyElement;
+    private readonly regulatorButtons: NodeListOf<HTMLButtonElement>;
+    private readonly widthRegulator: HTMLDivElement;
+    private readonly heightRegulator: HTMLDivElement;
+    private readonly heightRegulatorBar: HTMLDivElement;
+    private readonly widthRegulatorBar: HTMLDivElement;
+    private readonly rangeRegulatorBar: HTMLDivElement;
+    private readonly countRegulatorBar: HTMLDivElement;
+    private readonly canvasDiv: HTMLDivElement;
+    private readonly canvas: HTMLCanvasElement;
+    private readonly canvasContext: CanvasRenderingContext2D;
+    private readonly heightParagraph: HTMLParagraphElement;
+    private readonly widthParagraph: HTMLParagraphElement;
+    private readonly rangeParagraph: HTMLParagraphElement;
+    private readonly countParagraph: HTMLParagraphElement;
+    private readonly kmeansSelect: HTMLSelectElement;
     private countInput: HTMLInputElement;
     private canvasMenu: HTMLDivElement;
-    private kmeansMenu: HTMLDivElement;
+    private readonly kmeansMenu: HTMLDivElement;
 
     constructor(model: ClasterModel) {
         super();
@@ -52,10 +52,10 @@ class ClasterView extends View {
         this.canvasDiv = document.querySelector('.canvas') ?? Errors.handleError('null');
         this.canvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
         this.canvasContext = this.canvas.getContext('2d') ?? Errors.handleError('null');
-        this.heightParagrapth = document.querySelector('.regulator__height-paragraph') ?? Errors.handleError('null');
-        this.widthParagrapth = document.querySelector('.regulator__width-paragraph') ?? Errors.handleError('null');
-        this.rangeParagrapth = document.querySelector('.regulator__range-paragraph') ?? Errors.handleError('null');
-        this.countParagrapth = document.querySelector('.regulator__count-paragraph') ?? Errors.handleError('null');
+        this.heightParagraph = document.querySelector('.regulator__height-paragraph') ?? Errors.handleError('null');
+        this.widthParagraph = document.querySelector('.regulator__width-paragraph') ?? Errors.handleError('null');
+        this.rangeParagraph = document.querySelector('.regulator__range-paragraph') ?? Errors.handleError('null');
+        this.countParagraph = document.querySelector('.regulator__count-paragraph') ?? Errors.handleError('null');
         this.kmeansSelect = document.querySelector('.kmeans-menu__select') ?? Errors.handleError('null');
         this.countInput = document.querySelector('.kmeans-menu__input input') ?? Errors.handleError('null');
         this.canvasMenu = document.querySelector('.canvas__menu') ?? Errors.handleError('null');
@@ -66,9 +66,9 @@ class ClasterView extends View {
 
         //server data
         // this._rangeInput = document.querySelector('.range') ?? Errors.handleError('null');
-        // this._groupInput = document.querySelector('.groupsize') ?? Errors.handleError('null');
+        // this._groupInput = document.querySelector('.group-size') ?? Errors.handleError('null');
 
-        // //buttons to send on server ddata
+        // //buttons to send on server data
         this._DBSCANButton = document.querySelector('.canvas__menu-button_DBSCAN')
             ?? Errors.handleError('null');
         this._kmeansButton = document.querySelector('.canvas__menu-button_kmeans')
@@ -79,7 +79,7 @@ class ClasterView extends View {
         //Models
         this._clasterModel = model;
         //this._brush = new Brush();    add Brush
-        //start with DBSCAN
+        //starts with DBSCAN
         this.kmeansMenu.style.display = 'none';
         this._subscribe();
         this.canvas.setAttribute('height', this.canvasDiv.offsetHeight.toString());
@@ -97,7 +97,7 @@ class ClasterView extends View {
                     this.canvasDiv,
                     this.canvas,
                     this.canvasContext,
-                    this.heightParagrapth,
+                    this.heightParagraph,
                     'height'
                 )
             }
@@ -114,7 +114,7 @@ class ClasterView extends View {
                         this.canvasDiv,
                         this.canvas,
                         this.canvasContext,
-                        this.widthParagrapth,
+                        this.widthParagraph,
                         'width'
                     )
                 }
@@ -131,7 +131,7 @@ class ClasterView extends View {
                     this.canvasDiv,
                     this.canvas,
                     this.canvasContext,
-                    this.rangeParagrapth,
+                    this.rangeParagraph,
                     'range',
                     960
                 )
@@ -148,7 +148,7 @@ class ClasterView extends View {
                     this.canvasDiv,
                     this.canvas,
                     this.canvasContext,
-                    this.countParagrapth,
+                    this.countParagraph,
                     'count',
                     255
                 )
@@ -353,8 +353,8 @@ class ClasterView extends View {
             callback(
                 getComputedStyle(this.kmeansMenu).display,
                 this.canvasContext,
-                parseInt(this.rangeParagrapth.textContent ?? Errors.handleError('null')),
-                parseInt(this.countParagrapth.textContent ?? Errors.handleError('null')),
+                parseInt(this.rangeParagraph.textContent ?? Errors.handleError('null')),
+                parseInt(this.countParagraph.textContent ?? Errors.handleError('null')),
                 this.kmeansSelect.value ?? Errors.handleError('null'),
                 parseInt(this.countInput.value ?? Errors.handleError('null')),
                 10
