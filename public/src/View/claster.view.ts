@@ -33,6 +33,8 @@ class ClasterView extends View {
     private widthParagrapth: HTMLParagraphElement;
     private rangeParagrapth: HTMLParagraphElement;
     private countParagrapth: HTMLParagraphElement;
+    private kmeansSelect: HTMLSelectElement;
+    private countInput: HTMLInputElement;
     private canvasMenu: HTMLDivElement;
     private kmeansMenu: HTMLDivElement;
 
@@ -54,6 +56,8 @@ class ClasterView extends View {
         this.widthParagrapth = document.querySelector('.regulator__width-paragraph') ?? Errors.handleError('null');
         this.rangeParagrapth = document.querySelector('.regulator__range-paragraph') ?? Errors.handleError('null');
         this.countParagrapth = document.querySelector('.regulator__count-paragraph') ?? Errors.handleError('null');
+        this.kmeansSelect = document.querySelector('.kmeans-menu__select') ?? Errors.handleError('null');
+        this.countInput = document.querySelector('.kmeans-menu__input input') ?? Errors.handleError('null');
         this.canvasMenu = document.querySelector('.canvas__menu') ?? Errors.handleError('null');
         this.kmeansMenu = document.querySelector('.kmeans-menu') ?? Errors.handleError('null');
 
@@ -245,7 +249,10 @@ class ClasterView extends View {
         })
 
         body.addEventListener('mouseup', _ => {
-            isDown = false;
+            if (isDown) {
+                isDown = false;
+                this._clasterModel.positions = [];
+            }
         })
     }
 
@@ -337,31 +344,22 @@ class ClasterView extends View {
         this._kmeansButton.addEventListener('click', (event) => {
             event.preventDefault();
             callback(this.kmeansMenu);
-        })
+        });
     }
 
     handleFetch(callback: Function) {
         this._sendButton.addEventListener('click', (event) => {
             event.preventDefault();
-            if (getComputedStyle(this.kmeansMenu).display == 'none') {
-                callback(
-                    'none',
-                    this.canvasContext,
-                    parseInt(this.rangeParagrapth.textContent ?? Errors.handleError('null')),
-                    parseInt(this.countParagrapth.textContent ?? Errors.handleError('null')),
-                    10
-                )
-            }
-            else {
-                callback(
-                    'block',
-                    this.canvasContext,
-                    parseInt(this.rangeParagrapth.textContent ?? Errors.handleError('null')),
-                    parseInt(this.countParagrapth.textContent ?? Errors.handleError('null')),
-                    10
-                )
-            }
-        })
+            callback(
+                getComputedStyle(this.kmeansMenu).display,
+                this.canvasContext,
+                parseInt(this.rangeParagrapth.textContent ?? Errors.handleError('null')),
+                parseInt(this.countParagrapth.textContent ?? Errors.handleError('null')),
+                this.kmeansSelect.value ?? Errors.handleError('null'),
+                parseInt(this.countInput.value ?? Errors.handleError('null')),
+                10
+            );
+        });
     }
 }
 

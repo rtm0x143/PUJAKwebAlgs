@@ -29,7 +29,15 @@ class ClasterController extends Controller{
         }
     }
 
-    request(type: string, context: CanvasRenderingContext2D, range: number, groupSize: number, radius: number) {
+    request(
+        type: string,
+        context: CanvasRenderingContext2D,
+        range: number,
+        groupSize: number,
+        metricType: string,
+        clastersCount: string,
+        radius: number
+    ) {
         if (type === 'none') {
             fetch(`${this.urlValue}/alg/clasterisation?type=DBSCAN&range=${range}&gSize=${groupSize}`, {
                 method: 'POST',
@@ -45,8 +53,6 @@ class ClasterController extends Controller{
                     if (value == null) Errors.handleError('null');
                     let colorsArray = []
 
-                    console.log(value)
-
                     for (let i = 1; i < value.length; i += 2) {
                         if (value[i] >= 2) {
                             if (value[i - 1] > colorsArray.length) {
@@ -55,8 +61,8 @@ class ClasterController extends Controller{
                                         Math.floor(
                                             Math.random() * 361
                                         ),
-                                        0.5 + Math.random() * 0.5,
-                                        0.5 + Math.random() * 0.5) ?? Errors.handleError('undefined')
+                                        1,
+                                        0.8 + Math.random() * 0.2) ?? Errors.handleError('undefined')
                                     );
                                 }
 
@@ -89,9 +95,65 @@ class ClasterController extends Controller{
                             );
                         }
                     }
+                })
+            })
+        } else {
+            fetch(`${this.urlValue}/alg/clasterisation?type=k_means&pCount=${2}&metric=${metricType}[&cCount=${clastersCount}]`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/octet-stream'
+                },
 
-                    console.log(colorsArray)
-                    console.log(this._clasterModel.positions)
+                body: (new Uint16Array(this._clasterModel.positions)).buffer
+            }).then((response) => {
+                let reader = response.body?.getReader();
+                reader?.read().then(({done, value}) => {
+                    if (value == undefined) Errors.handleError('undefined');
+                    if (value == null) Errors.handleError('null');
+                    let colorsArray = []
+
+                    for (let i = 1; i < value.length; i += 2) {
+                        if (value[i] >= 2) {
+                            if (value[i - 1] > colorsArray.length) {
+                                for (let j = colorsArray.length; j < value[i - 1]; ++j) {
+                                    colorsArray.push(this.hsvToRGB(
+                                        Math.floor(
+                                            Math.random() * 361
+                                        ),
+                                        1,
+                                        0.8 + Math.random() * 0.2) ?? Errors.handleError('undefined')
+                                    );
+                                }
+
+                                this._clasterView.drawCircle(
+                                    context,
+                                    '',
+                                    colorsArray[value[i - 1] - 1],
+                                    this._clasterModel.positions[i],
+                                    this._clasterModel.positions[i - 1],
+                                    radius
+                                );
+                            } else {
+                                this._clasterView.drawCircle(
+                                    context,
+                                    '',
+                                    colorsArray[value[i - 1] - 1],
+                                    this._clasterModel.positions[i],
+                                    this._clasterModel.positions[i - 1],
+                                    radius
+                                );
+                            }
+                        } else {
+                            this._clasterView.drawCircle(
+                                context,
+                                '',
+                                'grey',
+                                this._clasterModel.positions[i],
+                                this._clasterModel.positions[i - 1],
+                                radius
+                            );
+                        }
+                    }
                 })
             })
         }
