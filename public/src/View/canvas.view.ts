@@ -13,7 +13,7 @@ class CanvasView {
     resize(canvas: HTMLCanvasElement, e: MouseEvent, callback: Function): void {
         const dx: number = e.clientX - this._mousePosX;
         const dy: number = e.clientY - this._mousePosY;
-
+  
         this._mousePosX = e.clientX;
         this._mousePosY = e.clientY;
 
