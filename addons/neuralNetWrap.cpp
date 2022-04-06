@@ -44,13 +44,13 @@ Napi::Value findDigit(const Napi::CallbackInfo& info)
         return env.Null();
     }
 
-//     Napi::Uint8Array img = info[0].As<Napi::Uint8Array>();
-//     if (img.ByteLength() != 10000) {
-//         Napi::Error::New(env, "Invalid image size").ThrowAsJavaScriptException();
-//         return env.Null();
+    Napi::ArrayBuffer buffer = info[0].As<Napi::ArrayBuffer>();
+    if (buffer.ByteLength() != 10000) {
+        Napi::Error::New(env, "Invalid image size").ThrowAsJavaScriptException();
+        return env.Null();
     }
 
-    std::vector<double> normalized = tools::normalizeRGBA_Img((uint8_t*)info[0].As<Napi::ArrayBuffer>().Data(), img.ByteLength() / 4);
+    std::vector<double> normalized = tools::normalizeRGBA_Img((uint8_t*)buffer.Data(), buffer.ByteLength() / 4);
     Napi::Number result = Napi::Number::New(env, (int)net->feedForward(normalized));
 
     return result;
