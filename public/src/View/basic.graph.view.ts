@@ -1,12 +1,13 @@
-import View from './canvas.view';
+import CanvasView from './canvas.view';
+import GraphModel from '../Model/graph.model'
 import Errors from "../config/Errors";
 
-class GraphView extends View{
+class GraphView extends CanvasView {
     private _canvas: HTMLCanvasElement;
     private _sendButton: HTMLButtonElement;
 
-    constructor() {
-        super();
+    constructor(model: GraphModel) {
+        super(model);
 
         this._canvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
         this._sendButton = document.querySelector('.calcButton') ?? Errors.handleError('null');
