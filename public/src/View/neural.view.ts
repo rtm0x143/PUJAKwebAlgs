@@ -17,7 +17,7 @@ class NeuralView extends canvasView {
     private _sendButton: HTMLButtonElement;
 
     constructor(neuralModel: NeuralModel) {
-        super();
+        super(neuralModel);
 
         this._neuralModel = neuralModel;
 
