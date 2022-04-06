@@ -32,11 +32,11 @@ class ClasterController extends Controller {
             }).then((response) => {
                 var _a;
                 let reader = (_a = response.body) === null || _a === void 0 ? void 0 : _a.getReader();
-                reader === null || reader === void 0 ? void 0 : reader.read().then(({ done, value }) => {
+                reader === null || reader === void 0 ? void 0 : reader.read().then(({ value }) => {
                     var _a;
-                    if (value == undefined)
+                    if (value === undefined)
                         Errors.handleError('undefined');
-                    if (value == null)
+                    if (value === null)
                         Errors.handleError('null');
                     let colorsArray = [];
                     for (let i = 1; i < value.length; i += 2) {
@@ -59,7 +59,9 @@ class ClasterController extends Controller {
             });
         }
         else {
-            fetch(`${this.urlValue}/alg/clasterisation?type=k_means&pCount=${2}&metric=${metricType}[&cCount=${clastersCount}]`, {
+            fetch(clastersCount ?
+                `${this.urlValue}/alg/clasterisation?type=k_means&pCount=${2}&metric=${metricType}&cCount=${clastersCount}` :
+                `${this.urlValue}/alg/clasterisation?type=k_means&pCount=${2}&metric=${metricType}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/octet-stream'
@@ -68,29 +70,26 @@ class ClasterController extends Controller {
             }).then((response) => {
                 var _a;
                 let reader = (_a = response.body) === null || _a === void 0 ? void 0 : _a.getReader();
-                reader === null || reader === void 0 ? void 0 : reader.read().then(({ done, value }) => {
+                reader === null || reader === void 0 ? void 0 : reader.read().then(({ value }) => {
                     var _a;
-                    if (value == undefined)
+                    console.log(value);
+                    if (value === undefined)
                         Errors.handleError('undefined');
-                    if (value == null)
+                    if (value === null)
                         Errors.handleError('null');
                     let colorsArray = [];
-                    for (let i = 1; i < value.length; i += 2) {
-                        if (value[i] >= 2) {
-                            if (value[i - 1] > colorsArray.length) {
-                                for (let j = colorsArray.length; j < value[i - 1]; ++j) {
-                                    colorsArray.push((_a = this.hsvToRGB(Math.floor(Math.random() * 361), 1, 0.8 + Math.random() * 0.2)) !== null && _a !== void 0 ? _a : Errors.handleError('undefined'));
-                                }
-                                this._clasterView.drawCircle(context, '', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], radius);
+                    for (let i = 0, k = 0; i < value.length; ++i, k += 2) {
+                        if (value[i] + 1 > colorsArray.length) {
+                            for (let j = colorsArray.length; j < value[i] + 1; ++j) {
+                                colorsArray.push((_a = this.hsvToRGB(Math.floor(Math.random() * 361), 1, 1)) !== null && _a !== void 0 ? _a : Errors.handleError('undefined'));
                             }
-                            else {
-                                this._clasterView.drawCircle(context, '', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], radius);
-                            }
+                            this._clasterView.drawCircle(context, '', colorsArray[value[i]], this._clasterModel.positions[k + 1], this._clasterModel.positions[k], radius);
                         }
                         else {
-                            this._clasterView.drawCircle(context, '', 'grey', this._clasterModel.positions[i], this._clasterModel.positions[i - 1], radius);
+                            this._clasterView.drawCircle(context, '', colorsArray[value[i]], this._clasterModel.positions[k + 1], this._clasterModel.positions[k], radius);
                         }
                     }
+                    console.log(colorsArray);
                 });
             });
         }

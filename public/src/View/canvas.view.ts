@@ -1,26 +1,43 @@
 import Errors from '../config/Errors.js';
+import CanvasModel from '../Model/canvas.model.js';
 
 class CanvasView {
     private _mousePosX = 0;
     private _mousePosY = 0;
-
+    private _canvasModel: CanvasModel;
+        
+    public canvas: HTMLCanvasElement; 
     public resizeIcon: HTMLDivElement;
 
-    constructor() {
-        this.resizeIcon = document.querySelector('.resizeIcon') ?? Errors.handleError('null');
+    constructor(model: CanvasModel) {
+        this.resizeIcon = document.querySelector('.resize-icon') ?? Errors.handleError('null');
+        this.canvas = document.querySelector('.canvas') ?? Errors.handleError('null');
+        this._canvasModel = model;
+        this._subscribeToCanvasModel();
     }
 
-    resize(canvas: HTMLCanvasElement, e: MouseEvent, callback: Function): void {
+    private _resize(e: MouseEvent, callback: Function): void {
         const dx: number = e.clientX - this._mousePosX;
         const dy: number = e.clientY - this._mousePosY;
   
         this._mousePosX = e.clientX;
         this._mousePosY = e.clientY;
 
-        callback(dx, dy, canvas);
+        callback(this.canvas, dx, dy);
 
         // canvas.style.width = parseInt(getComputedStyle(canvas, '').width, 10) + 2 * dx + "px";
         // canvas.style.height = parseInt(getComputedStyle(canvas, '').height, 10) + 2 * dy + "px";
+    }
+
+    handeResizeIconElement(callback: Function) {
+        this.resizeIcon.addEventListener('mousedown', (e: MouseEvent) => {
+            this._mousePosX = e.clientX;
+            this._mousePosY = e.clientY;
+            // this._resize(e, callback);
+        });
+        this.resizeIcon.addEventListener('mousemove', (e: MouseEvent) => {
+
+        });
     }
 
     drawGrid(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, color: string, columnCount: number, rowsCount: number) {
@@ -41,8 +58,11 @@ class CanvasView {
         canvasContext.fill();
     }
 
-    subscribe() {
-
+    _subscribeToCanvasModel() {
+        this._canvasModel.addEventListener('canvas.model:change', () => {
+            this.canvas.width = this._canvasModel.width;
+            this.canvas.height = this._canvasModel.height;
+        });
     }
 }
 

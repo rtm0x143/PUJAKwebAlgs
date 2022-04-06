@@ -1,12 +1,15 @@
 import Errors from "../config/Errors";
-import ClasterModel from '../Model/claster.model.js';
-import canvasView from './canvas.view.js';
+// Какой нахуй кластер модел
+import NeuralModel from '../Model/neural.model.js';
+import CanvasView from './canvas.view.js';
 
-class NeuralView extends canvasView {
-    constructor() {
-        super();
+class NeuralView extends CanvasView {
+    private _model: NeuralModel;
 
-
+    constructor(model: NeuralModel) {
+        super(model);
+        
+        this._model = model;
     }
 }
 
