@@ -1,6 +1,8 @@
 import AntView from "../View/ant.view";
 import Controller from "./Controller.js";
 import GraphModel from "../Model/graph.model";
+import {response} from "express";
+import * as Buffer from "buffer";
 
 class AntController extends Controller {
     private _graphView;
@@ -24,9 +26,27 @@ class AntController extends Controller {
     }
 
     //call calculate distances in model
-    calcData() {
+    calcData(antsCount: number, greedCoef: number, herdCoef: number, pherLeak: number) {
+        let data = new FormData();
+
+        let antData = {
+            antsCount: antsCount,
+            greedCoef: greedCoef,
+            herdCoef: herdCoef,
+            pherLeak: pherLeak
+        }
+
+        let buff = new Buffer.from(new Uint16Array<number>(this._graphModel.coords))
+
+        data.append("json", JSON.stringify(antData));
         this._graphModel.setDistances();
-        console.log(this._graphModel.distances)
+
+        fetch(`${this.urlValue}`, {
+            method: "POST",
+            body: data
+        }).then((response) => {
+            //...
+        })
     }
 }
 
