@@ -16,6 +16,7 @@ class AntController extends Controller {
 
         //set callbacks to view handlers
         this._graphView.setCoordsHandler(this.setCoords.bind(this));
+        this._graphView.getDataHandler(this.getToken.bind(this));
     }
 
     //sendCoords data to model
@@ -51,7 +52,7 @@ class AntController extends Controller {
             if (response.ok) {
                 return response.text();
             }
-        }).then(async (token) => {
+        }).then((token) => {
             if (!sessionStorage.getItem('token')) {
                 sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
             } else {
@@ -61,7 +62,9 @@ class AntController extends Controller {
                         'Authorization': sessionStorage.getItem('token') ?? Errors.handleError('null')
                     }
                 }).then(() => {
+                    sessionStorage.removeItem('token');
                     sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
+                    console.log(sessionStorage.getItem('token'))
                 }).catch((err) => {
                     console.log(err)
                 })
@@ -73,6 +76,7 @@ class AntController extends Controller {
                     'Authorization': sessionStorage.getItem('token') ?? Errors.handleError('null'),
                 },
             }).then((response) => {
+                console.log(sessionStorage.getItem('token'))
                 response.json().then(r => console.log(r));
             })
         })
