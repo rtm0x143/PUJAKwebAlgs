@@ -1,6 +1,7 @@
 import AntView from "../View/ant.view";
 import Controller from "./Controller.js";
 import GraphModel from "../Model/graph.model";
+import Errors from "../config/Errors.js";
 
 class AntController extends Controller {
     private _graphView;
@@ -15,7 +16,6 @@ class AntController extends Controller {
 
         //set callbacks to view handlers
         this._graphView.setCoordsHandler(this.setCoords.bind(this));
-        this._graphView.getDataHandler(this.getToken.bind(this), this.getData.bind(this));
     }
 
     //sendCoords data to model
@@ -27,7 +27,6 @@ class AntController extends Controller {
     getToken(antsCount: number, greedCoef: number, herdCoef: number, pherLeak: number, pointsData: string) {
         // @ts-ignore
         let buff = buffer.Buffer.from(new Uint16Array(this._graphModel.coords).buffer);
-        console.log(buff);
         pointsData = buff.toString();
 
         let antData = {
@@ -38,30 +37,48 @@ class AntController extends Controller {
             pointsData
         }
 
+        console.log(antData);
+
         this._graphModel.setDistances();
 
         fetch(`${this.urlValue}/alg/ants/launch`, {
             method: "POST",
+            headers: {
+                'Content-type': 'application/json'
+            },
             body: JSON.stringify(antData)
         }).then((response) => {
-            let reader = response.body?.getReader();
-            reader?.read().then(({value}) => {
-                console.log(value);
+            if (response.ok) {
+                return response.text();
+            }
+        }).then(async (token) => {
+            if (!sessionStorage.getItem('token')) {
+                sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
+            } else {
+                fetch(`${this.urlValue}/alg/ants/terminateSession`, {
+                    method: "GET",
+                    headers: {
+                        'Authorization': sessionStorage.getItem('token') ?? Errors.handleError('null')
+                    }
+                }).then(() => {
+                    sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
+                }).catch((err) => {
+                    console.log(err)
+                })
+            }
+        }).then(() => {
+            fetch(`${this.urlValue}/alg/ants/getState`, {
+                method: "GET",
+                headers: {
+                    'Authorization': sessionStorage.getItem('token') ?? Errors.handleError('null'),
+                },
+            }).then((response) => {
+                response.json().then(r => console.log(r));
             })
         })
+
     }
 
-    getData(token: string) {
-        fetch(`${this.urlValue}/alg/ants/getState`, {
-            method: "POST",
-            headers: new Headers({
-                'Content-Type': 'string',
-                'Authorization': token,
-            }),
-        }).then((data) => {
-            console.log(data);
-        })
-    }
 }
 
 export default AntController;

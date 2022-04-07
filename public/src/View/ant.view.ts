@@ -51,7 +51,7 @@ class AntView extends CanvasView {
      * @param dataCallback
      */
     getDataHandler(tokenCallback: Function, dataCallback: Function) {
-        this._sendButton.addEventListener('click', () => {
+        this._sendButton.addEventListener('click', async () => {
             tokenCallback();
         })
     }
@@ -60,7 +60,6 @@ class AntView extends CanvasView {
     //subscribe dispatching events
     _subscribe() {
         this._graphModel.addEventListener('canvas:change', () => {
-            console.log(this._graphModel.coords);
             this.drawCircle
             (
                 this._context,
