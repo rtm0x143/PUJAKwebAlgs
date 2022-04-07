@@ -51,8 +51,8 @@ const antsRouter = Router()
         // }
         jwt.verify(token, process.env.jwtSecret, (err, payload) => {
             if (!err && nAlgs.ants.hasSession(payload)) {
-                nAlgs.ants.terminateSession(id)
-                console.log(jwt.decode(token), "deleted");
+                nAlgs.ants.terminateSession(payload)
+                console.log(payload, "deleted");
                 res.sendStatus(200)
             } 
             else {
