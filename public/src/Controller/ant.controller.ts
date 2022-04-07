@@ -39,7 +39,6 @@ class AntController extends Controller {
             herdCoef,
             pherLeak,
             pointsData,
-            pointsCount: this._graphModel.coords.length
         }
 
         console.log(antData);
