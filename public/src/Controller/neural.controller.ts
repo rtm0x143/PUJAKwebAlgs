@@ -1,8 +1,8 @@
 import NeuralView from "../View/neural.view";
 import NeuralModel from "../Model/neural.model";
-import Controller from "./Controller.js";
+import CanvasController from "./canvas.controller.js";
 
-class NeuralController extends Controller {
+class NeuralController extends CanvasController {
     // class Objects
     private _neuralView: NeuralView;
     private _neuralModel: NeuralModel;
@@ -10,7 +10,7 @@ class NeuralController extends Controller {
     private _isDrawing: Boolean;
 
     constructor(neuralView: NeuralView, neuralModel: NeuralModel) {
-        super();
+        super(neuralModel);
 
         //class Objects
         this._neuralView = neuralView;

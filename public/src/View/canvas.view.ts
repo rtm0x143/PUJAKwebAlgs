@@ -1,54 +1,48 @@
+import { collapseTextChangeRangesAcrossMultipleVersions, isThisTypeNode } from 'typescript';
 import Errors from '../config/Errors.js';
 import CanvasModel from '../Model/canvas.model.js';
 
 class CanvasView {
-    private _mousePosX = 0;
-    private _mousePosY = 0;
     private _canvasModel: CanvasModel;
-        
+
     public canvas: HTMLCanvasElement; 
     public canvasWrapper: HTMLDivElement;
     public resizeIcon: HTMLDivElement;
+
+    private _isDrawing = false;
 
     constructor(model: CanvasModel) {
         this.resizeIcon = document.querySelector('.resize-icon') ?? Errors.handleError('null');
         this.canvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
         this.canvasWrapper = document.querySelector('.canvas') ?? Errors.handleError('null');
         this._canvasModel = model;
+
         this._subscribeToCanvasModel();
     }
 
-    private _resize(e: MouseEvent, callback: Function): void {
-        const dx: number = e.x - this._mousePosX;
-        const dy: number = e.y - this._mousePosY;
-  
-        this._mousePosX = e.x;
-        this._mousePosY = e.y;
-        
-        console.log("_resize");
-        
-        callback(this.canvasWrapper, dx, dy);
-
-        // canvas.style.width = parseInt(getComputedStyle(canvas, '').width, 10) + 2 * dx + "px";
-        // canvas.style.height = parseInt(getComputedStyle(canvas, '').height, 10) + 2 * dy + "px";
-    }
-
-    handleResizeEvent(callback: Function) {
+    //#region handleMouse methods (doensn't work)
+    handleMouseDownResize(callback: Function): void {
         this.resizeIcon.addEventListener('mousedown', (e: MouseEvent) => {
-            this._mousePosX = e.x;
-            this._mousePosY = e.y;
+            e.preventDefault();
 
-            document.addEventListener('mousemove', (e: MouseEvent) => {
-                this._resize(e, callback);
-            });
-        });
-
-        document.addEventListener('mouseup', () => {
-            document.removeEventListener('mousemove', (e: MouseEvent) => {
-                this._resize(e, callback);
-            });
+            callback(e);
         });
     }
+
+    handleMouseMoveResize(callback: Function): void {
+        document.addEventListener('mousemove', (e: MouseEvent) => {
+            e.preventDefault();
+
+            callback(this.canvasWrapper, e);
+        });
+    }
+
+    handleMouseUpResize(callback: Function): void {
+        document.addEventListener('mouseup', () => {
+            callback();
+        });
+    } 
+    //#endregion
 
     drawGrid(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, color: string, columnCount: number, rowsCount: number) {
         context.strokeStyle = color;
@@ -72,6 +66,9 @@ class CanvasView {
         this._canvasModel.addEventListener('canvas.model:change', () => {
             this.canvasWrapper.style.width = this._canvasModel.width.toString() + "px";
             this.canvasWrapper.style.height = this._canvasModel.height.toString() + "px";
+            this.canvas.width = this._canvasModel.width;
+            this.canvas.height = this._canvasModel.height;
+            this.drawGrid(this.canvas, this.canvas.getContext('2d') ?? Errors.handleError("null"), 'grey', Math.floor(this.canvas.width / 30), Math.floor(this.canvas.height / 30));
         });
     }
 
