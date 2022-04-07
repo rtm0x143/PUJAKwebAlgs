@@ -15,7 +15,7 @@ class AntController extends Controller {
 
         //set callbacks to view handlers
         this._graphView.setCoordsHandler(this.setCoords.bind(this));
-        this._graphView.calcHandler(this.calcData.bind(this));
+        this._graphView.getDataHandler(this.getToken.bind(this), this.getData.bind(this));
     }
 
     //sendCoords data to model
@@ -24,7 +24,7 @@ class AntController extends Controller {
     }
 
     //call calculate distances in model
-    calcData(antsCount: number, greedCoef: number, herdCoef: number, pherLeak: number, pointsData: string) {
+    getToken(antsCount: number, greedCoef: number, herdCoef: number, pherLeak: number, pointsData: string) {
         // @ts-ignore
         let buff = buffer.Buffer.from(new Uint16Array(this._graphModel.coords).buffer);
         console.log(buff);
@@ -48,6 +48,18 @@ class AntController extends Controller {
             reader?.read().then(({value}) => {
                 console.log(value);
             })
+        })
+    }
+
+    getData(token: string) {
+        fetch(`${this.urlValue}/alg/ants/getState`, {
+            method: "POST",
+            headers: new Headers({
+                'Content-Type': 'string',
+                'Authorization': token,
+            }),
+        }).then((data) => {
+            console.log(data);
         })
     }
 }

@@ -47,13 +47,15 @@ class AntView extends CanvasView {
     /**
      * this handler method used to call function that count distances in model
      *
-     * @param callback - Function
+     * @param tokenCallback
+     * @param dataCallback
      */
-    calcHandler(callback: Function) {
+    getDataHandler(tokenCallback: Function, dataCallback: Function) {
         this._sendButton.addEventListener('click', () => {
-            callback();
+            tokenCallback();
         })
     }
+
 
     //subscribe dispatching events
     _subscribe() {
