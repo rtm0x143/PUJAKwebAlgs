@@ -15,8 +15,10 @@ const antsRouter = Router()
             return
         }
         let data = Buffer.from(req.body["pointsData"])
-        let id = nAlgs.ants.launch(
-            new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2), req.body)
+        console.log(data);
+        let pointsData = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2)
+        console.log(pointsData);
+        let id = nAlgs.ants.launch(pointsData, req.body)
 
         let token = jwt.sign(id, process.env["jwtSecret"])
         console.log(jwt.decode(token), "created");
@@ -52,7 +54,7 @@ const antsRouter = Router()
         jwt.verify(token, process.env.jwtSecret, (err, payload) => {
             if (!err && nAlgs.ants.hasSession(payload)) {
                 nAlgs.ants.terminateSession(payload)
-                console.log(jwt.decode(token), "deleted");
+                console.log(payload, "deleted");
                 res.sendStatus(200)
             } 
             else {

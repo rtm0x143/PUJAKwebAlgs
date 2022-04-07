@@ -1,12 +1,12 @@
-import GraphView from "../View/graph.view";
-import Controller from "./Controller.js";
+import GeneticView from "../View/genetic.view";
+import Controller from "./Controller";
 import GraphModel from "../Model/graph.model";
 
-class GraphController extends Controller {
+class GeneticController extends Controller {
     private _graphView;
     private _graphModel;
 
-    constructor(GraphView: GraphView, GraphModel: GraphModel) {
+    constructor(GraphView: GeneticView, GraphModel: GraphModel) {
         super();
 
         //classes Objects
@@ -30,4 +30,4 @@ class GraphController extends Controller {
     }
 }
 
-export default GraphController;
+export default GeneticController;

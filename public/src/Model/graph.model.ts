@@ -20,21 +20,7 @@ class GraphModel extends CanvasModel {
      * function that represent coords to distances between points but if points count more than 1
      */
     setDistances() {
-        if (this.coords.length >= 4) {
-            for (let i = 0; i < this.coords.length; i += 2) {
-                this.distances[i] = [];
 
-                for (let j = 0; j < this.coords.length; j += 2) {
-                    if (i != j) {
-                        this.distances[i][j] = this.findDistance(this.coords[i], this.coords[i + 1],
-                            this.coords[j], this.coords[j + 1]);
-                    }
-                    else {
-                        this.distances[i][j] = 0;
-                    }
-                }
-            }
-        }
     }
 
     /**

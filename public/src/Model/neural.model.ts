@@ -3,6 +3,7 @@ import INeural from "./interfaces/INeural";
 
 class NeuralModel extends CanvasModel implements INeural{
     coords: Array<number> = [];
+    answer: string = "";
 
     /**
      * function that fetch server and get data
@@ -18,6 +19,16 @@ class NeuralModel extends CanvasModel implements INeural{
         if (flag) {
             this.dispatchEvent(new Event('neuralcoordschange'));
         }
+    }
+
+    setAnswer(value: string) {
+        this.answer = value;
+        this.dispatchEvent(new Event('answer:change'));
+    }
+
+    clearCanvas() {
+        this.coords = [];
+        this.dispatchEvent(new Event('canvas:clear'));
     }
 }
 

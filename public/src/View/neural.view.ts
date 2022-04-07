@@ -1,12 +1,12 @@
 import Errors from "../config/Errors.js";
 import NeuralModel from '../Model/neural.model.js';
-import CanvasView from './canvas.view.js';
+import canvasView from './canvas.view.js';
 
-class NeuralView extends CanvasView {
+class NeuralView extends canvasView {
     private _neuralModel: NeuralModel;
 
     // canvas elements
-    // private readonly _neuralCanvas: HTMLCanvasElement;
+    private readonly _neuralCanvas: HTMLCanvasElement;
     private _neuralData: HTMLCanvasElement;
 
     // context elements
@@ -15,6 +15,9 @@ class NeuralView extends CanvasView {
 
     // button elements
     private _sendButton: HTMLButtonElement;
+    private _clearButton: HTMLButtonElement;
+
+    private _answerParagraph: HTMLParagraphElement;
 
     constructor(neuralModel: NeuralModel) {
         super(neuralModel);
@@ -22,21 +25,32 @@ class NeuralView extends CanvasView {
         this._neuralModel = neuralModel;
 
         // canvas elements initialise
-        this._neuralData = document.querySelector('.ui__canvas-data') ?? Errors.handleError('null');
+        this._neuralCanvas = document.querySelector('.canvas__element')
+            ?? Errors.handleError('null');
+        this._neuralData = document.querySelector('.ui__canvas-data')
+            ?? Errors.handleError('null');
 
         // button elements initialise
-        this._sendButton = document.querySelector('.send-button') ?? Errors.handleError('null');
+        this._sendButton = document.querySelector('.send-button')
+            ?? Errors.handleError('null');
+        this._clearButton = document.querySelector('.clear-button')
+            ?? Errors.handleError('null');
 
         // contexts
-        this._neuralContext = this.canvas.getContext('2d') ?? Errors.handleError('null');
-        this._dataContext = this._neuralData.getContext('2d') ?? Errors.handleError('null');
+        this._neuralContext = this._neuralCanvas.getContext('2d')
+            ?? Errors.handleError('null');
+        this._dataContext = this._neuralData.getContext('2d')
+            ?? Errors.handleError('null');
+
+        this._answerParagraph = document.querySelector('.answer-paragraph')
+            ?? Errors.handleError('null');
 
         // subscribe to model events
         this._subscribe();
 
         // initialise canvas params
-        this.canvas.height = 600;
-        this.canvas.width = 600;
+        this._neuralCanvas.height = 600;
+        this._neuralCanvas.width = 600;
     }
 
     /**
@@ -45,7 +59,7 @@ class NeuralView extends CanvasView {
      * @param callback - Function from controller
      */
     mouseDownHandler(callback: Function): void {
-        this.canvas.addEventListener('mousedown', (e) => {
+        this._neuralCanvas.addEventListener('mousedown', (e) => {
             e.preventDefault();
 
             callback(e);
@@ -58,7 +72,7 @@ class NeuralView extends CanvasView {
      * @param callback - Function from controller
      */
     mouseMoveHandler(callback: Function): void {
-        this.canvas.addEventListener('mousemove', (e) => {
+        this._neuralCanvas.addEventListener('mousemove', (e) => {
             e.preventDefault();
 
             callback(e);
@@ -92,6 +106,19 @@ class NeuralView extends CanvasView {
     }
 
     /**
+     * function used for clear canvas
+     *
+     * @param callback - Function from controller
+     */
+    clearHandler(callback: Function): void {
+        this._clearButton.addEventListener('click', (e: MouseEvent) => {
+            e.preventDefault();
+
+            callback();
+        })
+    }
+
+    /**
      * registry listeners for model events
      */
     private _subscribe(): void {
@@ -105,7 +132,16 @@ class NeuralView extends CanvasView {
                 )
             }
 
-            this._dataContext.drawImage(this.canvas, 0, 0, 50, 50)
+            this._dataContext.drawImage(this._neuralCanvas, 0, 0, 50, 50)
+        })
+
+        this._neuralModel.addEventListener('answer:change', _ => {
+            this._answerParagraph.innerHTML = this._neuralModel.answer;
+        })
+
+        this._neuralModel.addEventListener('canvas:clear', _ => {
+            this._neuralContext.clearRect(0, 0, this._neuralCanvas.width, this._neuralCanvas.height);
+            this._dataContext.clearRect(0, 0, this._neuralData.width, this._neuralData.height);
         })
     }
 

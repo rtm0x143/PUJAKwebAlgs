@@ -2,7 +2,7 @@ import CanvasView from './canvas.view.js';
 import Errors from "../config/Errors.js";
 import GraphModel from "../Model/graph.model.js";
 
-class GraphView extends CanvasView {
+class AntView extends CanvasView {
     //class Objects
     private _graphModel: GraphModel;
 
@@ -47,18 +47,18 @@ class GraphView extends CanvasView {
     /**
      * this handler method used to call function that count distances in model
      *
-     * @param callback - Function
+     * @param tokenCallback
      */
-    calcHandler(callback: Function) {
-        this._sendButton.addEventListener('click', () => {
-            callback();
+    getDataHandler(tokenCallback: Function) {
+        this._sendButton.addEventListener('click', async () => {
+            tokenCallback();
         })
     }
+
 
     //subscribe dispatching events
     _subscribe() {
         this._graphModel.addEventListener('canvas:change', () => {
-            console.log(this._graphModel.coords);
             this.drawCircle
             (
                 this._context,
@@ -72,4 +72,4 @@ class GraphView extends CanvasView {
     }
 }
 
-export default GraphView;
+export default AntView;
