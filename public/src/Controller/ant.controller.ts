@@ -30,15 +30,16 @@ class AntController extends Controller {
         let buff = buffer.Buffer.from(new Uint16Array(this._graphModel.coords).buffer);
         pointsData = buff.toString();
 
-        /*console.log(this._graphModel.coords);
-        console.log(buff);*/
+        console.log(this._graphModel.coords);
+        console.log(buff);
 
         let antData = {
             antsCount,
             greedCoef,
             herdCoef,
             pherLeak,
-            pointsData
+            pointsData,
+            pointsCount: this._graphModel.coords.length
         }
 
         console.log(antData);

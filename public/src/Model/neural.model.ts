@@ -21,6 +21,62 @@ class NeuralModel extends CanvasModel implements INeural{
         }
     }
 
+    getSource(imageData: ImageData) {
+        let minXPoint = Number.MAX_VALUE;
+        let minYPoint = Number.MAX_VALUE;
+        let maxXPoint = 0;
+        let maxYPoint = 0;
+
+        let index = Math.sqrt(imageData.data.length / 4);
+        let j = 0;
+
+        for (let i = 3; i < imageData.data.length; i += 4) {
+            if (j === index) {
+                j = 0;
+            }
+
+            if (imageData.data[i] !== 0) {
+                if (j < minXPoint) {
+                    minXPoint = j;
+                }
+
+                if (Math.floor(i / (index * 4)) < minYPoint) {
+                    minYPoint = Math.floor(i / (index * 4));
+                }
+
+                if (j > maxXPoint) {
+                    maxXPoint = j;
+                }
+
+                if (Math.floor(i / (index * 4)) > maxYPoint) {
+                    maxYPoint = Math.floor(i / (index * 4));
+                }
+            }
+
+            ++j;
+        }
+
+        console.log(minXPoint, maxXPoint);
+        let sizeX = maxXPoint - minXPoint > maxYPoint - minYPoint ? maxXPoint - minXPoint : 0;
+        let sizeY = maxYPoint - minYPoint > maxXPoint - minXPoint ? maxYPoint - minYPoint : 0;
+
+        if (sizeY != 0) {
+            return {
+                sX: minXPoint - sizeY * (1 / 2),
+                sY: minYPoint - sizeY / 3,
+                sWidth: sizeY + sizeY * (1 / 2),
+                sHeight: sizeY + sizeY * 2 / 3
+            }
+        } else {
+            return {
+                sX: minXPoint - sizeX * (1 / 2),
+                sY: minYPoint - sizeX / 3,
+                sWidth: sizeX + sizeX,
+                sHeight: sizeX + sizeX * 1 / 3
+            }
+        }
+    }
+
     setAnswer(value: string) {
         this.answer = value;
         this.dispatchEvent(new Event('answer:change'));

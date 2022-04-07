@@ -101,6 +101,24 @@ class NeuralView extends canvasView {
         this._sendButton.addEventListener('click', (e) => {
             e.preventDefault();
 
+            let obj = this._neuralModel.getSource(this._neuralContext.getImageData(
+                0, 0, this._neuralCanvas.width, this._neuralCanvas.height))
+
+            console.log(obj.sX, obj.sWidth);
+            console.log(obj.sY, obj.sHeight);
+
+            this._dataContext.drawImage(
+                this._neuralCanvas,
+                obj.sX,
+                obj.sY,
+                obj.sWidth,
+                obj.sHeight,
+                0,
+                0,
+                50,
+                50
+            )
+
             callback(this._dataContext.getImageData(0, 0, 50, 50));
         })
     }
@@ -131,8 +149,6 @@ class NeuralView extends canvasView {
                     this._neuralModel.coords[this._neuralModel.coords.length - 1],
                 )
             }
-
-            this._dataContext.drawImage(this._neuralCanvas, 0, 0, 50, 50)
         })
 
         this._neuralModel.addEventListener('answer:change', _ => {
