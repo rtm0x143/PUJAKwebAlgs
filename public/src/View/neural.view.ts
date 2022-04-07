@@ -105,6 +105,11 @@ class NeuralView extends canvasView {
         })
     }
 
+    /**
+     * function used for clear canvas
+     *
+     * @param callback - Function from controller
+     */
     clearHandler(callback: Function): void {
         this._clearButton.addEventListener('click', (e: MouseEvent) => {
             e.preventDefault();
