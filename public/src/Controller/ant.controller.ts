@@ -61,16 +61,17 @@ class AntController extends Controller {
                     headers: {
                         'Authorization': sessionStorage.getItem('token') ?? Errors.handleError('null')
                     }
-                }).then(() => {
+                }).then(async() => {
+                    console.log(sessionStorage.getItem('token'));
                     sessionStorage.removeItem('token');
-                    sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
-                    console.log(sessionStorage.getItem('token'))
+                    await sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
+                    console.log(sessionStorage.getItem('token'));
                 }).catch((err) => {
                     console.log(err)
                 })
             }
-        }).then(() => {
-            fetch(`${this.urlValue}/alg/ants/getState`, {
+        }).then(async() => {
+            await fetch(`${this.urlValue}/alg/ants/getState`, {
                 method: "GET",
                 headers: {
                     'Authorization': sessionStorage.getItem('token') ?? Errors.handleError('null'),
