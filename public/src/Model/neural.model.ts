@@ -60,19 +60,22 @@ class NeuralModel extends CanvasModel implements INeural{
         let sizeX = maxXPoint - minXPoint > maxYPoint - minYPoint ? maxXPoint - minXPoint : 0;
         let sizeY = maxYPoint - minYPoint > maxXPoint - minXPoint ? maxYPoint - minYPoint : 0;
 
-        if (sizeY != 0) {
+        let offsetX = maxXPoint - minXPoint;
+        let offsetY = maxYPoint - minYPoint;
+
+        if (sizeY !== 0) {
             return {
                 sX: minXPoint - sizeY * (1 / 2),
                 sY: minYPoint - sizeY / 3,
-                sWidth: sizeY + sizeY * (1 / 2),
+                sWidth: sizeY + offsetX,
                 sHeight: sizeY + sizeY * 2 / 3
             }
         } else {
             return {
-                sX: minXPoint - sizeX * (1 / 2),
+                sX: minXPoint - sizeX * (1 / 3),
                 sY: minYPoint - sizeX / 3,
-                sWidth: sizeX + sizeX,
-                sHeight: sizeX + sizeX * 1 / 3
+                sWidth: sizeX + sizeX * (2 / 3),
+                sHeight: sizeX * 2 / 3 + offsetY
             }
         }
     }

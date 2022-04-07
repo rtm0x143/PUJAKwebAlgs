@@ -28,10 +28,10 @@ class AntController extends Controller {
     getToken(antsCount: number, greedCoef: number, herdCoef: number, pherLeak: number, pointsData: string) {
         // @ts-ignore
         let buff = buffer.Buffer.from(new Uint16Array(this._graphModel.coords).buffer);
-        pointsData = buff.toString();
+        pointsData = buff.toString("hex");
 
-        console.log(this._graphModel.coords);
-        console.log(buff);
+        /*console.log(this._graphModel.coords);
+        console.log(buff);*/
 
         let antData = {
             antsCount,
