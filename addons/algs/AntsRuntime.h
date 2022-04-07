@@ -40,5 +40,7 @@ private:
 		std::vector<Session*>* tasksQueue, 
 		std::mutex* queueMutex, 
 		std::condition_variable* tasksDone);
+
+	uint64_t idCounter = 0;
 };
 
