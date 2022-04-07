@@ -1,10 +1,14 @@
-let t = require("jsonwebtoken")
+let {Buffer} = require("buffer")
 
-let q = t.sign("qwe", "1")
-console.log(t.decode(q)); 
+let arr = new Uint16Array([255, 2, 3])
 
-let arr = new Uint8Array([1, 2, 1, 2, 3, 4])
+let buf = Buffer.from(arr.buffer),
+    bStr = buf.toString("hex"),
+    buf2 = Buffer.from(bStr);
 
-let buf = Buffer.from(Buffer.from(arr.buffer).toString())
+let jsonData = JSON.stringify({
+    cringe: 123,
+    data: bStr
+})
 
-console.log(new Uint16Array(buf.buffer, buf.byteOffset, buf.byteLength / 2));  
+console.log(JSON.parse(jsonData));

@@ -14,10 +14,9 @@ const antsRouter = Router()
             res.sendStatus(400);
             return
         }
-        let data = Buffer.from(req.body["pointsData"])
-        console.log(data);
-        let id = nAlgs.ants.launch(
-            new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2), req.body)
+        let data = Buffer.from(req.body["pointsData"], "hex")
+        let pointsData = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2)
+        let id = nAlgs.ants.launch(pointsData, req.body)
 
         let token = jwt.sign(id, process.env["jwtSecret"])
         console.log(jwt.decode(token), "created");

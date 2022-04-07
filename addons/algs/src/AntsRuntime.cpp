@@ -69,9 +69,6 @@ bool AntsRuntime::hasSession(const uint64_t& id)
 	auto s_it = std::find_if(sessions.begin(), sessions.end(),
 		[&id](const Session* s) -> bool { return s->id == id; });
 
-	if (s_it != sessions.end()) std::cout << (*s_it)->id << '\n';
-	else std::cout << "Not found\n";
-
 	return s_it != sessions.end();
 }
 
@@ -100,8 +97,23 @@ double** genGraphFromPoints(uint16_t* points, uint32_t pCount)
 
 uint64_t AntsRuntime::launch(const ColonyConfig& colonySettings, uint16_t* points, uint32_t pCount)
 {
-	double** graph = genGraphFromPoints(points, pCount);
+	std::cout << "Points : \n";
+	for (size_t i = 0; i < pCount; i++)
+	{
+		std::cout << points[i * 2] << ' ' << points[i * 2 + 1] << ' ';
+	}
+	std::cout << '\n';
+	
 
+	double** graph = genGraphFromPoints(points, pCount);
+	for (size_t i = 0; i < pCount; i++)
+	{
+		for (size_t j = 0; j < pCount; j++){
+			std::cout << graph[i][j] << ' ';
+		}std::cout << '\n';
+	}
+	std::cout << '\n';
+	
 	Session* session = new Session{
 			++idCounter,
 			new Colony(colonySettings, graph, pCount),
