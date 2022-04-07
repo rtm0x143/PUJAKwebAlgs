@@ -30,6 +30,9 @@ class AntController extends Controller {
         let buff = buffer.Buffer.from(new Uint16Array(this._graphModel.coords).buffer);
         pointsData = buff.toString();
 
+        /*console.log(this._graphModel.coords);
+        console.log(buff);*/
+
         let antData = {
             antsCount,
             greedCoef,
@@ -52,9 +55,9 @@ class AntController extends Controller {
             if (response.ok) {
                 return response.text();
             }
-        }).then((token) => {
+        }).then(async (token) => {
             if (!sessionStorage.getItem('token')) {
-                sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
+                await sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
             } else {
                 fetch(`${this.urlValue}/alg/ants/terminateSession`, {
                     method: "GET",
@@ -62,22 +65,19 @@ class AntController extends Controller {
                         'Authorization': sessionStorage.getItem('token') ?? Errors.handleError('null')
                     }
                 }).then(async() => {
-                    console.log(sessionStorage.getItem('token'));
                     sessionStorage.removeItem('token');
                     await sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
-                    console.log(sessionStorage.getItem('token'));
-                }).catch((err) => {
-                    console.log(err)
                 })
             }
-        }).then(async() => {
+
+            return token;
+        }).then(async (token) => {
             await fetch(`${this.urlValue}/alg/ants/getState`, {
                 method: "GET",
                 headers: {
-                    'Authorization': sessionStorage.getItem('token') ?? Errors.handleError('null'),
+                    'Authorization': token ?? Errors.handleError('null'),
                 },
             }).then((response) => {
-                console.log(sessionStorage.getItem('token'))
                 response.json().then(r => console.log(r));
             })
         })
