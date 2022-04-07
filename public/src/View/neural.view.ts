@@ -15,6 +15,9 @@ class NeuralView extends canvasView {
 
     // button elements
     private _sendButton: HTMLButtonElement;
+    private _clearButton: HTMLButtonElement;
+
+    private _answerParagraph: HTMLParagraphElement;
 
     constructor(neuralModel: NeuralModel) {
         super(neuralModel);
@@ -22,15 +25,25 @@ class NeuralView extends canvasView {
         this._neuralModel = neuralModel;
 
         // canvas elements initialise
-        this._neuralCanvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
-        this._neuralData = document.querySelector('.ui__canvas-data') ?? Errors.handleError('null');
+        this._neuralCanvas = document.querySelector('.canvas__element')
+            ?? Errors.handleError('null');
+        this._neuralData = document.querySelector('.ui__canvas-data')
+            ?? Errors.handleError('null');
 
         // button elements initialise
-        this._sendButton = document.querySelector('.send-button') ?? Errors.handleError('null');
+        this._sendButton = document.querySelector('.send-button')
+            ?? Errors.handleError('null');
+        this._clearButton = document.querySelector('.clear-button')
+            ?? Errors.handleError('null');
 
         // contexts
-        this._neuralContext = this._neuralCanvas.getContext('2d') ?? Errors.handleError('null');
-        this._dataContext = this._neuralData.getContext('2d') ?? Errors.handleError('null');
+        this._neuralContext = this._neuralCanvas.getContext('2d')
+            ?? Errors.handleError('null');
+        this._dataContext = this._neuralData.getContext('2d')
+            ?? Errors.handleError('null');
+
+        this._answerParagraph = document.querySelector('.answer-paragraph')
+            ?? Errors.handleError('null');
 
         // subscribe to model events
         this._subscribe();
@@ -92,6 +105,14 @@ class NeuralView extends canvasView {
         })
     }
 
+    clearHandler(callback: Function): void {
+        this._clearButton.addEventListener('click', (e: MouseEvent) => {
+            e.preventDefault();
+
+            callback();
+        })
+    }
+
     /**
      * registry listeners for model events
      */
@@ -107,6 +128,15 @@ class NeuralView extends canvasView {
             }
 
             this._dataContext.drawImage(this._neuralCanvas, 0, 0, 50, 50)
+        })
+
+        this._neuralModel.addEventListener('answer:change', _ => {
+            this._answerParagraph.innerHTML = this._neuralModel.answer;
+        })
+
+        this._neuralModel.addEventListener('canvas:clear', _ => {
+            this._neuralContext.clearRect(0, 0, this._neuralCanvas.width, this._neuralCanvas.height);
+            this._dataContext.clearRect(0, 0, this._neuralData.width, this._neuralData.height);
         })
     }
 

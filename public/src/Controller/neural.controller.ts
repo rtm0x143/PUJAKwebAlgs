@@ -34,6 +34,11 @@ class NeuralController extends Controller {
             this.mouseUp();
         })
 
+        //clearEvent
+        this._neuralView.clearHandler(() => {
+            this.clearCanvas();
+        })
+
         //fetchEvent
         this._neuralView.sendButtonHandler((imageData: ImageData) => {
             this.sendData(imageData);
@@ -57,6 +62,10 @@ class NeuralController extends Controller {
         }
     }
 
+    clearCanvas(): void {
+        this._neuralModel.clearCanvas();
+    }
+
     /**
      * function that fetch server and get data
      *
@@ -71,7 +80,9 @@ class NeuralController extends Controller {
             },
             body: imageData.data
         }).then((response: Response) => {
-            console.log(response);
+            return response.text()
+        }).then((text: string) => {
+            this._neuralModel.setAnswer(text);
         });
     }
 }

@@ -1,8 +1,6 @@
 import AntView from "../View/ant.view";
 import Controller from "./Controller.js";
 import GraphModel from "../Model/graph.model";
-import {response} from "express";
-import * as Buffer from "buffer";
 
 class AntController extends Controller {
     private _graphView;
@@ -26,26 +24,30 @@ class AntController extends Controller {
     }
 
     //call calculate distances in model
-    calcData(antsCount: number, greedCoef: number, herdCoef: number, pherLeak: number) {
-        let data = new FormData();
+    calcData(antsCount: number, greedCoef: number, herdCoef: number, pherLeak: number, pointsData: string) {
+        // @ts-ignore
+        let buff = buffer.Buffer.from(new Uint16Array(this._graphModel.coords).buffer);
+        console.log(buff);
+        pointsData = buff.toString();
 
         let antData = {
-            antsCount: antsCount,
-            greedCoef: greedCoef,
-            herdCoef: herdCoef,
-            pherLeak: pherLeak
+            antsCount,
+            greedCoef,
+            herdCoef,
+            pherLeak,
+            pointsData
         }
 
-        let buff = new Buffer.from(new Uint16Array<number>(this._graphModel.coords))
-
-        data.append("json", JSON.stringify(antData));
         this._graphModel.setDistances();
 
-        fetch(`${this.urlValue}`, {
+        fetch(`${this.urlValue}/alg/ants/launch`, {
             method: "POST",
-            body: data
+            body: JSON.stringify(antData)
         }).then((response) => {
-            //...
+            let reader = response.body?.getReader();
+            reader?.read().then(({value}) => {
+                console.log(value);
+            })
         })
     }
 }
