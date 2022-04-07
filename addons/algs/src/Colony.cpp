@@ -1,13 +1,12 @@
 #include "Colony.h"
 #include <cmath>
-#include <iostream>
 
 
 double rnd01() { return (double)rand() / (RAND_MAX + 1); }
 
 Colony::Colony(const ColonyConfig& config, double** graph, uint32_t graphSize)
 	: graph(graph), graphSize(graphSize), conf(config)
-{
+{;
 	//ants = (Ant*)malloc(sizeof(Ant) * config.antsCount);
 	ants = new Ant[config.antsCount];
 	for (size_t i = 0; i < config.antsCount; ++i)
@@ -20,7 +19,7 @@ Colony::Colony(const ColonyConfig& config, double** graph, uint32_t graphSize)
 	pheromones[0] = pherData;
 	for (size_t i = 0; i < graphSize * graphSize; ++i)
 	{
-		pherData[i] = 1e-10;
+		pherData[i] = 1e-100;
 	}
 
 	probabilities = (double**)malloc(sizeof(double*) * graphSize);
@@ -38,7 +37,7 @@ Colony::~Colony() {
 	free(probabilities[0]);
 	free(pheromones);
 	free(probabilities);
-	free(ants);
+	delete[] ants;
 }
 
 Colony::Ant::Ant(Colony* home)
@@ -199,7 +198,7 @@ void Colony::leakPheromones()
 	}
 }
 
-std::pair<uint16_t*, double> Colony::iterate()
+std::pair<std::vector<uint16_t>, double> Colony::iterate()
 {
 	calcProbabilities();
 
@@ -218,5 +217,13 @@ std::pair<uint16_t*, double> Colony::iterate()
 		if (ants[bestInd].pathCost > ants[i].pathCost) bestInd = i;
 	}
 
-	return { ants[bestInd].path, ants[bestInd].pathCost};
+	uint16_t* bestPath = ants[bestInd].path;
+	std::pair<std::vector<uint16_t>, double> result { 
+		std::vector<uint16_t>(graphSize + 1), ants[bestInd].pathCost };
+
+	for (size_t i = 0; i < graphSize + 1; i++) {
+		result.first[i] = bestPath[i];
+	}
+
+	return result;
 }

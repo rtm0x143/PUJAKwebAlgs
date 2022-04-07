@@ -44,7 +44,7 @@ public:
 		Colony* home;
 	};
 
-	std::pair<uint16_t*, double> iterate();
+	std::pair<std::vector<uint16_t>, double> iterate();
 
 private:
 	double** graph;
