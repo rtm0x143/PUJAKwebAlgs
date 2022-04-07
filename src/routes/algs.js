@@ -15,6 +15,7 @@ const antsRouter = Router()
             return
         }
         let data = Buffer.from(req.body["pointsData"])
+        console.log(data);
         let id = nAlgs.ants.launch(
             new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2), req.body)
 
