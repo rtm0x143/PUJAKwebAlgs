@@ -2,6 +2,20 @@
   "targets": [
     {
       "include_dirs" : [
+        "<!@(node -p \"require('node-addon-api').include\")",
+        "addons/algs"
+      ],
+      "target_name": "ants",
+      "sources": [ 
+        "addons/antsWrap.cpp",
+        "addons/algs/src/astar.cpp",
+        "addons/algs/src/Colony.cpp",
+        "addons/algs/src/AntsRuntime.cpp"
+      ],
+      'defines': [ 'NAPI_CPP_EXCEPTIONS' ]
+    },
+    {
+      "include_dirs" : [
         "<!@(node -p \"require('node-addon-api').include\")"
       ],
       "target_name": "labGen",
@@ -50,13 +64,5 @@
       ],
       'defines': [ 'NAPI_CPP_EXCEPTIONS' ]
     }
-    # {
-    #   "include_dirs" : [
-    #     "<!@(node -p \"require('node-addon-api').include\")"
-    #   ],
-    #   "target_name": "test",
-    #   "sources": [ "addons/test.cpp" ],
-    #   'defines': [ 'NAPI_CPP_EXCEPTIONS' ]
-    # }
     ]
 }

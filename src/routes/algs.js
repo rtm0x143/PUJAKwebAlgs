@@ -1,6 +1,61 @@
-import { Router, application } from "express"
+import { config } from "dotenv"; config()
+import { Router } from "express"
 import { checkQuery } from "../middlewares.js"
+import jwt from "jsonwebtoken"
 import nAlgs from "../algorithms.cjs"
+
+if (!process.env["jwtSecret"]) {
+    throw ".env file must contain 'jwtSecret'"
+}
+
+const antsRouter = Router()
+    .post("/launch", (req, res) => {
+        if (!req.body["pointsData"]) {
+            res.sendStatus(400);
+            return
+        }
+        let data = Buffer.from(req.body["pointsData"])
+        let id = nAlgs.ants.launch(
+            new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2), req.body)
+
+        let token = jwt.sign(id, process.env["jwtSecret"])
+        res.send(token);
+    })
+    .get("/getState", (req, res) => {
+        let token = req.header("Authorization")
+        console.log(token);
+        if (!token) {
+            res.sendStatus(401)
+            return
+        }
+        let id = jwt.decode(token)
+        if (nAlgs.ants.hasSession(id)) {
+            let result = nAlgs.ants.getNextEpoch(id);
+            res.json({
+                cost: result.cost,
+                path: Buffer.from(result.path.buffer).toString()
+            })
+        } 
+        else {
+            res.sendStatus(401)
+            return
+        }
+    })
+    .get("/terminateSession", (req, res) => {
+        let token = req.header("Authorization")
+        if (!token) {
+            res.sendStatus(401)
+            return
+        }
+        let id = jwt.decode(token)
+        if (nAlgs.ants.hasSession(id)) {
+            nAlgs.ants.terminateSession(id)
+        } 
+        else {
+            res.sendStatus(401)
+            return
+        }
+    })
 
 export default Router()
     .post("/clasterisation", [checkQuery(["type"]), (req, res) => {
@@ -84,3 +139,4 @@ export default Router()
         
         res.send(nAlgs.neuralNet.findDigit(req.body[0]).toString())
     })
+    .use("/ants", antsRouter)

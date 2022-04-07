@@ -4,9 +4,9 @@
 #include "tools.h"
 #include "NetIO.h"
 
-#include <iostream>
-#include "vectorExtention.cpp"
-using namespace vectorExtention;
+// #include <iostream>
+// #include "vectorExtention.cpp"
+// using namespace vectorExtention;
 
 NeuralNetwork* net = nullptr;
 
