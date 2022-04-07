@@ -19,42 +19,47 @@ const antsRouter = Router()
             new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2), req.body)
 
         let token = jwt.sign(id, process.env["jwtSecret"])
+        console.log(jwt.decode(token), "created");
         res.send(token);
     })
     .get("/getState", (req, res) => {
         let token = req.header("Authorization")
-        console.log(token);
-        if (!token) {
-            res.sendStatus(401)
-            return
-        }
-        let id = jwt.decode(token)
-        if (nAlgs.ants.hasSession(id)) {
-            let result = nAlgs.ants.getNextEpoch(id);
-            res.json({
-                cost: result.cost,
-                path: Buffer.from(result.path.buffer).toString()
-            })
-        } 
-        else {
-            res.sendStatus(401)
-            return
-        }
+        // if (!token) {
+        //     res.sendStatus(401)
+        //     return
+        // }
+        jwt.verify(token, process.env.jwtSecret, (err, payload) => {
+            console.log("requested", payload);
+            if (!err && nAlgs.ants.hasSession(payload)) 
+            {
+                let result = nAlgs.ants.getNextEpoch(payload);
+                res.json({
+                    cost: result.cost,
+                    path: Buffer.from(result.path.buffer).toString()
+                })
+            } 
+            else {
+                res.sendStatus(401)
+            }
+        })
     })
     .get("/terminateSession", (req, res) => {
         let token = req.header("Authorization")
-        if (!token) {
-            res.sendStatus(401)
-            return
-        }
-        let id = jwt.decode(token)
-        if (nAlgs.ants.hasSession(id)) {
-            nAlgs.ants.terminateSession(id)
-        } 
-        else {
-            res.sendStatus(401)
-            return
-        }
+        // if (!token) {
+        //     res.sendStatus(401)
+        //     return
+        // }
+        jwt.verify(token, process.env.jwtSecret, (err, payload) => {
+            if (!err && nAlgs.ants.hasSession(payload)) {
+                nAlgs.ants.terminateSession(id)
+                console.log(jwt.decode(token), "deleted");
+                res.sendStatus(200)
+            } 
+            else {
+                res.sendStatus(401)
+                return
+            }
+        })
     })
 
 export default Router()

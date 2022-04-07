@@ -1,8 +1,7 @@
 #include <cmath>
 #include "AntsRuntime.h"
 #include <algorithm>
-
-uint64_t idCounter = 0;
+#include <iostream>
 
 AntsRuntime::AntsRuntime() : sessions(0), terminateFlag(false)
 {
@@ -63,8 +62,15 @@ void AntsRuntime::workerRuntime(
 
 bool AntsRuntime::hasSession(const uint64_t& id)
 {
+	std::cout << "Seaks for " << id << " Has " << sessions.size() << " sessions:\n\t";
+	for (Session* s : sessions) std::cout << s->id << ' ';
+	std::cout << '\n';
+	
 	auto s_it = std::find_if(sessions.begin(), sessions.end(),
 		[&id](const Session* s) -> bool { return s->id == id; });
+
+	if (s_it != sessions.end()) std::cout << (*s_it)->id << '\n';
+	else std::cout << "Not found\n";
 
 	return s_it != sessions.end();
 }

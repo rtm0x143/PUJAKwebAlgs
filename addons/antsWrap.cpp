@@ -1,6 +1,7 @@
 #include "napi.h"
 #include "algs/Colony.h"
 #include "algs/AntsRuntime.h"
+#include <iostream>
 
 AntsRuntime antsRuntime;
 ColonyConfig deafultConfig{ 100, 1, 1, 0.5 };
@@ -43,19 +44,18 @@ Napi::Value launch(const Napi::CallbackInfo& info)
     return Napi::String::New(env, std::to_string(id));
 }
 
-void checkForId(const Napi::CallbackInfo& info, uint64_t& id) 
+uint64_t checkForId(const Napi::CallbackInfo& info) 
 {
     if (!info[0].IsString()) {
         Napi::TypeError::New(info.Env(), "Invalid arguments type").ThrowAsJavaScriptException();
     }
-    
-    std::stoull(info[0].ToString(), &id);
+    return info[0].ToNumber().Int64Value();
 }
 
 Napi::Value hasSession(const Napi::CallbackInfo& info) 
 {
-    uint64_t id;
-    checkForId(info, id);
+    std::cout << "In hasSession " << (std::string)info[0].ToString() << '\n';
+    uint64_t id = checkForId(info);
 
     return Napi::Boolean::New(info.Env(), antsRuntime.hasSession(id));
 }
@@ -63,8 +63,7 @@ Napi::Value hasSession(const Napi::CallbackInfo& info)
 Napi::Value getNextEpoch(const Napi::CallbackInfo& info)
 {
     Napi::Env env = info.Env();
-    uint64_t id;
-    checkForId(info, id);
+    uint64_t id = checkForId(info);
 
     std::pair<std::vector<uint16_t>, double> epochResult = antsRuntime.getEpochResult(id);
     Napi::Uint16Array path = Napi::Uint16Array::New(env, epochResult.first.size());
@@ -84,8 +83,7 @@ Napi::Value getNextEpoch(const Napi::CallbackInfo& info)
 Napi::Value terminateSession(const Napi::CallbackInfo& info) 
 {
     Napi::Env env = info.Env();
-    uint64_t id;
-    checkForId(info, id);
+    uint64_t id = checkForId(info);
 
     antsRuntime.terminate(id);
     return env.Undefined();
