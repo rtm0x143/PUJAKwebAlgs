@@ -8,7 +8,6 @@ class CanvasController {
 
     constructor(model: CanvasModel) {
         console.log("CanvasController initialized");
-        console.log(model);
         this._model = model;
         this._view = new CanvasView(model);
 

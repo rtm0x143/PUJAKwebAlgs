@@ -38,14 +38,14 @@ class CanvasView {
             this._mousePosX = e.x;
             this._mousePosY = e.y;
 
-            document.addEventListener('mousemove', (e: MouseEvent) => {
-                this._resize(e, callback);
+            document.addEventListener('mousemove', (e) => {
+
             });
         });
 
         document.addEventListener('mouseup', () => {
-            document.removeEventListener('mousemove', (e: MouseEvent) => {
-                this._resize(e, callback);
+            document.removeEventListener('mousemove', () => {
+
             });
         });
     }

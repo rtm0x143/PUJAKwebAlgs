@@ -8,6 +8,41 @@
     <title>PUJAK</title>
 </head>
 <body>
+<header class="header">
+    <div class="nav-button cursor" id="nav-trigger">
+        <svg class="nav-icon" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle class="nav-icon__circle" cx="41.5" cy="41.5" r="41.5"/>
+            <path class="nav-icon__line" d="M19.5 32.9048L61.5 31L64 39L18 37.0952L19.5 32.9048Z"/>
+            <path class="nav-icon__line" d="M18.5155 44.5L66 48L64.4845 51.5L17 50.3333L18.5155 44.5Z"/>
+        </svg>
+    </div>
+</header>
+<div class="navigation-closed" id="navigation-screen">
+    <div class="navigation-overlay">
+        <div class="nav-button-close cursor" id="nav-close">
+            <svg class="nav-icon" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle class="nav-icon__circle" cx="41.5" cy="41.5" r="41.5"/>
+                <path class="nav-icon__line" d="M19.5 32.9048L61.5 31L64 39L18 37.0952L19.5 32.9048Z"/>
+                <path class="nav-icon__line" d="M18.5155 44.5L66 48L64.4845 51.5L17 50.3333L18.5155 44.5Z"/>
+            </svg>
+        </div>
+        <div class="main-menu">
+            <ul class="main-menu__nav">
+                <li>
+                    <a class="main-menu__nav__link" href="/algorithms">
+                        <span class="main-menu__nav__link__text">Algorithms</span><br>
+                        <span class="separator-line"></span>
+                    </a>
+                </li>
+                <li>
+                    <a class="main-menu__nav__link" href="#">
+                        <span class="main-menu__nav__link__text">About us</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
     <p class="title">A-star</p>
     <div class="ui ui_astar">
         <div class="canvas canvas_astar">
@@ -75,7 +110,7 @@
             </div>
           </div>
     </div>
-    <script src="./canvasResize.js"></script>
+    <script src="dist/astar.js" type="module"></script>
 </body>
 </html>
 

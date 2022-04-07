@@ -4,32 +4,63 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title> 
-    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.0.3/custom-elements-es5-adapter.js"></script>
+    <link rel="stylesheet" href="style.min.css">
+    <title>PUJAK</title>
 </head>
 <body>
-<!-- #CFCFCF - brush color -->
-    <canvas class="canvas" width="500" height="500" style="background: #303030;"></canvas>
-    <div>
-        <p class="text">Text 1</p>
+    <header class="header">
+        <div class="nav-button cursor" id="nav-trigger">
+            <svg class="nav-icon" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle class="nav-icon__circle" cx="41.5" cy="41.5" r="41.5"/>
+                <path class="nav-icon__line" d="M19.5 32.9048L61.5 31L64 39L18 37.0952L19.5 32.9048Z"/>
+                <path class="nav-icon__line" d="M18.5155 44.5L66 48L64.4845 51.5L17 50.3333L18.5155 44.5Z"/>
+            </svg>
+        </div>
+    </header>
+    <div class="navigation-closed" id="navigation-screen">
+        <div class="navigation-overlay">
+            <div class="nav-button-close cursor" id="nav-close">
+                <svg class="nav-icon" viewBox="0 0 83 83" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle class="nav-icon__circle" cx="41.5" cy="41.5" r="41.5"/>
+                    <path class="nav-icon__line" d="M19.5 32.9048L61.5 31L64 39L18 37.0952L19.5 32.9048Z"/>
+                    <path class="nav-icon__line" d="M18.5155 44.5L66 48L64.4845 51.5L17 50.3333L18.5155 44.5Z"/>
+                </svg>
+            </div>
+            <div class="main-menu">
+                <ul class="main-menu__nav">
+                    <li>
+                        <a class="main-menu__nav__link" href="/algorithms">
+                            <span class="main-menu__nav__link__text">Algorithms</span><br>
+                            <span class="separator-line"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="main-menu__nav__link" href="#">
+                            <span class="main-menu__nav__link__text">About us</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
-        <input type="text" class="canvasWidth" placeholder="width">
-        <input type="text" class="canvasHeight" placeholder="height">
-        <input type="text" class="canvasBackground" placeholder="background">
-        <input type="submit" value="Send" class="sendButton">
-
-    <div>
-        <button>Add Rectangle</button>
+    <div class="welcome-screen">
+        <span class="team-name__text">PUJAK</span>
+        <span class="team-name__blinking-line"></span>
     </div>
-    <input value="Text 2" id="p_input">
-    <button class="text_change">click</button>
 
-    <input type="text" class="range">
-    <input type="text" class="groupsize">
-    <button class="DBSCAN" type="submit" method="POST">DBSCAN</button>
-    <button class="kmeans" type="submit" method="POST">kmeans</button>
-
-<script src="dist/index.js" type="module"></script>
-<script src="dist/test.cjs"></script>
+    <div class="drawing">
+        <svg class="drawing__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1649 1182" fill="none">
+            <path d="M358 1036.65L0 627.654C608 -23.9456 1352.67 372.154 1649 651.654C1191 324.454 597.5 771.988 358 1036.65Z" fill="#3D85B3"/>
+            <rect width="113.223" height="742.157" transform="matrix(-0.789543 -0.613695 -0.613695 0.789543 1543.23 595.484)" fill="#FF6464"/>
+            <circle cx="465" cy="391.115" r="253" fill="#FF6464"/>
+            <rect x="220" y="102.225" width="45.0341" height="1506.81" transform="rotate(-49.2379 220 102.225)" fill="#303030"/>
+            <rect width="156.293" height="567.459" transform="matrix(-0.72445 -0.689327 -0.689327 0.72445 1319.39 659.35)" fill="#FFE37D"/>
+            <path d="M717 0.615122L698.5 36.6151L1280.29 295.256L1287.82 279.213L717 0.615122Z" fill="#303030"/>
+            <path d="M757 94.6151L764.973 80.3133L1398.46 377.717L1388.26 399.442L757 94.6151Z" fill="#303030"/>
+            <rect x="295" y="285.225" width="45.0341" height="660.795" transform="rotate(-49.2379 295 285.225)" fill="#FFE37D"/>
+            <path d="M295 438.115L407.583 633.115H182.417L295 438.115Z" fill="#303030"/>
+            <path d="M1442.24 324.069L1559.67 284.74L1535.01 406.103L1442.24 324.069Z" fill="#FFE37D"/>
+        </svg>
+    </div>
+    <script src="dist/index.js" type="module"></script>
 </body>
-</html>

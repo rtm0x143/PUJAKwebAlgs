@@ -2,7 +2,7 @@ import CanvasView from './canvas.view.js';
 import Errors from "../config/Errors.js";
 import GraphModel from "../Model/graph.model.js";
 
-class GraphView extends CanvasView {
+class AntView extends CanvasView {
     //class Objects
     private _graphModel: GraphModel;
 
@@ -72,4 +72,4 @@ class GraphView extends CanvasView {
     }
 }
 
-export default GraphView;
+export default AntView;
