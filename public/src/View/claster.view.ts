@@ -1,40 +1,45 @@
 import Errors from '../config/Errors.js';
-import Brush from '../Model/brush.model.js';
+//import Brush from '../Model/brush.model.js';
 import ClasterModel from '../Model/claster.model.js';
-import View from './View.js';
+import CanvasView from './canvas.view.js';
 
-class ClasterView extends View {
+class ClasterView extends CanvasView {
     private _regulatorButton: HTMLButtonElement;
+    private currentAlg: string = 'DBSCAN';
     // private _regulator: HTMLDivElement;
 
     // private _rangeInput: HTMLInputElement;
     // private _groupInput: HTMLInputElement;
 
     private _DBSCANButton: HTMLButtonElement;
-    private _Kmeansutton: HTMLButtonElement;
+    private _kmeansButton: HTMLButtonElement;
+    private _sendButton: HTMLButtonElement;
 
     private _clasterModel: ClasterModel;
     //private _brush: Brush;
 
-    private body: HTMLBodyElement;
-    private regulatorButtons: NodeListOf<HTMLButtonElement>;
-    private widthRegulator: HTMLDivElement;
-    private heightRegulator: HTMLDivElement;
-    private heightRegulatorBar: HTMLDivElement;
-    private widthRegulatorBar: HTMLDivElement;
-    private rangeRegulatorBar: HTMLDivElement;
-    private countRegulatorBar: HTMLDivElement;
-    private canvasDiv: HTMLDivElement;
-    private canvas: HTMLCanvasElement;
-    private canvasContext: CanvasRenderingContext2D;
-    private heightParagrapth: HTMLParagraphElement;
-    private widthParagrapth: HTMLParagraphElement;
-    private rangeParagrapth: HTMLParagraphElement;
-    private countParagrapth: HTMLParagraphElement;
+    private readonly body: HTMLBodyElement;
+    private readonly regulatorButtons: NodeListOf<HTMLButtonElement>;
+    private readonly widthRegulator: HTMLDivElement;
+    private readonly heightRegulator: HTMLDivElement;
+    private readonly heightRegulatorBar: HTMLDivElement;
+    private readonly widthRegulatorBar: HTMLDivElement;
+    private readonly rangeRegulatorBar: HTMLDivElement;
+    private readonly countRegulatorBar: HTMLDivElement;
+    private readonly canvasDiv: HTMLDivElement;
+    // private readonly canvas: HTMLCanvasElement;
+    private readonly canvasContext: CanvasRenderingContext2D;
+    private readonly heightParagraph: HTMLParagraphElement;
+    private readonly widthParagraph: HTMLParagraphElement;
+    private readonly rangeParagraph: HTMLParagraphElement;
+    private readonly countParagraph: HTMLParagraphElement;
+    private readonly kmeansSelect: HTMLSelectElement;
+    private countInput: HTMLInputElement;
     private canvasMenu: HTMLDivElement;
+    private readonly kmeansMenu: HTMLDivElement;
 
     constructor(model: ClasterModel) {
-        super();
+        super(model);
 
         this.body = document.querySelector('body') ?? Errors.handleError('null');
         this.regulatorButtons = document.querySelectorAll('.regulator__button') ?? Errors.handleError('null');
@@ -47,26 +52,35 @@ class ClasterView extends View {
         this.canvasDiv = document.querySelector('.canvas') ?? Errors.handleError('null');
         this.canvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
         this.canvasContext = this.canvas.getContext('2d') ?? Errors.handleError('null');
-        this.heightParagrapth = document.querySelector('.regulator__height-paragraph') ?? Errors.handleError('null');
-        this.widthParagrapth = document.querySelector('.regulator__width-paragraph') ?? Errors.handleError('null');
-        this.rangeParagrapth = document.querySelector('.regulator__range-paragraph') ?? Errors.handleError('null');
-        this.countParagrapth = document.querySelector('.regulator__count-paragraph') ?? Errors.handleError('null');
+        this.heightParagraph = document.querySelector('.regulator__height-paragraph') ?? Errors.handleError('null');
+        this.widthParagraph = document.querySelector('.regulator__width-paragraph') ?? Errors.handleError('null');
+        this.rangeParagraph = document.querySelector('.regulator__range-paragraph') ?? Errors.handleError('null');
+        this.countParagraph = document.querySelector('.regulator__count-paragraph') ?? Errors.handleError('null');
+        this.kmeansSelect = document.querySelector('.kmeans-menu__select') ?? Errors.handleError('null');
+        this.countInput = document.querySelector('.kmeans-menu__input input') ?? Errors.handleError('null');
         this.canvasMenu = document.querySelector('.canvas__menu') ?? Errors.handleError('null');
+        this.kmeansMenu = document.querySelector('.kmeans-menu') ?? Errors.handleError('null');
 
         //Elements fo change canvas
         this._regulatorButton = document.querySelector('.regulator__button') ?? Errors.handleError('null');
 
         //server data
         // this._rangeInput = document.querySelector('.range') ?? Errors.handleError('null');
-        // this._groupInput = document.querySelector('.groupsize') ?? Errors.handleError('null');
+        // this._groupInput = document.querySelector('.group-size') ?? Errors.handleError('null');
 
-        // //buttons to send on server ddata
-        this._DBSCANButton = document.querySelector('.canvas__menu-button_DBSCAN') ?? Errors.handleError('null');
-        this._Kmeansutton = document.querySelector('.canvas__menu-button_kmeans') ?? Errors.handleError('null');
+        // //buttons to send on server data
+        this._DBSCANButton = document.querySelector('.canvas__menu-button_DBSCAN')
+            ?? Errors.handleError('null');
+        this._kmeansButton = document.querySelector('.canvas__menu-button_kmeans')
+            ?? Errors.handleError('null');
+        this._sendButton =  document.querySelector('.canvas__menu-button_send')
+            ?? Errors.handleError('null');
 
         //Models
         this._clasterModel = model;
         //this._brush = new Brush();    add Brush
+        //starts with DBSCAN
+        this.kmeansMenu.style.display = 'none';
         this._subscribe();
         this.canvas.setAttribute('height', this.canvasDiv.offsetHeight.toString());
         this.canvas.setAttribute('width', this.canvasDiv.offsetWidth.toString());
@@ -83,25 +97,27 @@ class ClasterView extends View {
                     this.canvasDiv,
                     this.canvas,
                     this.canvasContext,
-                    this.heightParagrapth,
+                    this.heightParagraph,
                     'height'
                 )
             }
             else if (item.className == "regulator__button regulator__button_width") {
-                this.changeCanvasSize(
-                    item.offsetHeight + this.widthRegulatorBar.offsetHeight,
-                    -item.offsetHeight - this.widthRegulatorBar.offsetHeight,
-                    this.canvasDiv.offsetWidth / -(item.offsetHeight + this.widthRegulatorBar.offsetHeight),
-                    this.body,
-                    item,
-                    this.widthRegulator,
-                    this.widthRegulatorBar,
-                    this.canvasDiv,
-                    this.canvas,
-                    this.canvasContext,
-                    this.widthParagrapth,
-                    'width'
-                )
+                if (this.currentAlg === 'DBSCAN') {
+                    this.changeCanvasSize(
+                        item.offsetHeight + this.widthRegulatorBar.offsetHeight,
+                        -item.offsetHeight - this.widthRegulatorBar.offsetHeight,
+                        this.canvasDiv.offsetWidth / -(item.offsetHeight + this.widthRegulatorBar.offsetHeight),
+                        this.body,
+                        item,
+                        this.widthRegulator,
+                        this.widthRegulatorBar,
+                        this.canvasDiv,
+                        this.canvas,
+                        this.canvasContext,
+                        this.widthParagraph,
+                        'width'
+                    )
+                }
             }
             else if (item.className == "regulator__button regulator__button_range") {
                 this.changeDBSCANSParams(
@@ -115,7 +131,7 @@ class ClasterView extends View {
                     this.canvasDiv,
                     this.canvas,
                     this.canvasContext,
-                    this.rangeParagrapth,
+                    this.rangeParagraph,
                     'range',
                     960
                 )
@@ -132,14 +148,30 @@ class ClasterView extends View {
                     this.canvasDiv,
                     this.canvas,
                     this.canvasContext,
-                    this.countParagrapth,
+                    this.countParagraph,
                     'count',
                     255
                 )
             }
         })
+
+        //listeners for swapping clasters algs
+        /*this.kmeans.addEventListener('click', (e) => {
+            let kmeansRegulator = document.querySelector('regulator__button regulator__button_height');
+            kmeansRegulator.removeEventListener('mousedown');
+        });*/
+        //listener for send button
+        /*this.sendButton.addEventListener('click', (e) => {
+
+        })*/
         
-        this.drawGrid(this.canvas, this.canvasContext, 'grey', Math.floor(this.canvas.width / 30), Math.floor(this.canvas.height / 30));
+        this.drawGrid(
+            this.canvas,
+            this.canvasContext,
+            'grey',
+            Math.floor(this.canvas.width / 30),
+            Math.floor(this.canvas.height / 30)
+        );
     }
 
     changeCanvasSize(
@@ -206,12 +238,21 @@ class ClasterView extends View {
                     regulatorBar.style.height = `${-buttonMargin - regulatorButton.offsetHeight + 10}px`
                 }
 
-                this.drawGrid(canvas, canvasContext, 'grey', Math.floor(canvas.width / 30), Math.floor(canvas.height / 30));
+                this.drawGrid(
+                    canvas,
+                    canvasContext,
+                    'grey',
+                    Math.floor(canvas.width / 30),
+                    Math.floor(canvas.height / 30)
+                );
             }
         })
 
         body.addEventListener('mouseup', _ => {
-            isDown = false;
+            if (isDown) {
+                isDown = false;
+                this._clasterModel.positions = [];
+            }
         })
     }
 
@@ -299,19 +340,27 @@ class ClasterView extends View {
         )});
     }
 
-    handleDBSCANFetch(callback: Function) {
-        this._DBSCANButton.addEventListener('click', (event) => {
+    handleKmeansClick(callback: Function) {
+        this._kmeansButton.addEventListener('click', (event) => {
             event.preventDefault();
-            callback(this.canvasContext, parseInt("30"), parseInt("3"));
-        })
-    }    
+            callback(this.kmeansMenu);
+        });
+    }
 
-    handleKMeansFetch(callback: Function) {
-        this._Kmeansutton.addEventListener('click', (event) => {
+    handleFetch(callback: Function) {
+        this._sendButton.addEventListener('click', (event) => {
             event.preventDefault();
-            callback()
-        })
-    }   
+            callback(
+                getComputedStyle(this.kmeansMenu).display,
+                this.canvasContext,
+                parseInt(this.rangeParagraph.textContent ?? Errors.handleError('null')),
+                parseInt(this.countParagraph.textContent ?? Errors.handleError('null')),
+                this.kmeansSelect.value ?? Errors.handleError('null'),
+                parseInt(this.countInput.value ?? Errors.handleError('null')),
+                10
+            );
+        });
+    }
 }
 
 export default ClasterView;

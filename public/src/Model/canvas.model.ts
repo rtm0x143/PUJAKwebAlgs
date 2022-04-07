@@ -11,6 +11,7 @@ class CanvasModel extends EventTarget implements ICanvas {
     changeCanvasParams(width: number, height: number): void {
         this.width = width;
         this.height = height;
+        
         this.dispatchEvent(new Event('canvas.model:change'));
     }
 }

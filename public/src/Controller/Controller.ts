@@ -1,5 +1,3 @@
-import Model from '../Model/Model.js';
-
 class Controller {
     urlValue: string = location.origin;
     hsvToRGB(h: number, s: number, v: number) {
