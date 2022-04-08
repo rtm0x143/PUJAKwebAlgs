@@ -1,10 +1,12 @@
 #include "napi.h"
-#include "algs/Colony.h"
-#include "algs/AntsRuntime.h"
-#include <iostream>
+#include "Colony.h"
+// #include "algs/AntsRuntime.h"
+#include "SimulationRuntime.h"
+#include "tools.h"
 
-AntsRuntime antsRuntime;
-ColonyConfig deafultConfig{ 100, 1, 1, 0.5 };
+SimulationRuntime<Colony, std::pair<std::vector<uint16_t>, double>> antsRuntime;
+// AntsRuntime antsRuntime;
+ColonyConfig deafultConfig{ 100, 1, 1.5, 0.6 };
 
 Napi::Value launch(const Napi::CallbackInfo& info)
 {
@@ -18,7 +20,8 @@ Napi::Value launch(const Napi::CallbackInfo& info)
         return env.Undefined();
     }
 
-    Napi::Uint16Array points = info[0].As<Napi::Uint16Array>();
+    Napi::Uint16Array pointsData = info[0].As<Napi::Uint16Array>();
+    uint32_t pointsCount = pointsData.ElementLength() / 2;
     Napi::Number sessionId;
     ColonyConfig config = deafultConfig;
 
@@ -39,8 +42,11 @@ Napi::Value launch(const Napi::CallbackInfo& info)
         if (settings.Has("pherLeak"))
             config.pherLeak = settings.Get("pherLeak").ToNumber().DoubleValue();
     }
+    
+    Colony* colony = new Colony(config,
+        tools::genGraphFromPoints(pointsData.Data(), pointsCount), pointsCount);
 
-    uint64_t id = antsRuntime.launch(config, points.Data(), points.ElementLength() / 2);
+    uint64_t id = antsRuntime.attach(colony);
     return Napi::String::New(env, std::to_string(id));
 }
 
@@ -54,7 +60,6 @@ uint64_t checkForId(const Napi::CallbackInfo& info)
 
 Napi::Value hasSession(const Napi::CallbackInfo& info) 
 {
-    std::cout << "In hasSession " << (std::string)info[0].ToString() << '\n';
     uint64_t id = checkForId(info);
 
     return Napi::Boolean::New(info.Env(), antsRuntime.hasSession(id));
@@ -85,7 +90,7 @@ Napi::Value terminateSession(const Napi::CallbackInfo& info)
     Napi::Env env = info.Env();
     uint64_t id = checkForId(info);
 
-    antsRuntime.terminate(id);
+    delete antsRuntime.detach(id);
     return env.Undefined();
 }
 

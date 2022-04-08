@@ -17,10 +17,12 @@ const antsRouter = Router()
         let data = Buffer.from(req.body["pointsData"], "hex")
         let pointsData = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2)
         let id = nAlgs.ants.launch(pointsData, req.body)
-
-        let token = jwt.sign(id, process.env["jwtSecret"])
-        console.log(jwt.decode(token), "created");
-        res.send(token);
+        console.log("From launch", id);
+        jwt.sign(id, process.env["jwtSecret"], (err, token) => {
+            console.log(jwt.decode(token), token, "created");
+            console.log(err);
+            res.send(token);
+        })
     })
     .get("/getState", (req, res) => {
         let token = req.header("Authorization")

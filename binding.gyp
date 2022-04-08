@@ -3,14 +3,16 @@
     {
       "include_dirs" : [
         "<!@(node -p \"require('node-addon-api').include\")",
-        "addons/algs"
+        "addons/algs",
+        "addons/utils"
       ],
       "target_name": "ants",
       "sources": [ 
         "addons/antsWrap.cpp",
-        "addons/algs/src/astar.cpp",
         "addons/algs/src/Colony.cpp",
-        "addons/algs/src/AntsRuntime.cpp"
+        # "addons/algs/src/AntsRuntime.cpp",
+        "addons/utils/src/SimulationRuntime.cpp",
+        "addons/utils/src/tools.cpp"
       ],
       'defines': [ 'NAPI_CPP_EXCEPTIONS' ]
     },
@@ -25,7 +27,8 @@
     {
       "include_dirs" : [
         "<!@(node -p \"require('node-addon-api').include\")",
-        "addons/algs"
+        "addons/algs",
+        "addons/utils"
       ],
       "target_name": "clasterisation",
       "sources": [ 
