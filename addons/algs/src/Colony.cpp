@@ -6,7 +6,8 @@ double rnd01() { return (double)rand() / (RAND_MAX + 1); }
 
 Colony::Colony(const ColonyConfig& config, double** graph, uint32_t graphSize)
 	: graph(graph), graphSize(graphSize), conf(config)
-{;
+{
+	;
 	//ants = (Ant*)malloc(sizeof(Ant) * config.antsCount);
 	ants = new Ant[config.antsCount];
 	for (size_t i = 0; i < config.antsCount; ++i)
@@ -139,7 +140,7 @@ void Colony::Ant::makeTour()
 
 		for (size_t j = 0; j < home->graphSize; ++j)
 		{
-			if (!visited[j]) 
+			if (!visited[j])
 			{
 				prob += curProbs[j];
 				if (prob >= randVal) {
@@ -167,7 +168,7 @@ void Colony::calcProbabilities()
 	for (size_t i = 0; i < graphSize; ++i)
 	{
 		double prefsSum = 0.0,
-			* graphNode = graph[i], 
+			* graphNode = graph[i],
 			* pherNone = pheromones[i],
 			* probNode = probabilities[i];
 
@@ -218,7 +219,7 @@ std::pair<std::vector<uint16_t>, double> Colony::iterate()
 	}
 
 	uint16_t* bestPath = ants[bestInd].path;
-	std::pair<std::vector<uint16_t>, double> result { 
+	std::pair<std::vector<uint16_t>, double> result{
 		std::vector<uint16_t>(graphSize + 1), ants[bestInd].pathCost };
 
 	for (size_t i = 0; i < graphSize + 1; i++) {
@@ -226,4 +227,8 @@ std::pair<std::vector<uint16_t>, double> Colony::iterate()
 	}
 
 	return result;
+}
+
+std::pair<std::vector<uint16_t>, double> Colony::operator()() {
+	return iterate();
 }

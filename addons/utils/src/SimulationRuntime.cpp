@@ -1,31 +1,35 @@
-#include <cmath>
-#include <algorithm>
-#include "AntsRuntime.h"
-#include "tools.h"
+#include "SimulationRuntime.h"
+#include "Colony.h"
 #include <iostream>
+#include <algorithm>
 
-AntsRuntime::AntsRuntime() : sessions(0), terminateFlag(false)
+template <class Simulation, class State>
+SimulationRuntime<Simulation, State>::SimulationRuntime() 
+	: sessions(0), terminateFlag(false)
 {
-	worker = std::thread(workerRuntime, &terminateFlag, 
+	worker = std::thread(workerRuntime, &terminateFlag,
 		&tasksUpdated, &tasks, &tasksMutex, &tasksDone);
 }
 
-AntsRuntime::~AntsRuntime() 
+template <class Simulation, class State>
+SimulationRuntime<Simulation, State>::~SimulationRuntime()
 {
 	terminateFlag = false;
+	tasksUpdated.notify_one();
 	if (worker.joinable()) {
 		worker.join();
 	}
 	for (Session* s : sessions) {
-		delete s->colony;
+		// delete s->sim;
 		delete s->_mutex;
 		delete s;
 	}
 }
 
-void AntsRuntime::workerRuntime(
+template <class Simulation, class State>
+void SimulationRuntime<Simulation, State>::workerRuntime(
 	bool* terminate, std::condition_variable* queueUpdated,
-	std::vector<Session*>* tasks, std::mutex* queueMutex, 
+	std::vector<Session*>* tasks, std::mutex* queueMutex,
 	std::condition_variable* tasksDone)
 {
 	std::mutex _mutex;
@@ -52,38 +56,35 @@ void AntsRuntime::workerRuntime(
 				task = tasks->back();
 				tasks->pop_back();
 			}
-			std::cout << "Currant task - " << task->id << '\n';
 			{
 				std::unique_lock<std::mutex> lock(*task->_mutex);
-				if (task->colony) 
-					task->result = task->colony->iterate();
-				
+				task->result = (*task->sim)();
 			}
 		}
 	}
 }
 
-bool AntsRuntime::hasSession(const uint64_t& id)
+template <class Simulation, class State>
+Simulation* SimulationRuntime<Simulation, State>::hasSession(const uint64_t& id)
 {
 	std::cout << "Seaks for " << id << " Has " << sessions.size() << " sessions:\n\t";
 	for (Session* s : sessions) std::cout << s->id << ' ';
 	std::cout << '\n';
-	
+
 	auto s_it = std::find_if(sessions.begin(), sessions.end(),
 		[&id](const Session* s) -> bool { return s->id == id; });
 
-	return s_it != sessions.end();
+	if (s_it != sessions.end()) std::cout << (*s_it)->id << '\n';
+	else std::cout << "Not found\n";
+
+	return (s_it == sessions.end() ? (*s_it)->sim : nullptr);
 }
 
-uint64_t AntsRuntime::launch(const ColonyConfig& colonySettings, uint16_t* points, uint32_t pCount)
+template <class Simulation, class State>
+uint64_t SimulationRuntime<Simulation, State>::attach(Simulation* sim)
 {
-	double** graph = tools::genGraphFromPoints(points, pCount);
-	
 	Session* session = new Session{
-			++idCounter,
-			new Colony(colonySettings, graph, pCount),
-			std::pair<std::vector<uint16_t>, double>{ 0, 0 },
-			new std::mutex
+			++idCounter, sim, State{}, new std::mutex
 	};
 
 	sessions.push_back(session);
@@ -96,7 +97,8 @@ uint64_t AntsRuntime::launch(const ColonyConfig& colonySettings, uint16_t* point
 	return session->id;
 }
 
-std::pair<std::vector<uint16_t>, double>  AntsRuntime::getEpochResult(const uint64_t& id)
+template <class Simulation, class State>
+State SimulationRuntime<Simulation, State>::getEpochResult(const uint64_t& id)
 {
 	auto s_it = std::find_if(sessions.begin(), sessions.end(),
 		[&id](const Session* s) -> bool { return s->id == id; });
@@ -122,7 +124,8 @@ std::pair<std::vector<uint16_t>, double>  AntsRuntime::getEpochResult(const uint
 	return result;
 }
 
-void AntsRuntime::terminate(const uint64_t& id)
+template <class Simulation, class State>
+Simulation* SimulationRuntime<Simulation, State>::detach(const uint64_t& id)
 {
 	tasksMutex.lock();
 	std::remove_if(tasks.begin(), tasks.end(),
@@ -132,8 +135,14 @@ void AntsRuntime::terminate(const uint64_t& id)
 	auto s_it = std::find_if(sessions.begin(), sessions.end(),
 		[&id](const Session* s) -> bool { return s->id == id; });
 
-	delete (*s_it)->colony;
+	Simulation* sim = (*s_it)->sim;
+	// delete (*s_it)->sim;
 	delete (*s_it)->_mutex;
 	delete *s_it;
 	sessions.erase(s_it);
+
+	return sim;
 }
+
+
+template class SimulationRuntime<Colony, std::pair<std::vector<uint16_t>, double>>;
