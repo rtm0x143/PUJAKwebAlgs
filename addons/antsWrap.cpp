@@ -3,6 +3,7 @@
 // #include "algs/AntsRuntime.h"
 #include "SimulationRuntime.h"
 #include "tools.h"
+#include <iostream>
 
 SimulationRuntime<Colony, std::pair<std::vector<uint16_t>, double>> antsRuntime;
 // AntsRuntime antsRuntime;
@@ -62,7 +63,7 @@ Napi::Value hasSession(const Napi::CallbackInfo& info)
 {
     uint64_t id = checkForId(info);
 
-    return Napi::Boolean::New(info.Env(), antsRuntime.hasSession(id));
+    return Napi::Boolean::New(info.Env(), antsRuntime.hasSession(id) != nullptr);
 }
 
 Napi::Value getNextEpoch(const Napi::CallbackInfo& info)
@@ -89,6 +90,7 @@ Napi::Value terminateSession(const Napi::CallbackInfo& info)
 {
     Napi::Env env = info.Env();
     uint64_t id = checkForId(info);
+    std::cout << "c++term " << id << '\n';
 
     delete antsRuntime.detach(id);
     return env.Undefined();

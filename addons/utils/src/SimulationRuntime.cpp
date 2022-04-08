@@ -77,7 +77,7 @@ Simulation* SimulationRuntime<Simulation, State>::hasSession(const uint64_t& id)
 	if (s_it != sessions.end()) std::cout << (*s_it)->id << '\n';
 	else std::cout << "Not found\n";
 
-	return (s_it == sessions.end() ? (*s_it)->sim : nullptr);
+	return (s_it != sessions.end() ? (*s_it)->sim : nullptr);
 }
 
 template <class Simulation, class State>
@@ -134,13 +134,16 @@ Simulation* SimulationRuntime<Simulation, State>::detach(const uint64_t& id)
 
 	auto s_it = std::find_if(sessions.begin(), sessions.end(),
 		[&id](const Session* s) -> bool { return s->id == id; });
-
-	Simulation* sim = (*s_it)->sim;
-	// delete (*s_it)->sim;
-	delete (*s_it)->_mutex;
-	delete *s_it;
-	sessions.erase(s_it);
-
+	
+	Simulation* sim = nullptr;
+	if (s_it != sessions.end()) {
+		sim = (*s_it)->sim;
+		// delete (*s_it)->sim;
+		delete (*s_it)->_mutex;
+		delete *s_it;
+		sessions.erase(s_it);
+	}
+	std::cout << "c++deleted " << id << ' ' << sim << '\n';
 	return sim;
 }
 

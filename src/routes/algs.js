@@ -35,6 +35,7 @@ const antsRouter = Router()
             if (!err && nAlgs.ants.hasSession(payload)) 
             {
                 let result = nAlgs.ants.getNextEpoch(payload);
+                console.log(result);
                 res.json({
                     cost: result.cost,
                     path: Buffer.from(result.path.buffer).toString()
@@ -53,13 +54,13 @@ const antsRouter = Router()
         // }
         jwt.verify(token, process.env.jwtSecret, (err, payload) => {
             if (!err && nAlgs.ants.hasSession(payload)) {
+                console.log("Trying to delete", payload);
                 nAlgs.ants.terminateSession(payload)
                 console.log(payload, "deleted");
                 res.sendStatus(200)
             } 
             else {
                 res.sendStatus(401)
-                return
             }
         })
     })
