@@ -2,53 +2,32 @@
 #include <malloc.h>
 #include <cstdint>
 #include <stdlib.h>
+#include <vector>
 
 typedef uint16_t u16;
 
 class Graph
 {
 public:
-	u16 length;
-	u16** matrix;
-	u16** ways;
-
-	Graph(u16 length, u16** matrix);
-
-	~Graph() {
-		delete[] ways;
+	struct Way {
+		u16* path;
+		double weight;
 	};
 
-	void setWay(u16 index);
+	u16 length;
+	double** matrix;
 
-	u16 getMinWeight(u16** matrix);
-	u16 getMaxWeightIndex(u16** matrix);
-	int32_t getMaxWeightIndex(u16** matrix, u16* way);
-	u16 countWeight(u16* way);
+	std::vector<Way> ways;
 
-private:
-	//create random way on Graph
-	u16* getRandomArray(u16 index) {
-		bool* visits = new bool[length];
+	Graph(u16 length, double** matrix);
 
-		for (int i = 0; i < length; ++i) {
-			visits[i] = false;
-		}
+	Way& getMinWay();
 
-		u16* way = new u16[length];
+	/*u16 getMinWeight(double** matrix);
+	u16 getMaxWeightIndex(double** matrix);
+	int32_t getMaxWeightIndex(double** matrix, u16* way);*/
+	void countWeight(Way& way);
 
-		u16 counter = 0;
-		while (counter < length) {
-			u16 prob = rand() % length;
-
-			if (!visits[prob]) {
-				visits[prob] = true;
-				way[counter] = prob;
-				++counter;
-			}
-		};
-
-		return way;
-		delete[] way;
-		delete[] visits;
-	}
+	//set random way on Graph
+	void setRandomWay(Way& way);
 };
