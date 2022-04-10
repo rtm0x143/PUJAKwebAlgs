@@ -43,8 +43,6 @@ class AntController extends Controller {
 
         console.log(antData);
 
-        this._graphModel.setDistances();
-
         fetch(`${this.urlValue}/alg/ants/launch`, {
             method: "POST",
             headers: {
@@ -78,7 +76,22 @@ class AntController extends Controller {
                     'Authorization': token ?? Errors.handleError('null'),
                 },
             }).then((response) => {
-                response.json().then(r => console.log(r));
+                response.json().then((value) => {
+                    // @ts-ignore
+                    let bufferData = buffer.Buffer.from(value.path ?? Errors.handleError('undefined'));
+                    let pointsData = new Uint16Array(
+                        bufferData.buffer,
+                        bufferData.byteOffset,
+                        bufferData.byteLength / 2)
+
+                    this._graphModel.updateWay(
+                        pointsData, value.cost
+                    );
+
+                    this._graphModel.clearCanvas();
+
+                    console.log(pointsData, value.cost)
+                });
             })
         })
 
