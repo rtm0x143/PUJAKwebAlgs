@@ -54,7 +54,7 @@ function graphSimGetState(sim) {
 }
 
 function simTerminate(sim) {
-    (req, res) => {
+    return (req, res) => {
         let token = req.header("Authorization")
         // if (!token) {
         //     res.sendStatus(401)
