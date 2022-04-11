@@ -42,9 +42,9 @@ public:
 		Colony* home;
 	};
 
-	std::pair<std::vector<uint16_t>, double> iterate();
+	std::pair<std::vector<uint16_t>, double>* iterate();
 
-	std::pair<std::vector<uint16_t>, double> operator()();
+	std::pair<std::vector<uint16_t>, double>* operator()();
 
 private:
 	double** graph;

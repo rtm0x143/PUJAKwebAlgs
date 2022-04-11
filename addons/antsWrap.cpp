@@ -1,12 +1,10 @@
+#include <iostream>
 #include "napi.h"
 #include "Colony.h"
-// #include "algs/AntsRuntime.h"
-#include "SimulationRuntime.h"
+#include "AntsRuntime.h"
 #include "tools.h"
-#include <iostream>
 
-SimulationRuntime<Colony, std::pair<std::vector<uint16_t>, double>> antsRuntime;
-// AntsRuntime antsRuntime;
+AntsRuntime antsRuntime;
 ColonyConfig deafultConfig{ 100, 1, 1.5, 0.6 };
 
 Napi::Value launch(const Napi::CallbackInfo& info)
@@ -23,7 +21,6 @@ Napi::Value launch(const Napi::CallbackInfo& info)
 
     Napi::Uint16Array pointsData = info[0].As<Napi::Uint16Array>();
     uint32_t pointsCount = pointsData.ElementLength() / 2;
-    Napi::Number sessionId;
     ColonyConfig config = deafultConfig;
 
     if (info.Length() == 2)
@@ -71,17 +68,17 @@ Napi::Value getNextEpoch(const Napi::CallbackInfo& info)
     Napi::Env env = info.Env();
     uint64_t id = checkForId(info);
 
-    std::pair<std::vector<uint16_t>, double> epochResult = antsRuntime.getEpochResult(id);
-    Napi::Uint16Array path = Napi::Uint16Array::New(env, epochResult.first.size());
+    std::pair<std::vector<uint16_t>, double>* epochResult = antsRuntime.getEpochResult(id);
+    Napi::Uint16Array path = Napi::Uint16Array::New(env, epochResult->first.size());
 
-    uint16_t* pathData = epochResult.first.data();
-    for (size_t i = 0; i < epochResult.first.size(); ++i) {
+    uint16_t* pathData = epochResult->first.data();
+    for (size_t i = 0; i < epochResult->first.size(); ++i) {
         path[i] = pathData[i];
     }
     
     Napi::Object result = Napi::Object::New(env);
     result.Set(Napi::String::New(env, "path"), path);
-    result.Set(Napi::String::New(env, "cost"), epochResult.second);
+    result.Set(Napi::String::New(env, "cost"), epochResult->second);
 
     return result;
 }

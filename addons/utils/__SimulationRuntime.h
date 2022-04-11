@@ -1,8 +1,11 @@
 #pragma once
+
+// unfull header; template must be defined in expanding realisation file, including "__SimulationRuntime.cpp"
+
 #include <thread>
 #include <mutex>
+#include <vector>
 #include <condition_variable>
-#include "Colony.h"
 
 template <class Simulation, class State>
 class SimulationRuntime
@@ -13,7 +16,7 @@ public:
 
 	uint64_t attach(Simulation* sim);
 	Simulation* hasSession(const uint64_t& id);
-	State getEpochResult(const uint64_t& id);
+	State* getEpochResult(const uint64_t& id);
 	Simulation* detach(const uint64_t& id);
 
 private:
@@ -21,7 +24,7 @@ private:
 	{
 		uint64_t id;
 		Simulation* sim;
-		State result;
+		State* result;
 		std::mutex* _mutex;
 	};
 
@@ -44,4 +47,3 @@ private:
 
 	uint64_t idCounter = 0;
 };
-

@@ -20,6 +20,7 @@ public:
 	std::vector<Way> ways;
 
 	Graph(u16 length, double** matrix);
+	~Graph();
 
 	Way& getMinWay();
 

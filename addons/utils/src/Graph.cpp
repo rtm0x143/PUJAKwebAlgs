@@ -13,6 +13,14 @@ Graph::Graph(u16 length, double** matrix) : ways(length) {
 	}
 };
 
+Graph::~Graph()
+{
+	for (Way& way : ways) {
+		delete way.path;
+	}
+	
+}
+
 //create random way on Graph
 void Graph::setRandomWay(Way& way) {
 	bool* visits = new bool[length];
