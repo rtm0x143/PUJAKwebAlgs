@@ -1,7 +1,6 @@
-#include "SimulationRuntime.h"
-#include "Colony.h"
 #include <iostream>
 #include <algorithm>
+#include "__SimulationRuntime.h"
 
 template <class Simulation, class State>
 SimulationRuntime<Simulation, State>::SimulationRuntime() 
@@ -22,6 +21,7 @@ SimulationRuntime<Simulation, State>::~SimulationRuntime()
 	for (Session* s : sessions) {
 		// delete s->sim;
 		delete s->_mutex;
+		delete s->result;
 		delete s;
 	}
 }
@@ -77,14 +77,14 @@ Simulation* SimulationRuntime<Simulation, State>::hasSession(const uint64_t& id)
 	if (s_it != sessions.end()) std::cout << (*s_it)->id << '\n';
 	else std::cout << "Not found\n";
 
-	return (s_it == sessions.end() ? (*s_it)->sim : nullptr);
+	return (s_it != sessions.end() ? (*s_it)->sim : nullptr);
 }
 
 template <class Simulation, class State>
 uint64_t SimulationRuntime<Simulation, State>::attach(Simulation* sim)
 {
 	Session* session = new Session{
-			++idCounter, sim, State{}, new std::mutex
+			++idCounter, sim, nullptr, new std::mutex
 	};
 
 	sessions.push_back(session);
@@ -98,7 +98,7 @@ uint64_t SimulationRuntime<Simulation, State>::attach(Simulation* sim)
 }
 
 template <class Simulation, class State>
-State SimulationRuntime<Simulation, State>::getEpochResult(const uint64_t& id)
+State* SimulationRuntime<Simulation, State>::getEpochResult(const uint64_t& id)
 {
 	auto s_it = std::find_if(sessions.begin(), sessions.end(),
 		[&id](const Session* s) -> bool { return s->id == id; });
@@ -109,7 +109,7 @@ State SimulationRuntime<Simulation, State>::getEpochResult(const uint64_t& id)
 		{
 			std::unique_lock<std::mutex> slock(*(*s_it)->_mutex),
 				tlock(tasksMutex);
-			if (!(*s_it)->result.first.empty()) break;
+			if (!(*s_it)->result) break;
 		}
 		tasksDone.wait(selfLock);
 	}
@@ -117,7 +117,8 @@ State SimulationRuntime<Simulation, State>::getEpochResult(const uint64_t& id)
 	std::unique_lock<std::mutex> slock(*(*s_it)->_mutex),
 		tlock(tasksMutex);
 
-	std::pair<std::vector<uint16_t>, double>  result = std::move((*s_it)->result);
+	State* result = (*s_it)->result;
+	(*s_it)->result = nullptr;
 	tasks.push_back(*s_it);
 	tasksUpdated.notify_one();
 
@@ -134,15 +135,19 @@ Simulation* SimulationRuntime<Simulation, State>::detach(const uint64_t& id)
 
 	auto s_it = std::find_if(sessions.begin(), sessions.end(),
 		[&id](const Session* s) -> bool { return s->id == id; });
-
-	Simulation* sim = (*s_it)->sim;
-	// delete (*s_it)->sim;
-	delete (*s_it)->_mutex;
-	delete *s_it;
-	sessions.erase(s_it);
-
+	
+	Simulation* sim = nullptr;
+	if (s_it != sessions.end()) {
+		sim = (*s_it)->sim;
+		// delete (*s_it)->sim;
+		delete (*s_it)->_mutex;
+		delete *s_it;
+		sessions.erase(s_it);
+	}
+	std::cout << "c++deleted " << id << ' ' << sim << '\n';
 	return sim;
 }
 
 
-template class SimulationRuntime<Colony, std::pair<std::vector<uint16_t>, double>>;
+// template class SimulationRuntime<Colony, std::pair<std::vector<uint16_t>, double>>;
+// template class SimulationRuntime<Genetic, std::pair<std::vector<uint16_t>, double>>;

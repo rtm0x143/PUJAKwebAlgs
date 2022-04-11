@@ -1,6 +1,5 @@
-#include "Colony.h"
 #include <cmath>
-
+#include "Colony.h"
 
 double rnd01() { return (double)rand() / (RAND_MAX + 1); }
 
@@ -199,7 +198,7 @@ void Colony::leakPheromones()
 	}
 }
 
-std::pair<std::vector<uint16_t>, double> Colony::iterate()
+std::pair<std::vector<uint16_t>, double>* Colony::iterate()
 {
 	calcProbabilities();
 
@@ -219,16 +218,16 @@ std::pair<std::vector<uint16_t>, double> Colony::iterate()
 	}
 
 	uint16_t* bestPath = ants[bestInd].path;
-	std::pair<std::vector<uint16_t>, double> result{
+	auto result = new std::pair<std::vector<uint16_t>, double>{ 
 		std::vector<uint16_t>(graphSize + 1), ants[bestInd].pathCost };
 
 	for (size_t i = 0; i < graphSize + 1; i++) {
-		result.first[i] = bestPath[i];
+		result->first[i] = bestPath[i];
 	}
 
 	return result;
 }
 
-std::pair<std::vector<uint16_t>, double> Colony::operator()() {
+std::pair<std::vector<uint16_t>, double>* Colony::operator()() {
 	return iterate();
 }
