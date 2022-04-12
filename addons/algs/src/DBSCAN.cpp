@@ -1,7 +1,7 @@
 #include <list>
 #include <cmath>
 #include <iostream>
-#include "clasterisation.h"
+#include "../clasterisation.h"
 
 std::vector<uint32_t>* calcNeighborhoods(int16_t* points, uint32_t pNum, double inclusionRange) {
 	std::vector<uint32_t>* neighborhoods = new std::vector<uint32_t>[pNum];
