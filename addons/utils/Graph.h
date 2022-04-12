@@ -23,10 +23,6 @@ public:
 	~Graph();
 
 	Way& getMinWay();
-
-	/*u16 getMinWeight(double** matrix);
-	u16 getMaxWeightIndex(double** matrix);
-	int32_t getMaxWeightIndex(double** matrix, u16* way);*/
 	void countWeight(Way& way);
 
 	//set random way on Graph

@@ -5,7 +5,7 @@ Genetic::Genetic(Graph* graph) : graph(graph), bestWay(nullptr) {}
 
 void Genetic::crossChromo(u16 firstChromo, u16 secondChromo, u16* splitPath) {
 	u16 start = rand() % (graph->length);
-	u16 end = rand() % (graph->length - start) + start + 1; //rand??
+	u16 end = rand() % (graph->length - start) + start + 1;
 
 	while (start == end) {
 		end = rand() % (graph->length - start) + start + 1;
@@ -22,7 +22,7 @@ void Genetic::crossChromo(u16 firstChromo, u16 secondChromo, u16* splitPath) {
 	u16 index = end - start;
 	bool flag = true;
 	for (int i = 0; i < graph->length; ++i) {
-		for (int j = 0; j < end - start; ++j) { //rand??
+		for (int j = 0; j < end - start; ++j) {
 			if (splitPath[j] == graph->ways[secondChromo].path[i]) {
 				flag = false;
 				break;
@@ -57,25 +57,11 @@ void Genetic::reverseMutation(u16* splitPath)
 	}
 }
 
-bool Genetic::updatePopulation(Graph::Way& way) {
-	//sort matrix
-	Graph::Way& minWay = graph->getMinWay();
-
-	if (way.weight < minWay.weight) {
-		delete[] minWay.path;
-		minWay = way;
-
-		return true;
-	}
-	return false;
-}
-
 void Genetic::generate() {
 	std::vector<Graph::Way> nextGeneration;
 	
 	for (size_t i = 0; i < graph->length; ++i) {
-		u16* firstSplitPath = new u16[graph->length];
-		u16* secondSplitPath = new u16[graph->length];
+		u16* splitPath = new u16[graph->length];
 
 		u16 firstChromo = rand() % graph->length;
 		u16 secondChromo = rand() % graph->length;
@@ -84,14 +70,19 @@ void Genetic::generate() {
 			secondChromo = rand() % graph->length;
 		}
 
-		crossChromo(firstChromo, secondChromo, firstSplitPath);
+		crossChromo(firstChromo, secondChromo, splitPath);
 
-		for (int i = 0; i < graph->length; ++i) {
-			std::cout << firstSplitPath[i] << " ";
+		for (size_t j = 0; j < graph->length; ++j) {
+			std::cout << splitPath[j] << " ";
 		}
-		std::cout << std::endl;
 
-		Graph::Way firstSplitWay{ firstSplitPath };
+		//std::cout << std::endl;
+		
+		if (rand() % 100 <= 5) {
+			mutation(splitPath);
+		}
+
+		Graph::Way firstSplitWay{ splitPath };
 
 		graph->countWeight(firstSplitWay);
 		nextGeneration.push_back(firstSplitWay);
