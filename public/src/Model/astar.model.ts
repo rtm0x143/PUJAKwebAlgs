@@ -16,11 +16,8 @@ class AstarModel extends CanvasModel {
      * @returns Point with x and y indices
      */
     
-    getIndex(x: number, y: number): Point {
-        return new Point(
-            2 * (x + y * this.gridResolution.x),
-            2 * (x + y * this.gridResolution.x) + 1
-        );
+    getIndex(x: number, y: number): number {
+        return x + y * this.gridResolution.x
     }
 
      /**
@@ -30,17 +27,15 @@ class AstarModel extends CanvasModel {
      * @param y - y coordinate
      */
     addWall(x: number, y: number): void {
-        let indices: Point = this.getIndex(x, y);
+        let index: number = this.getIndex(x, y);
         
-        this.grid[indices.x] = 1;
-        this.grid[indices.y] = 1;
+        this.grid[index] = 1;
     }
 
     removeWall(x: number, y: number) {
-        let indices: Point = this.getIndex(x, y);
+        let index: number = this.getIndex(x, y);
 
-        this.grid[indices.x] = 0;
-        this.grid[indices.y] = 0;
+        this.grid[index] = 0;
     }
 
     setStartPoint(pointCoords: Point, mouseCanvasPos: Point): void {
@@ -60,7 +55,7 @@ class AstarModel extends CanvasModel {
     }
 
     setGridSize(gridResolution: Point) {
-        this.grid = new Uint8Array(2 * gridResolution.x * gridResolution.y);
+        this.grid = new Uint8Array(gridResolution.x * gridResolution.y);
         this.gridResolution = gridResolution;
     }
 }

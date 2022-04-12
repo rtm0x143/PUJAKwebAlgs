@@ -60,7 +60,7 @@ class AstarView extends CanvasView {
                 for (let j = 0; j < this._astarModel.gridResolution.x; ++j) {
                     let currentPoint = this._astarModel.getIndex(j, i);
                     
-                    if (this._astarModel.grid[currentPoint.x] == 1 && this._astarModel.grid[currentPoint.y] == 1) {
+                    if (this._astarModel.grid[currentPoint] == 1) {
                         this.canvasContext.fillRect(
                             j * cellWidth, 
                             i * cellHeight, 

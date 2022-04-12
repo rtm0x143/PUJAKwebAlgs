@@ -3,7 +3,15 @@ import AstarView from '../View/astar.view.js';
 import AstarModel from '../Model/astar.model.js';
 import Errors from '../config/Errors.js';
 import Point from '../Model/point.js';
+import { isThisTypeNode } from 'typescript';
+import { timingSafeEqual } from 'crypto';
 
+
+// black: #303030, 
+// white: #CFCFCF,
+// green: #52F193,
+// red: #F25D52,
+// 
 class AstarController extends CanvasController {
     private readonly _astarModel: AstarModel;
     private _astarView: AstarView;
@@ -35,7 +43,7 @@ class AstarController extends CanvasController {
             this.findPathCallback();
         });
 
-        this._astarModel.setGridSize(new Point(20, 20));
+        this._astarModel.setGridSize(this._astarView.getGridSize());
         this._astarView.drawGrid(
             this._astarView.canvasGridContext,
             '#CFCFCF', 
@@ -46,8 +54,6 @@ class AstarController extends CanvasController {
 
     buttonStartClickCallback() {
         this._isStartPoint = true;
-        console.log("start point set");
-        
     }
 
     buttonEndClickCallback() {
@@ -83,12 +89,12 @@ class AstarController extends CanvasController {
                 return;
             }
                 
-            if (this._astarModel.grid[gridIndex.x] !== 1 && this._astarModel.grid[gridIndex.y] !== 1) {
+            if (this._astarModel.grid[gridIndex] !== 1) {
                 if (this._isStartPoint) {
                     // Clear previous start point
                     this.fillCell(this._astarModel.startPointMousePos, "#303030");
                     // Fill current start point cell
-                    this.fillCell(mouseCanvasPos, "#52f193");
+                    this.fillCell(mouseCanvasPos, "#52F193");
                     this._astarModel.setStartPoint(canvas2dCoords, mouseCanvasPos);
                     this._isStartPoint = false;
                     return;
@@ -97,7 +103,7 @@ class AstarController extends CanvasController {
                     // Clear previous end point
                     this.fillCell(this._astarModel.endPointMousePos, "#303030");
                     // Full current end point cell
-                    this.fillCell(mouseCanvasPos, "#e7615a");
+                    this.fillCell(mouseCanvasPos, "#F25D52");
                     this._astarModel.setEndPoint(canvas2dCoords, mouseCanvasPos);
                     this._isEndPoint = false;
                     return;
@@ -214,11 +220,20 @@ class AstarController extends CanvasController {
 
     private findPathRequest(): Promise<Response> {
         let data = {
-            "start": {'x': this._astarModel.startPoint.x, 'y': this._astarModel.startPoint.y},
-            "end": {'x': this._astarModel.endPoint.x, 'y': this._astarModel.endPoint.y},
-            "size": [this._astarModel.gridResolution.x, this._astarModel.gridResolution.y],
-            // @ts-ignore
-            "walls": buffer.Buffer.from(this._astarModel.grid).toString()
+            end: {
+                x: this._astarModel.endPoint.x, 
+                y: this._astarModel.endPoint.y
+            },
+            start: {
+                x: this._astarModel.startPoint.x, 
+                y: this._astarModel.startPoint.y
+            },
+            field: {
+                height: this._astarModel.gridResolution.y, 
+                width: this._astarModel.gridResolution.x,
+                // @ts-ignore
+                data: buffer.Buffer.from(this._astarModel.grid.buffer).toString()
+            },
         }
 
         console.log(JSON.stringify(data));
@@ -236,8 +251,107 @@ class AstarController extends CanvasController {
 
     findPathResponse() {
         this.findPathRequest().then((response) => {
+            let reader = response.body?.getReader();
+            let pathStart = -1;
 
-        })
+            let readChunck = () => {
+                reader?.read().then(({done, value}) => {
+                    if (value === undefined) Errors.handleError("undefined");
+                    if (value === null) Errors.handleError("null");
+
+                    if (pathStart === -1) {
+                        pathStart = this.drawAlgSteps(value);
+                    }
+                    
+                    if (pathStart !== -1) {
+                        this.drawPath(value, pathStart);
+                    }
+
+                    if (!done) readChunck();
+                })
+            }
+        });
+    }
+
+    fillCellByGridCoordinates(point: Point, color: string) {
+        let steps = new Point(
+            this._astarView.canvas.width / this._astarModel.gridResolution.x,
+            this._astarView.canvas.height / this._astarModel.gridResolution.y,
+        );
+
+        let topLeftCorner = new Point(
+            point.x * steps.x,
+            point.y * steps.y
+        );
+
+        this._astarView.canvasContext.fillStyle = color;
+        this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
+    }
+
+    // visited cell: #5EF2F0
+    // opened cell: #F2D546
+    // current cell: #706BF2
+    drawAlgSteps(responseArray: Uint8Array): number {
+        let pathStart = -1;
+        let colorVisited = "#5EF2F0";
+        let colorOpened = "#F2D546";
+        let colorCurrent = "#706BF2";
+        
+        for (let i = 0; i < responseArray.length; i += 2) {
+            let currentPoint = new Point(responseArray[i], responseArray[i + 1]);
+
+            // If end point was reached in alg steps part of an array
+            if (currentPoint.x === this._astarModel.endPoint.x && currentPoint.y === this._astarModel.endPoint.y) {
+                pathStart = i + 1;
+                break;
+            }
+
+            this.fillCellByGridCoordinates(currentPoint, colorCurrent);
+
+            for (let n = -1; n <= 1; ++n) {
+                for (let m = -1; m <= 1; ++m) {
+                    if (n === m) continue;
+
+                    let moveX = currentPoint.x + m;
+                    let moveY = currentPoint.y + n;
+
+                    // Check if the neighboring cell is not visited and not the wall
+                    if (
+                        moveX >= 0 && moveX < this._astarModel.gridResolution.x &&
+                        moveY >= 0 && moveY < this._astarModel.gridResolution.y
+                    ) {
+                        let index = this._astarModel.getIndex(moveX, moveY);
+
+                        if (
+                            this._astarModel.grid[index] !== 1 &&
+                            this._astarModel.grid[index] !== 2 &&
+                            this._astarModel.startPoint.x !== moveX &&
+                            this._astarModel.startPoint.y !== moveY &&
+                            this._astarModel.endPoint.x !== moveX &&
+                            this._astarModel.endPoint.y !== moveY
+                        ) {
+                            this.fillCellByGridCoordinates(new Point(moveX, moveY), colorOpened);
+                        }    
+                    }
+                }
+            }
+            
+            // Change value and color of the current cell to visited
+            this._astarModel.grid[this._astarModel.getIndex(currentPoint.x, currentPoint.y)] = 2;
+            this.fillCellByGridCoordinates(currentPoint, colorVisited);
+        }
+
+        return pathStart
+    }
+
+    drawPath(responseArray: Uint8Array, pathStart: number): void {
+        let colorPath = "#F22EC3";
+
+        for (let i = pathStart; i < responseArray.length; i += 2) {
+            let currentPoint = new Point(responseArray[i], responseArray[i + 1]);
+
+            this.fillCellByGridCoordinates(currentPoint, colorPath);
+        }
     }
 }
 
