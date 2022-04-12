@@ -56,57 +56,6 @@ Graph::Way& Graph::getMinWay()
 	return minWay;
 }
 
-//u16 Graph::getMinWeight(double** matrix) {
-//	u16 min = UINT16_MAX;
-//	for (int i = 0; i < length; ++i) {
-//		u16 count = countWeight(matrix[i]);
-//
-//		if (count < min) {
-//			min = count;
-//		}
-//	}
-//
-//	return min;
-//}
-//
-//u16 Graph::getMaxWeightIndex(double** matrix) {
-//	u16 index = 0;
-//	u16 max = 0;
-//
-//	for (int i = 0; i < length; ++i) {
-//		u16 count = countWeight(matrix[i]);
-//
-//		if (count > max) {
-//			max = count;
-//			index = i;
-//		}
-//	}
-//
-//	return index;
-//}
-//
-//int32_t Graph::getMaxWeightIndex(double** matrix, u16* way) {
-//	u16 index = 0;
-//	u16 max = 0;
-//
-//	for (int i = 0; i < length; ++i) {
-//		u16 count = countWeight(matrix[i]);
-//
-//		if (count > max) {
-//			max = count;
-//			index = i;
-//		}
-//	}
-//
-//	u16 wayCount = countWeight(way);
-//	if (wayCount >= max) {
-//		return -1;
-//	}
-//	else {
-//		return index;
-//	}
-//}
-
 void Graph::countWeight(Way& way) {
 	u16* path = way.path;
 	way.weight = 0.0;
