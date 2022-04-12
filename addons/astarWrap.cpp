@@ -10,22 +10,21 @@ Napi::Value astar(const Napi::CallbackInfo& info)
 {
     Napi::Env env = info.Env();
     
-    if (info.Length() < 3) {
+    if (info.Length() < 4) {
         Napi::TypeError::New(env, "Invalid arguments count").ThrowAsJavaScriptException();
         return env.Undefined();
     } 
-    else if(!info[0].IsObject() || !info[1].IsObject() || !info[2].IsTypedArray()) {
+    else if(!info[0].IsObject() || !info[1].IsObject() || !info[2].IsObject() || !info[3].IsTypedArray()) {
         Napi::TypeError::New(env, "Invalid arguments type").ThrowAsJavaScriptException();
         return env.Undefined();
     } 
 
-    uint8_t* fieldData = info[2].As<Napi::Uint8Array>().Data();
-
-    uint8_t height = fieldData[0], 
-        width = fieldData[1];
+    Napi::Object dims = info[2].ToObject();
+    int height = dims.Get("height").ToNumber(), 
+        width = dims.Get("width").ToNumber();
 
     uint8_t** field = new uint8_t*[height];
-    field[0] = fieldData + 2; 
+    field[0] = info[3].As<Napi::Uint8Array>().Data();; 
     for (size_t i = 1; i < height; i++)
     {
         field[i] = field[i - 1] + width;

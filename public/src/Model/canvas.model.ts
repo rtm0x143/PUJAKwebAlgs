@@ -1,4 +1,4 @@
-import ICanvas from "./interface/ICanvas";
+import ICanvas from "./interfaces/ICanvas";
 import Brush from "./brush.model.js";
 
 class CanvasModel extends EventTarget implements ICanvas {
@@ -11,6 +11,7 @@ class CanvasModel extends EventTarget implements ICanvas {
     changeCanvasParams(width: number, height: number): void {
         this.width = width;
         this.height = height;
+        
         this.dispatchEvent(new Event('canvas.model:change'));
     }
 }
