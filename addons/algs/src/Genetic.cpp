@@ -4,16 +4,25 @@
 Genetic::Genetic(Graph* graph) : graph(graph), bestWay(nullptr) {}
 
 void Genetic::crossChromo(u16 firstChromo, u16 secondChromo, u16* splitPath) {
-	u16 start = rand() % graph->length;
-	u16 end = rand() % (graph->length - start) + start + 1;
+	u16 start = rand() % (graph->length);
+	u16 end = rand() % (graph->length - start) + start + 1; //rand??
+
+	while (start == end) {
+		end = rand() % (graph->length - start) + start + 1;
+	}
+
+	if (end == graph->length) {
+		--end;
+	}
 
 	for (int i = start; i < end; ++i) {
 		splitPath[i - start] = graph->ways[firstChromo].path[i]; 
 	}
 
+	u16 index = end - start;
 	bool flag = true;
 	for (int i = 0; i < graph->length; ++i) {
-		for (int j = 0; j < end - start; ++j) {
+		for (int j = 0; j < end - start; ++j) { //rand??
 			if (splitPath[j] == graph->ways[secondChromo].path[i]) {
 				flag = false;
 				break;
@@ -21,7 +30,8 @@ void Genetic::crossChromo(u16 firstChromo, u16 secondChromo, u16* splitPath) {
 		}
 
 		if (flag) {
-			splitPath[i] = graph->ways[secondChromo].path[i];
+			splitPath[index] = graph->ways[secondChromo].path[i];
+			++index;
 			++end;
 		}
 
@@ -61,33 +71,33 @@ bool Genetic::updatePopulation(Graph::Way& way) {
 }
 
 void Genetic::generate() {
-	u16* firstSplitPath = new u16[graph->length];
-	u16* secondSplitPath = new u16[graph->length];
+	std::vector<Graph::Way> nextGeneration;
+	
+	for (size_t i = 0; i < graph->length; ++i) {
+		u16* firstSplitPath = new u16[graph->length];
+		u16* secondSplitPath = new u16[graph->length];
 
-	u16 firstChromo = rand() % graph->length;
-	u16 secondChromo = rand() % graph->length;
+		u16 firstChromo = rand() % graph->length;
+		u16 secondChromo = rand() % graph->length;
 
-	while (secondChromo == firstChromo) {
-		secondChromo = rand() % graph->length;
+		while (secondChromo == firstChromo) {
+			secondChromo = rand() % graph->length;
+		}
+
+		crossChromo(firstChromo, secondChromo, firstSplitPath);
+
+		for (int i = 0; i < graph->length; ++i) {
+			std::cout << firstSplitPath[i] << " ";
+		}
+		std::cout << std::endl;
+
+		Graph::Way firstSplitWay{ firstSplitPath };
+
+		graph->countWeight(firstSplitWay);
+		nextGeneration.push_back(firstSplitWay);
 	}
 
-	u16 splitPoint = (rand() % (graph->length - 1));
-
-	std::cout << firstChromo << std::endl;
-	std::cout << secondChromo << std::endl;
-	std::cout << splitPoint << std::endl;
-
-	crossChromo(firstChromo, secondChromo, firstSplitPath);
-
-	for (int i = 0; i < graph->length; ++i) {
-		std::cout << firstSplitPath[i] << " ";
-	}
-
-	Graph::Way firstSplitWay{ firstSplitPath };
-
-	graph->countWeight(firstSplitWay);
-
-	if (!updatePopulation(firstSplitWay)) delete[] firstSplitPath;
+	this->graph->ways = nextGeneration;
 };
 
 std::pair<std::vector<u16>, double>* Genetic::operator()()
