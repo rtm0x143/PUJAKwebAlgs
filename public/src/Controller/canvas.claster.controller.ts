@@ -67,7 +67,7 @@ class ClasterController extends CanvasController {
                                 }
 
                                 this._clasterView.drawCircle(
-                                    context,
+                                    this._clasterView.canvasContext,
                                     '',
                                     colorsArray[value[i - 1] - 1],
                                     this._clasterModel.positions[i],
@@ -76,7 +76,7 @@ class ClasterController extends CanvasController {
                                 );
                             } else {
                                 this._clasterView.drawCircle(
-                                    context,
+                                    this._clasterView.canvasContext,
                                     '',
                                     colorsArray[value[i - 1] - 1],
                                     this._clasterModel.positions[i],
@@ -86,7 +86,7 @@ class ClasterController extends CanvasController {
                             }
                         } else {
                             this._clasterView.drawCircle(
-                                context,
+                                this._clasterView.canvasContext,
                                 '',
                                 'grey',
                                 this._clasterModel.positions[i],
@@ -128,7 +128,7 @@ class ClasterController extends CanvasController {
                             }
 
                             this._clasterView.drawCircle(
-                                context,
+                                this._clasterView.canvasContext,
                                 '',
                                 colorsArray[value[i]],
                                 this._clasterModel.positions[k + 1],
@@ -137,7 +137,7 @@ class ClasterController extends CanvasController {
                             );
                         } else {
                             this._clasterView.drawCircle(
-                                context,
+                                this._clasterView.canvasContext,
                                 '',
                                 colorsArray[value[i]],
                                 this._clasterModel.positions[k + 1],

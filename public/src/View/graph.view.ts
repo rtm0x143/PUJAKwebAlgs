@@ -6,10 +6,6 @@ class GraphView extends CanvasView {
     //class Objects
     private _graphModel: GraphModel;
 
-    //canvas elements
-    private _canvas: HTMLCanvasElement;
-    private readonly _context: CanvasRenderingContext2D;
-
     //button elements
     private _sendButton: HTMLButtonElement;
 
@@ -18,10 +14,6 @@ class GraphView extends CanvasView {
 
         this._graphModel = graphModel;
 
-        //canvas elements initialise
-        this._canvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
-        this._context = this._canvas.getContext('2d') ?? Errors.handleError('null');
-
         //button elements initialise
         this._sendButton = document.querySelector('.ui__calc-button') ?? Errors.handleError('null');
 
@@ -29,8 +21,8 @@ class GraphView extends CanvasView {
         this._subscribe();
 
         //initialise canvas size params
-        this._canvas.height = 800;
-        this._canvas.width = 1200;
+        this.canvas.height = 800;
+        this.canvas.width = 1200;
     }
 
     /**
@@ -39,7 +31,7 @@ class GraphView extends CanvasView {
      * @param callback - Function
      */
     setCoordsHandler(callback: Function) {
-        this._canvas.addEventListener('click', (e) => {
+        this.canvas.addEventListener('click', (e) => {
             callback(e.offsetX, e.offsetY);
         })
     }
@@ -61,7 +53,7 @@ class GraphView extends CanvasView {
             console.log(this._graphModel.coords);
             this.drawCircle
             (
-                this._context,
+                this.canvasContext,
                 '',
                 'white',
                 this._graphModel.coords[this._graphModel.coords.length - 2],

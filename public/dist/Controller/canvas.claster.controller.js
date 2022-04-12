@@ -45,14 +45,14 @@ class ClasterController extends CanvasController {
                                 for (let j = colorsArray.length; j < value[i - 1]; ++j) {
                                     colorsArray.push((_a = this._clasterView.hsvToRGB(Math.floor(Math.random() * 361), 1, 0.8 + Math.random() * 0.2)) !== null && _a !== void 0 ? _a : Errors.handleError('undefined'));
                                 }
-                                this._clasterView.drawCircle(context, '', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], radius);
+                                this._clasterView.drawCircle(this._clasterView.canvasContext, '', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], radius);
                             }
                             else {
-                                this._clasterView.drawCircle(context, '', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], radius);
+                                this._clasterView.drawCircle(this._clasterView.canvasContext, '', colorsArray[value[i - 1] - 1], this._clasterModel.positions[i], this._clasterModel.positions[i - 1], radius);
                             }
                         }
                         else {
-                            this._clasterView.drawCircle(context, '', 'grey', this._clasterModel.positions[i], this._clasterModel.positions[i - 1], radius);
+                            this._clasterView.drawCircle(this._clasterView.canvasContext, '', 'grey', this._clasterModel.positions[i], this._clasterModel.positions[i - 1], radius);
                         }
                     }
                 });
@@ -83,10 +83,10 @@ class ClasterController extends CanvasController {
                             for (let j = colorsArray.length; j < value[i] + 1; ++j) {
                                 colorsArray.push((_a = this._clasterView.hsvToRGB(Math.floor(Math.random() * 361), 1, 1)) !== null && _a !== void 0 ? _a : Errors.handleError('undefined'));
                             }
-                            this._clasterView.drawCircle(context, '', colorsArray[value[i]], this._clasterModel.positions[k + 1], this._clasterModel.positions[k], radius);
+                            this._clasterView.drawCircle(this._clasterView.canvasContext, '', colorsArray[value[i]], this._clasterModel.positions[k + 1], this._clasterModel.positions[k], radius);
                         }
                         else {
-                            this._clasterView.drawCircle(context, '', colorsArray[value[i]], this._clasterModel.positions[k + 1], this._clasterModel.positions[k], radius);
+                            this._clasterView.drawCircle(this._clasterView.canvasContext, '', colorsArray[value[i]], this._clasterModel.positions[k + 1], this._clasterModel.positions[k], radius);
                         }
                     }
                     console.log(colorsArray);
