@@ -52,6 +52,7 @@ class NeuralController extends CanvasController {
 
     mouseMove(e: MouseEvent): void {
         if (this._isDrawing) {
+            console.log(e.offsetX, e.offsetY);
             this._neuralModel.addCoords(e.offsetX, e.offsetY, true);
         }
     }
