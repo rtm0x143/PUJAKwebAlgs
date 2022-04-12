@@ -76,7 +76,7 @@ void Genetic::generate() {
 			std::cout << splitPath[j] << " ";
 		}
 
-		//std::cout << std::endl;
+		std::cout << std::endl;
 		
 		if (rand() % 100 <= 5) {
 			mutation(splitPath);

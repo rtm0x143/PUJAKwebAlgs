@@ -1,7 +1,7 @@
 #include <cmath>
 #include "Colony.h"
 
-double rnd01() { return (double)rand() / (RAND_MAX + 1); }
+double rnd01() { return (double)rand() / ((double)RAND_MAX + 1); }
 
 Colony::Colony(const ColonyConfig& config, double** graph, uint32_t graphSize)
 	: graph(graph), graphSize(graphSize), conf(config)
