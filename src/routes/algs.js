@@ -17,7 +17,9 @@ function simLaunch(sim) {
         let data = Buffer.from(req.body["pointsData"], "hex")
         let pointsData = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2)
         let id = sim.launch(pointsData, req.body)
+
         console.log("From launch with", sim, " created ", id);
+
         jwt.sign(id, process.env["jwtSecret"], (err, token) => {
             console.log(jwt.decode(token), token, "created");
             if (err) {
@@ -41,7 +43,6 @@ function graphSimGetState(sim) {
             if (!err && sim.hasSession(payload)) 
             {
                 let result = sim.getNextEpoch(payload);
-                console.log(result);
                 res.json({
                     cost: result.cost,
                     path: Buffer.from(result.path.buffer).toString()
@@ -143,15 +144,15 @@ export default Router()
         res.end()
     }]) // http://localhost:8000/alg/labgen?height=50&width=50
     .post("/astar", (req, res) => {
-        if (!req.body["start"] || !req.body["end"] || !req.body["fieldData"] ||
-            !req.body["height"], !req.body["width"]) res.sendStatus(400);
+        if (!req.body["start"] || !req.body["end"] || !req.body["field"]) res.sendStatus(400);
         
-        let raw = Buffer.from(req.body["fieldData"])
+        let field = req.body["field"]
+        let raw = Buffer.from(field["data"])
 
         let result = new Uint8Array(nAlgs.astar(
                 req.body["start"], 
                 req.body["end"], 
-                { width: req.body["width"], height: req.body["height"] },
+                { width: field["width"], height: field["height"] },
                 new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength)));
 
         res.setHeader("Content-Type", "application/octet-stream")
