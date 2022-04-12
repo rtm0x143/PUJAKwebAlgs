@@ -31,6 +31,10 @@ class AstarController extends CanvasController {
             this.buttonEndClickCallback();
         });
 
+        this._astarView.handleButtonFindPath(() => {
+            this.findPathCallback();
+        });
+
         this._astarModel.setGridSize(new Point(20, 20));
         this._astarView.drawGrid(
             this._astarView.canvasGridContext,
@@ -204,15 +208,37 @@ class AstarController extends CanvasController {
         this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
     }
 
-    // findPath(gridData: Uint8Array) {
-    //     fetch(`${this.urlValue}/alg/astar/`, {
-    //         method: "POST",
-    //         headers: {
-    //             'Content-Type': 'application/octet-stream'
-    //         },
-            
-    //     })
-    // }
+    findPathCallback(): void {
+        this.findPathRequest();
+    }
+
+    private findPathRequest(): Promise<Response> {
+        let data = {
+            "start": {'x': this._astarModel.startPoint.x, 'y': this._astarModel.startPoint.y},
+            "end": {'x': this._astarModel.endPoint.x, 'y': this._astarModel.endPoint.y},
+            "size": [this._astarModel.gridResolution.x, this._astarModel.gridResolution.y],
+            // @ts-ignore
+            "walls": buffer.Buffer.from(this._astarModel.grid).toString()
+        }
+
+        console.log(JSON.stringify(data));
+        
+        const response = fetch(`${this.urlValue}/alg/astar/`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        return response;
+    }
+
+    findPathResponse() {
+        this.findPathRequest().then((response) => {
+
+        })
+    }
 }
 
 export default AstarController;

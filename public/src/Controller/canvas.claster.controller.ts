@@ -31,7 +31,7 @@ class ClasterController extends CanvasController {
 
     request(
         type: string,
-        context: CanvasRenderingContext2D,
+        // context: CanvasRenderingContext2D,
         range: number,
         groupSize: number,
         metricType: string,

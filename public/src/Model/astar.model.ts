@@ -4,7 +4,7 @@ import Point from './point.js';
 class AstarModel extends CanvasModel {
     public grid: Uint8Array = new Uint8Array(0);
     public gridResolution: Point = new Point(-1, -1);
-    public startPoint: Point = new Point(1, 1);
+    public startPoint: Point = new Point(-1, -1);
     public startPointMousePos: Point = new Point(-1, -1);
     public endPoint: Point = new Point(-1, -1);
     public endPointMousePos: Point = new Point(-1, -1);

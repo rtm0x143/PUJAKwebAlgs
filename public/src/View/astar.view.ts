@@ -8,6 +8,7 @@ import Point from '../Model/point.js';
 class AstarView extends CanvasView {
     private _buttonStartPoint: HTMLButtonElement;
     private _buttonEndPoint: HTMLButtonElement;
+    private _buttonFindPath: HTMLButtonElement;
     // private _buttonGenerate: HTMLButtonElement;
     private _astarModel: AstarModel; 
 
@@ -21,8 +22,9 @@ class AstarView extends CanvasView {
         super(model);
 
         this._astarModel = model;
-        this._buttonStartPoint = document.querySelector('.button-start') ?? Errors.handleError("null");
-        this._buttonEndPoint = document.querySelector('.button-end') ?? Errors.handleError("null");
+        this._buttonStartPoint = document.querySelector('.button__start') ?? Errors.handleError("null");
+        this._buttonEndPoint = document.querySelector('.button__end') ?? Errors.handleError("null");
+        this._buttonFindPath = document.querySelector('.button__find-path') ?? Errors.handleError("null");
 
         this.canvasGrid = document.querySelector("#gridLayer") ?? Errors.handleError("null");
         this.canvasGridContext = this.canvasGrid.getContext('2d') ?? Errors.handleError("null");
@@ -132,6 +134,14 @@ class AstarView extends CanvasView {
         }
 
         this._buttonEndPoint.addEventListener('click', callbackButtonClickWrapper);
+    }
+
+    handleButtonFindPath(callbackFindPath: Function) {
+        function callbackFindPathWrapper() {
+            callbackFindPath();
+        }
+
+        this._buttonFindPath.addEventListener('click', callbackFindPathWrapper);
     }
 
     // Этот медот должен брать данные из слайдера

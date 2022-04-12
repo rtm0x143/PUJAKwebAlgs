@@ -14,7 +14,7 @@
                 <canvas
                     class="canvas__element canvas__element_astar"
                     id="wallsLayer"
-                    style="position: absolute; left: 0; top: 0;"
+                    style="position: absolute; left: 0; top: 0"
                 ></canvas>
                 <canvas
                     class="canvas__element canvas__element_astar"
@@ -46,9 +46,7 @@
                         <button
                             class="heuristics-switcher-menu heuristics-switcher-button"
                         >
-                            <span class="button-wrap"
-                                >Manhattan heuristics</span
-                            >
+                            <span class="button-wrap">Manhattan heuristics</span>
                         </button>
                         <!-- <ul class="heuristics-menu">
                         <li class="link-container">
@@ -72,16 +70,17 @@
             </div>
             <div class="buttons-menu">
                 <div class="buttons-menu__buttons-bar">
-                    <button class="buttons-menu__button button-start">
-                        <span class="buttons-menu__button__text"
-                            >add start</span
-                        >
+                    <button class="buttons-menu__button button__start">
+                        <span class="buttons-menu__button__text">add start</span>
                     </button>
-                    <button class="buttons-menu__button button-end">
+                    <button class="buttons-menu__button button__end">
                         <span class="buttons-menu__button__text">add end</span>
                     </button>
-                    <button class="buttons-menu__button">
+                    <button class="buttons-menu__button button__generate">
                         <span class="buttons-menu__button__text">generate</span>
+                    </button>
+                    <button class="buttons-menu__button button__find-path">
+                        <span class="buttons-menu__button__text">find path</span>
                     </button>
                     <!-- <button class="buttons-menu__button">
                   <span class="buttons-menu__button__text">append</span>
@@ -116,6 +115,8 @@
                 </div>
             </div>
         </div>
+
+        <script src="https://bundle.run/buffer@6.0.3"></script>
         <script src="./dist/astar.js" type="module"></script>
     </body>
 </html>
