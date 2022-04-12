@@ -2,6 +2,37 @@
   "targets": [
     {
       "include_dirs" : [
+        "<!@(node -p \"require('node-addon-api').include\")",
+        "addons/algs",
+        "addons/utils"
+      ],
+      "target_name": "genetic",
+      "sources": [ 
+        "addons/geneticWrap.cpp",
+        "addons/algs/src/Genetic.cpp",
+        "addons/utils/src/GeneticRuntime.cpp",
+        "addons/utils/src/Graph.cpp",
+        "addons/utils/src/tools.cpp"
+      ],
+      'defines': [ 'NAPI_CPP_EXCEPTIONS' ]
+    },
+    {
+      "include_dirs" : [
+        "<!@(node -p \"require('node-addon-api').include\")",
+        "addons/algs",
+        "addons/utils"
+      ],
+      "target_name": "ants",
+      "sources": [ 
+        "addons/antsWrap.cpp",
+        "addons/algs/src/Colony.cpp",
+        "addons/utils/src/AntsRuntime.cpp",
+        "addons/utils/src/tools.cpp"
+      ],
+      'defines': [ 'NAPI_CPP_EXCEPTIONS' ]
+    },
+    {
+      "include_dirs" : [
         "<!@(node -p \"require('node-addon-api').include\")"
       ],
       "target_name": "labGen",
@@ -11,7 +42,8 @@
     {
       "include_dirs" : [
         "<!@(node -p \"require('node-addon-api').include\")",
-        "addons/algs"
+        "addons/algs",
+        "addons/utils"
       ],
       "target_name": "clasterisation",
       "sources": [ 
@@ -50,13 +82,5 @@
       ],
       'defines': [ 'NAPI_CPP_EXCEPTIONS' ]
     }
-    # {
-    #   "include_dirs" : [
-    #     "<!@(node -p \"require('node-addon-api').include\")"
-    #   ],
-    #   "target_name": "test",
-    #   "sources": [ "addons/test.cpp" ],
-    #   'defines': [ 'NAPI_CPP_EXCEPTIONS' ]
-    # }
     ]
 }

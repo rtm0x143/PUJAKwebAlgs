@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <utility>
 
-struct ColonyConfig 
+struct ColonyConfig
 {
 	uint32_t antsCount;
 	double greedCoef;
@@ -26,25 +26,25 @@ public:
 		Ant(Ant&);
 		Ant(Ant&&);
 		~Ant();
-		
+
 		Ant& operator=(Ant& other);
 		Ant& operator=(Ant&& other);
-		
+
 
 		void makeTour();
 		void releasePheromones();
 
 		uint16_t* path;
-		//std::vector<uint16_t> path;
 		double pathCost;
 
 	private:
 		bool* visited;
-		//std::vector<bool> visited;
 		Colony* home;
 	};
 
-	std::pair<uint16_t*, double> iterate();
+	std::pair<std::vector<uint16_t>, double>* iterate();
+
+	std::pair<std::vector<uint16_t>, double>* operator()();
 
 private:
 	double** graph;

@@ -34,6 +34,11 @@ class NeuralController extends CanvasController {
             this.mouseUp();
         })
 
+        //clearEvent
+        this._neuralView.clearHandler(() => {
+            this.clearCanvas();
+        })
+
         //fetchEvent
         this._neuralView.sendButtonHandler((imageData: ImageData) => {
             this.sendData(imageData);
@@ -47,6 +52,7 @@ class NeuralController extends CanvasController {
 
     mouseMove(e: MouseEvent): void {
         if (this._isDrawing) {
+            console.log(e.offsetX, e.offsetY);
             this._neuralModel.addCoords(e.offsetX, e.offsetY, true);
         }
     }
@@ -55,6 +61,10 @@ class NeuralController extends CanvasController {
         if (this._isDrawing) {
             this._isDrawing = false;
         }
+    }
+
+    clearCanvas(): void {
+        this._neuralModel.clearCanvas();
     }
 
     /**
@@ -71,7 +81,9 @@ class NeuralController extends CanvasController {
             },
             body: imageData.data
         }).then((response: Response) => {
-            console.log(response);
+            return response.text()
+        }).then((text: string) => {
+            this._neuralModel.setAnswer(text);
         });
     }
 }

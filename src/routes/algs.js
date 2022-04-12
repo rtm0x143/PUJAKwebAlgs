@@ -1,6 +1,90 @@
-import { Router, application } from "express"
+import { config } from "dotenv"; config()
+import { Router } from "express"
 import { checkQuery } from "../middlewares.js"
+import jwt from "jsonwebtoken"
 import nAlgs from "../algorithms.cjs"
+
+if (!process.env["jwtSecret"]) {
+    throw ".env file must contain 'jwtSecret'"
+}
+
+function simLaunch(sim) {
+    return (req, res) => {
+        if (!req.body["pointsData"]) {
+            res.sendStatus(400);
+            return
+        }
+        let data = Buffer.from(req.body["pointsData"], "hex")
+        let pointsData = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2)
+        let id = sim.launch(pointsData, req.body)
+        console.log("From launch with", sim, " created ", id);
+        jwt.sign(id, process.env["jwtSecret"], (err, token) => {
+            console.log(jwt.decode(token), token, "created");
+            if (err) {
+                console.log(err)
+                res.sendStatus(500)
+                return
+            }
+            res.send(token);
+        })}
+}
+
+function graphSimGetState(sim) {
+    return (req, res) => {
+        let token = req.header("Authorization")
+        // if (!token) {
+        //     res.sendStatus(401)
+        //     return
+        // }
+        jwt.verify(token, process.env.jwtSecret, (err, payload) => {
+            console.log("requested", sim, "with", payload);
+            if (!err && sim.hasSession(payload)) 
+            {
+                let result = sim.getNextEpoch(payload);
+                console.log(result);
+                res.json({
+                    cost: result.cost,
+                    path: Buffer.from(result.path.buffer).toString()
+                })
+            } 
+            else {
+                res.sendStatus(401)
+            }
+        })}
+}
+
+function simTerminate(sim) {
+    return (req, res) => {
+        let token = req.header("Authorization")
+        // if (!token) {
+        //     res.sendStatus(401)
+        //     return
+        // }
+        jwt.verify(token, process.env.jwtSecret, (err, payload) => {
+            if (!err && sim.hasSession(payload)) {
+                console.log("Trying to delete", sim, "with", payload);
+                sim.terminateSession(payload)
+                console.log(payload, "deleted");
+                res.sendStatus(200)
+            } 
+            else {
+                res.sendStatus(401)
+            }
+        })
+    }
+}
+
+function createGraphSimRouter(sim) {
+    return Router()
+        .post("/launch", simLaunch(sim))
+        .get("/getState", graphSimGetState(sim))
+        .get("/terminateSession", simTerminate(sim))
+}   
+
+const antsRouter = createGraphSimRouter(nAlgs.ants)
+const geneticRouter = createGraphSimRouter(nAlgs.genetic)
+
+
 
 export default Router()
     .post("/clasterisation", [checkQuery(["type"]), (req, res) => {
@@ -84,3 +168,5 @@ export default Router()
         
         res.send(nAlgs.neuralNet.findDigit(req.body[0]).toString())
     })
+    .use("/ants", antsRouter)
+    .use("/genetic", geneticRouter)

@@ -2,7 +2,7 @@ import CanvasView from './canvas.view.js';
 import Errors from "../config/Errors.js";
 import GraphModel from "../Model/graph.model.js";
 
-class GraphView extends CanvasView {
+class GeneticView extends CanvasView {
     //class Objects
     private _graphModel: GraphModel;
 
@@ -15,7 +15,7 @@ class GraphView extends CanvasView {
         this._graphModel = graphModel;
 
         //button elements initialise
-        this._sendButton = document.querySelector('.ui__calc-button') ?? Errors.handleError('null');
+        this._sendButton = document.querySelector('.ui__calc-button_genetic') ?? Errors.handleError('null');
 
         //subscribe model events
         this._subscribe();
@@ -64,4 +64,4 @@ class GraphView extends CanvasView {
     }
 }
 
-export default GraphView;
+export default GeneticView;

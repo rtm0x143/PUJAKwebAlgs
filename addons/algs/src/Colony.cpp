@@ -1,13 +1,12 @@
-#include "Colony.h"
 #include <cmath>
-#include <iostream>
-
+#include "Colony.h"
 
 double rnd01() { return (double)rand() / (RAND_MAX + 1); }
 
 Colony::Colony(const ColonyConfig& config, double** graph, uint32_t graphSize)
 	: graph(graph), graphSize(graphSize), conf(config)
 {
+	;
 	//ants = (Ant*)malloc(sizeof(Ant) * config.antsCount);
 	ants = new Ant[config.antsCount];
 	for (size_t i = 0; i < config.antsCount; ++i)
@@ -20,7 +19,7 @@ Colony::Colony(const ColonyConfig& config, double** graph, uint32_t graphSize)
 	pheromones[0] = pherData;
 	for (size_t i = 0; i < graphSize * graphSize; ++i)
 	{
-		pherData[i] = 1e-10;
+		pherData[i] = 1e-100;
 	}
 
 	probabilities = (double**)malloc(sizeof(double*) * graphSize);
@@ -38,7 +37,7 @@ Colony::~Colony() {
 	free(probabilities[0]);
 	free(pheromones);
 	free(probabilities);
-	free(ants);
+	delete[] ants;
 }
 
 Colony::Ant::Ant(Colony* home)
@@ -140,7 +139,7 @@ void Colony::Ant::makeTour()
 
 		for (size_t j = 0; j < home->graphSize; ++j)
 		{
-			if (!visited[j]) 
+			if (!visited[j])
 			{
 				prob += curProbs[j];
 				if (prob >= randVal) {
@@ -168,7 +167,7 @@ void Colony::calcProbabilities()
 	for (size_t i = 0; i < graphSize; ++i)
 	{
 		double prefsSum = 0.0,
-			* graphNode = graph[i], 
+			* graphNode = graph[i],
 			* pherNone = pheromones[i],
 			* probNode = probabilities[i];
 
@@ -199,7 +198,7 @@ void Colony::leakPheromones()
 	}
 }
 
-std::pair<uint16_t*, double> Colony::iterate()
+std::pair<std::vector<uint16_t>, double>* Colony::iterate()
 {
 	calcProbabilities();
 
@@ -218,5 +217,17 @@ std::pair<uint16_t*, double> Colony::iterate()
 		if (ants[bestInd].pathCost > ants[i].pathCost) bestInd = i;
 	}
 
-	return { ants[bestInd].path, ants[bestInd].pathCost};
+	uint16_t* bestPath = ants[bestInd].path;
+	auto result = new std::pair<std::vector<uint16_t>, double>{ 
+		std::vector<uint16_t>(graphSize + 1), ants[bestInd].pathCost };
+
+	for (size_t i = 0; i < graphSize + 1; i++) {
+		result->first[i] = bestPath[i];
+	}
+
+	return result;
+}
+
+std::pair<std::vector<uint16_t>, double>* Colony::operator()() {
+	return iterate();
 }
