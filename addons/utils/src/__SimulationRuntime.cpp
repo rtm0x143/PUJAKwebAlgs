@@ -74,7 +74,7 @@ Simulation* SimulationRuntime<Simulation, State>::hasSession(const uint64_t& id)
 	auto s_it = std::find_if(sessions.begin(), sessions.end(),
 		[&id](const Session* s) -> bool { return s->id == id; });
 
-	if (s_it != sessions.end()) std::cout << (*s_it)->id << '\n';
+	if (s_it != sessions.end()) std::cout << "Foound " << (*s_it)->id << '\n';
 	else std::cout << "Not found\n";
 
 	return (s_it != sessions.end() ? (*s_it)->sim : nullptr);
@@ -109,7 +109,7 @@ State* SimulationRuntime<Simulation, State>::getEpochResult(const uint64_t& id)
 		{
 			std::unique_lock<std::mutex> slock(*(*s_it)->_mutex),
 				tlock(tasksMutex);
-			if (!(*s_it)->result) break;
+			if ((*s_it)->result) break;
 		}
 		tasksDone.wait(selfLock);
 	}

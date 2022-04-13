@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "Astar.h"
+#include "../Astar.h"
 
 #pragma region Point
 Point::Point()

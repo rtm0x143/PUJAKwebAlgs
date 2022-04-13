@@ -1,16 +1,26 @@
-#include "clasterisation.h"
+#include "../clasterisation.h"
 #include <ctime>
 #include <iostream>
 
 double k_means_run(const std::vector<double*>& objs, int paramCount,
 	double(*metricsFun)(double* obj1, double* obj2, int paramCount), uint8_t* clasterisation, uint8_t clasterCount)
 {
+	clasterCount = std::min(objs.size(), (size_t)clasterCount);
 	// generate random cluster's centers
-	std::vector<double*> centers(clasterCount);
-	for (uint8_t i = 0; i < clasterCount; i++) {
-		double* center = new double[paramCount];
-		for (int i = 0; i < paramCount; i++) center[i] = (double)rand() / RAND_MAX;
-		centers[i] = center;
+	double** centers = (double**)malloc(clasterCount * sizeof(double*)),
+		* centers_data = (double*)malloc(clasterCount * 2 * sizeof(double)),
+		** newCenters = (double**)malloc(clasterCount * sizeof(double*)),
+		* newCenters_data = (double*)malloc(clasterCount * 2 * sizeof(double));
+
+	for (size_t i = 0; i < clasterCount * 2; ++i) {
+		centers_data[i] = (double)rand() / RAND_MAX;
+	}
+	centers[0] = centers_data;
+	newCenters[0] = newCenters_data;
+
+	for (uint8_t i = 1; i < clasterCount; ++i) {
+		centers[i] = centers[i - 1] + paramCount;
+		newCenters[i] = newCenters[i - 1] + paramCount;
 	}
 
 	std::vector<double> distances(objs.size());
@@ -23,7 +33,7 @@ double k_means_run(const std::vector<double*>& objs, int paramCount,
 		{
 			distances[i] = metricsFun(objs[i], centers[0], paramCount);
 			clasterisation[i] = 0;
-			for (uint8_t c = 1; c < centers.size(); ++c) {
+			for (uint8_t c = 1; c < clasterCount; ++c) {
 				double dist = metricsFun(objs[i], centers[c], paramCount);
 				if (distances[i] > dist) {
 					distances[i] = dist;
@@ -35,44 +45,47 @@ double k_means_run(const std::vector<double*>& objs, int paramCount,
 		for (int i = 0; i < objs.size(); ++i) {
 			++clasterSizes[clasterisation[i]];
 		}
+		
 		//		correct center's positions
-		// create new centers
-		std::vector<double*> newCenters(clasterCount);
-		for (uint8_t i = 0; i < clasterCount; i++) {
-			double* center = new double[paramCount];
-			for (int p = 0; p < paramCount; p++) center[p] = 0;
-			newCenters[i] = center;
+		for (size_t i = 0; i < clasterCount * 2; ++i) {
+			newCenters_data[i] = clasterSizes[i / 2] ? 0.0 : (double)rand() / RAND_MAX;
 		}
+
 		// centralization
-		for (int i = 0; i < objs.size(); i++) {
+		for (int i = 0; i < objs.size(); ++i) {
 			for (int p = 0; p < paramCount; ++p)
 				newCenters[clasterisation[i]][p] += objs[i][p];
 		}
-		for (uint8_t i = 0; i < clasterCount; i++) {
+		for (uint8_t i = 0; i < clasterCount; ++i) {
 			for (int p = 0; p < paramCount; ++p)
-				newCenters[i][p] /= clasterSizes[i] ? clasterSizes[i] : 1;
+				newCenters[i][p] /= (clasterSizes[i] ? clasterSizes[i] : 1);
 		}
 		// check for changes
 		bool changed = false;
-		for (uint8_t i = 0; i < clasterCount; ++i) {
-			for (int p = 0; p < paramCount; p++)
-				if (std::abs(newCenters[i][p] - centers[i][p]) > 1e-4) {
+		for (uint8_t i = 0; i < clasterCount; ++i) 
+		{
+			double* newCenter = newCenters[i],
+				* oldCenter = centers[i];
+
+			for (int p = 0; p < paramCount; ++p)
+				if (std::abs(newCenter[p] - oldCenter[p]) > 1e-4) {
 					changed = true;
 					break;
 				}
 		}
 
-		for (uint8_t i = 0; i < clasterCount; ++i) delete[] centers[i];
-
 		if (changed) {
-			for (uint8_t i = 0; i < clasterCount; ++i)
-				centers[i] = newCenters[i];
+			for (uint8_t i = 0; i < clasterCount * 2; ++i)
+				centers_data[i] = newCenters_data[i];
 		}
 		else {
-			for (uint8_t i = 0; i < clasterCount; ++i) delete[] newCenters[i];
 			double error = 0;
 			for (double dist : distances) error += dist;
 
+			free(centers_data);
+			free(centers);
+			free(newCenters_data);
+			free(newCenters);
 			return error;
 		}
 	}
