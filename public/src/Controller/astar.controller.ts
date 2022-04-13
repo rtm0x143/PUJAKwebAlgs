@@ -268,6 +268,8 @@ class AstarController extends CanvasController {
                         this.drawPath(value, pathStart);
                     }
 
+                    // console.log(value, done);
+                    
                     if (!done) readChunck();
                 })
             }
@@ -301,15 +303,13 @@ class AstarController extends CanvasController {
         let colorCurrent = "#706BF2";
         
         for (let i = 0; i < responseArray.length; i += 2) {
-            let currentPoint = new Point(responseArray[i], responseArray[i + 1]);
+            let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
 
             // If end point was reached in alg steps part of an array
             if (currentPoint.x === this._astarModel.endPoint.x && currentPoint.y === this._astarModel.endPoint.y) {
                 pathStart = i + 1;
                 break;
             }
-
-            console.log("???");
             
             this.fillCellByGridCoordinates(currentPoint, colorCurrent);
 
@@ -353,7 +353,7 @@ class AstarController extends CanvasController {
         let colorPath = "#F22EC3";
 
         for (let i = pathStart; i < responseArray.length; i += 2) {
-            let currentPoint = new Point(responseArray[i], responseArray[i + 1]);
+            let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
 
             this.fillCellByGridCoordinates(currentPoint, colorPath);
         }
