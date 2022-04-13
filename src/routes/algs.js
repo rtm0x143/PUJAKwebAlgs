@@ -148,7 +148,6 @@ export default Router()
         
         let field = req.body["field"]
         let raw = Buffer.from(field["data"])
-
         let result = new Uint8Array(nAlgs.astar(
                 req.body["start"], 
                 req.body["end"], 

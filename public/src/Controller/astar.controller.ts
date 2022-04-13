@@ -237,7 +237,7 @@ class AstarController extends CanvasController {
             },
         }
 
-        console.log(JSON.stringify(data));
+        // console.log(JSON.stringify(data));
         
         const response = fetch(`${this.urlValue}/alg/astar/`, {
             method: "POST",
@@ -307,7 +307,7 @@ class AstarController extends CanvasController {
 
             // If end point was reached in alg steps part of an array
             if (currentPoint.x === this._astarModel.endPoint.x && currentPoint.y === this._astarModel.endPoint.y) {
-                pathStart = i + 1;
+                pathStart = i + 2;
                 break;
             }
             
