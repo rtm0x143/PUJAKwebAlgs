@@ -31,7 +31,6 @@ Napi::Value astar(const Napi::CallbackInfo& info)
     }
     
     Grid grid(field, width, height);
-    // grid.printGrid();
 
     Napi::Object start = info[0].ToObject(),
         end =  info[1].ToObject();

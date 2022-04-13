@@ -147,7 +147,7 @@ class AstarView extends CanvasView {
     // Этот медот должен брать данные из слайдера
     // TODO: добавить слайдер
     getGridSize(): Point {
-        return new Point(30, 30);
+        return new Point(30, 20);
     }
 }
 
