@@ -1,4 +1,4 @@
-#include "metrics.h"
+#include "../metrics.h"
 #include <string>
 
 double metrics::Euclidean(double* obj1, double* obj2, int paramCount) {

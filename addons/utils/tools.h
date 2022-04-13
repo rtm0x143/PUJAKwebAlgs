@@ -10,6 +10,8 @@ namespace tools
 
 	std::vector<double>* randBiases(const std::vector<size_t>& dimensions);
 
+	double** genGraphFromPoints(uint16_t* points, uint32_t pCount);
+
 	double sigmoid(double x);
 	double derSigByValue(double x);
 

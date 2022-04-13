@@ -1,4 +1,4 @@
-import IBrush from "./interface/IBrush";
+import IBrush from "./interfaces/IBrush";
 import Errors from "../config/Errors";
 
 class Brush implements IBrush {

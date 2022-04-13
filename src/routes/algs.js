@@ -1,6 +1,91 @@
-import { Router, application } from "express"
+import { config } from "dotenv"; config()
+import { Router } from "express"
 import { checkQuery } from "../middlewares.js"
+import jwt from "jsonwebtoken"
 import nAlgs from "../algorithms.cjs"
+
+if (!process.env["jwtSecret"]) {
+    throw ".env file must contain 'jwtSecret'"
+}
+
+function simLaunch(sim) {
+    return (req, res) => {
+        if (!req.body["pointsData"]) {
+            res.sendStatus(400);
+            return
+        }
+        let data = Buffer.from(req.body["pointsData"], "hex")
+        let pointsData = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2)
+        let id = sim.launch(pointsData, req.body)
+
+        console.log("From launch with", sim, " created ", id);
+
+        jwt.sign(id, process.env["jwtSecret"], (err, token) => {
+            console.log(jwt.decode(token), token, "created");
+            if (err) {
+                console.log(err)
+                res.sendStatus(500)
+                return
+            }
+            res.send(token);
+        })}
+}
+
+function graphSimGetState(sim) {
+    return (req, res) => {
+        let token = req.header("Authorization")
+        // if (!token) {
+        //     res.sendStatus(401)
+        //     return
+        // }
+        jwt.verify(token, process.env.jwtSecret, (err, payload) => {
+            console.log("requested", sim, "with", payload);
+            if (!err && sim.hasSession(payload)) 
+            {
+                let result = sim.getNextEpoch(payload);
+                res.json({
+                    cost: result.cost,
+                    path: Buffer.from(result.path.buffer).toString()
+                })
+            } 
+            else {
+                res.sendStatus(401)
+            }
+        })}
+}
+
+function simTerminate(sim) {
+    return (req, res) => {
+        let token = req.header("Authorization")
+        // if (!token) {
+        //     res.sendStatus(401)
+        //     return
+        // }
+        jwt.verify(token, process.env.jwtSecret, (err, payload) => {
+            if (!err && sim.hasSession(payload)) {
+                console.log("Trying to delete", sim, "with", payload);
+                sim.terminateSession(payload)
+                console.log(payload, "deleted");
+                res.sendStatus(200)
+            } 
+            else {
+                res.sendStatus(401)
+            }
+        })
+    }
+}
+
+function createGraphSimRouter(sim) {
+    return Router()
+        .post("/launch", simLaunch(sim))
+        .get("/getState", graphSimGetState(sim))
+        .get("/terminateSession", simTerminate(sim))
+}   
+
+const antsRouter = createGraphSimRouter(nAlgs.ants)
+const geneticRouter = createGraphSimRouter(nAlgs.genetic)
+
+
 
 export default Router()
     .post("/clasterisation", [checkQuery(["type"]), (req, res) => {
@@ -59,13 +144,16 @@ export default Router()
         res.end()
     }]) // http://localhost:8000/alg/labgen?height=50&width=50
     .post("/astar", (req, res) => {
-        if (!req.body["start"] || !req.body["end"] || !req.body["fieldData"]) res.sendStatus(400);
+        if (!req.body["start"] || !req.body["end"] || !req.body["field"]) res.sendStatus(400);
         
-        let raw = Buffer.from(req.body["fieldData"])
-        let fieldData = new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength)
+        let field = req.body["field"]
+        let raw = Buffer.from(field["data"])
 
-        let result = new Uint8Array(nAlgs.astar(req.body["start"], req.body["end"], 
-            new Uint8Array(fieldData.buffer, fieldData.byteOffset, fieldData.byteLength)));
+        let result = new Uint8Array(nAlgs.astar(
+                req.body["start"], 
+                req.body["end"], 
+                { width: field["width"], height: field["height"] },
+                new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength)));
 
         res.setHeader("Content-Type", "application/octet-stream")
         res.setHeader("Content-Lenght", result.length)
@@ -79,5 +167,7 @@ export default Router()
             res.send("Invalid stream dimension")
         }
         
-        res.send(nAlgs.findDigit(req.body[0]).toString())
+        res.send(nAlgs.neuralNet.findDigit(req.body[0]).toString())
     })
+    .use("/ants", antsRouter)
+    .use("/genetic", geneticRouter)

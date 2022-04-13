@@ -1,7 +1,6 @@
 #include "tools.h"
 #include <cmath>
 #include <fstream>
-#include <iostream>
 
 const uint32_t MAX_PX_VAL = 3 * 255 * 255;
 
@@ -23,8 +22,6 @@ Matrix<double>* tools::randWeights(const std::vector<size_t>& dimensions)
 		weights[i].map([rowCount = dimensions[i + 1]](double& el) {
 			return ((rand() % 100)) * 0.03 / (rowCount + 35);
 		});
-
-		//std::cout << weights[i] << '\n' << '\n';
 	}
 	return weights;
 }
@@ -44,6 +41,28 @@ std::vector<double>* tools::randBiases(const std::vector<size_t>& dimensions)
 	return biases;
 }
 
+double** tools::genGraphFromPoints(uint16_t* points, uint32_t pCount)
+{
+	double** graph = (double**)malloc(sizeof(double*) * pCount);
+	graph[0] = (double*)malloc(sizeof(double) * pCount * pCount);
+	for (size_t i = 1; i < pCount; ++i) {
+		graph[i] = graph[i - 1] + pCount;
+	}
+
+	for (size_t i = 0; i < pCount * 2; i += 2)
+	{
+		for (size_t j = i + 2; j < pCount * 2; j += 2) {
+			double distance = std::sqrt(
+				std::pow(points[i] - points[j], 2) + std::pow(points[i + 1] - points[j + 1], 2)
+			);
+			graph[i / 2][j / 2] = distance;
+			graph[j / 2][i / 2] = distance;
+		}
+		graph[i / 2][i / 2] = 0.0;
+	}
+
+	return graph;
+}
 
 
 double tools::sigmoid(double x) { return 1 / (1 + exp(-x)); }

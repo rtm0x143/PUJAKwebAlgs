@@ -1,11 +1,14 @@
-const _build = require("./_build.cjs")
+let {Buffer} = require("buffer")
 
-let arr = new Uint8Array([100, 2])
+let arr = new Uint16Array([255, 2, 3])
 
-let buf = Buffer.from(arr);
-let arrBuf = arr.buffer
-buf.toString()
+let buf = Buffer.from(arr.buffer),
+    bStr = buf.toString("hex"),
+    buf2 = Buffer.from(bStr);
 
-console.log(buf.toString())
-let result = JSON.parse(JSON.stringify({data : buf.toString()})) 
-console.log(result);   
+let jsonData = JSON.stringify({
+    cringe: 123,
+    data: bStr
+})
+
+console.log(JSON.parse(jsonData));
