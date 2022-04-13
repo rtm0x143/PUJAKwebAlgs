@@ -26,9 +26,6 @@ class ClasterView extends CanvasView {
     private readonly widthRegulatorBar: HTMLDivElement;
     private readonly rangeRegulatorBar: HTMLDivElement;
     private readonly countRegulatorBar: HTMLDivElement;
-    private readonly canvasDiv: HTMLDivElement;
-    // private readonly canvas: HTMLCanvasElement;
-    private readonly canvasContext: CanvasRenderingContext2D;
     private readonly heightParagraph: HTMLParagraphElement;
     private readonly widthParagraph: HTMLParagraphElement;
     private readonly rangeParagraph: HTMLParagraphElement;
@@ -49,9 +46,6 @@ class ClasterView extends CanvasView {
         this.widthRegulatorBar = document.querySelector('.regulator__bar_width') ?? Errors.handleError('null');
         this.rangeRegulatorBar = document.querySelector('.regulator__bar_range') ?? Errors.handleError('null');
         this.countRegulatorBar = document.querySelector('.regulator__bar_count') ?? Errors.handleError('null');
-        this.canvasDiv = document.querySelector('.canvas') ?? Errors.handleError('null');
-        this.canvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
-        this.canvasContext = this.canvas.getContext('2d') ?? Errors.handleError('null');
         this.heightParagraph = document.querySelector('.regulator__height-paragraph') ?? Errors.handleError('null');
         this.widthParagraph = document.querySelector('.regulator__width-paragraph') ?? Errors.handleError('null');
         this.rangeParagraph = document.querySelector('.regulator__range-paragraph') ?? Errors.handleError('null');
@@ -82,19 +76,19 @@ class ClasterView extends CanvasView {
         //starts with DBSCAN
         this.kmeansMenu.style.display = 'none';
         this._subscribe();
-        this.canvas.setAttribute('height', this.canvasDiv.offsetHeight.toString());
-        this.canvas.setAttribute('width', this.canvasDiv.offsetWidth.toString());
+        this.canvas.setAttribute('height', this.canvasWrapper.offsetHeight.toString());
+        this.canvas.setAttribute('width', this.canvasWrapper.offsetWidth.toString());
         this.regulatorButtons.forEach((item) => {
             if (item.className == "regulator__button regulator__button_height") {
                 this.changeCanvasSize(
                     item.offsetHeight + this.heightRegulatorBar.offsetHeight,
                     -item.offsetHeight - this.heightRegulatorBar.offsetHeight,
-                    this.canvasDiv.offsetHeight / -(item.offsetHeight + this.heightRegulatorBar.offsetHeight),
+                    this.canvasWrapper.offsetHeight / -(item.offsetHeight + this.heightRegulatorBar.offsetHeight),
                     this.body,
                     item,
                     this.heightRegulator,
                     this.heightRegulatorBar,
-                    this.canvasDiv,
+                    this.canvasWrapper,
                     this.canvas,
                     this.canvasContext,
                     this.heightParagraph,
@@ -106,12 +100,12 @@ class ClasterView extends CanvasView {
                     this.changeCanvasSize(
                         item.offsetHeight + this.widthRegulatorBar.offsetHeight,
                         -item.offsetHeight - this.widthRegulatorBar.offsetHeight,
-                        this.canvasDiv.offsetWidth / -(item.offsetHeight + this.widthRegulatorBar.offsetHeight),
+                        this.canvasWrapper.offsetWidth / -(item.offsetHeight + this.widthRegulatorBar.offsetHeight),
                         this.body,
                         item,
                         this.widthRegulator,
                         this.widthRegulatorBar,
-                        this.canvasDiv,
+                        this.canvasWrapper,
                         this.canvas,
                         this.canvasContext,
                         this.widthParagraph,
@@ -128,7 +122,7 @@ class ClasterView extends CanvasView {
                     item,
                     this.widthRegulator,
                     this.rangeRegulatorBar,
-                    this.canvasDiv,
+                    this.canvasWrapper,
                     this.canvas,
                     this.canvasContext,
                     this.rangeParagraph,
@@ -145,7 +139,7 @@ class ClasterView extends CanvasView {
                     item,
                     this.widthRegulator,
                     this.countRegulatorBar,
-                    this.canvasDiv,
+                    this.canvasWrapper,
                     this.canvas,
                     this.canvasContext,
                     this.countParagraph,
@@ -166,7 +160,6 @@ class ClasterView extends CanvasView {
         })*/
         
         this.drawGrid(
-            this.canvas,
             this.canvasContext,
             'grey',
             Math.floor(this.canvas.width / 30),
@@ -239,8 +232,7 @@ class ClasterView extends CanvasView {
                 }
 
                 this.drawGrid(
-                    canvas,
-                    canvasContext,
+                    this.canvasContext,
                     'grey',
                     Math.floor(canvas.width / 30),
                     Math.floor(canvas.height / 30)
@@ -338,6 +330,15 @@ class ClasterView extends CanvasView {
                 this._clasterModel.positions[this._clasterModel.positions.length - 2],
                 5
         )});
+
+        this._canvasModel.addEventListener('canvas.model:change', () => {
+            this.drawGrid(
+                this.canvasContext,
+                'grey', 
+                Math.floor(this.canvas.width / 30),
+                Math.floor(this.canvas.height / 30)
+            );
+        });
     }
 
     handleKmeansClick(callback: Function) {
