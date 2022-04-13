@@ -2,8 +2,6 @@
 #include <vector>
 #include "Matrix.h"
 
-typedef 
-
 class NeuralNetwork
 {
 public:
