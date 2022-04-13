@@ -215,7 +215,8 @@ class AstarController extends CanvasController {
     }
 
     findPathCallback(): void {
-        this.findPathRequest();
+        let response = this.findPathRequest();
+        this.findPathResponse(response);
     }
 
     private findPathRequest(): Promise<Response> {
@@ -249,11 +250,11 @@ class AstarController extends CanvasController {
         return response;
     }
 
-    findPathResponse() {
-        this.findPathRequest().then((response) => {
+    findPathResponse(astarResponse: Promise<Response>) {
+        astarResponse.then((response) => {
             let reader = response.body?.getReader();
             let pathStart = -1;
-
+            
             let readChunck = () => {
                 reader?.read().then(({done, value}) => {
                     if (value === undefined) Errors.handleError("undefined");
@@ -270,6 +271,8 @@ class AstarController extends CanvasController {
                     if (!done) readChunck();
                 })
             }
+
+            readChunck();
         });
     }
 
@@ -306,6 +309,8 @@ class AstarController extends CanvasController {
                 break;
             }
 
+            console.log("???");
+            
             this.fillCellByGridCoordinates(currentPoint, colorCurrent);
 
             for (let n = -1; n <= 1; ++n) {
