@@ -4,10 +4,6 @@ import { checkQuery } from "../middlewares.js"
 import jwt from "jsonwebtoken"
 import nAlgs from "../algorithms.cjs"
 
-if (!process.env["jwtSecret"]) {
-    throw ".env file must contain 'jwtSecret'"
-}
-
 function simLaunch(sim) {
     return (req, res) => {
         if (!req.body["pointsData"]) {

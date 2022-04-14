@@ -217,8 +217,8 @@ class NeuralView extends canvasView {
         this._neuralContext.beginPath();
 
         for (let i = 0; i < distance; ++i) {
-            let x = x1 + (Math.sin(angle) * i) - 25;
-            let y = y1 + (Math.cos(angle) * i) - 25;
+            let x = x1 + (Math.sin(angle) * i) - radius;
+            let y = y1 + (Math.cos(angle) * i) - radius;
             this._neuralContext.arc(x + 10, y + 10, radius, 0, Math.PI * 2);
         }
 
