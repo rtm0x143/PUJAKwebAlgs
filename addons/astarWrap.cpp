@@ -3,7 +3,7 @@
 
 // gets (start{x, y}, end{x, y}, fieldData = Uint8Array[height, width, ...fieldCells...])
 // field encoding : 0 - void, 1 - wall; 
-// returns ArrayBuffer[yxyxyxyxyxyxyxyxyx...FinalX?_FinalY?xyxyxyxyxy]
+// returns ArrayBuffer[yxyxyxyxyxyxyxyxyx...FinalY?_FinalX?yxyxyxyx]
 //                     ^^^^^^^^^^^^^^^^^^                   ^^^^^^^^
 //                      alg's steps                         result path
 Napi::Value astar(const Napi::CallbackInfo& info) 
@@ -31,7 +31,6 @@ Napi::Value astar(const Napi::CallbackInfo& info)
     }
     
     Grid grid(field, width, height);
-    // grid.printGrid();
 
     Napi::Object start = info[0].ToObject(),
         end =  info[1].ToObject();

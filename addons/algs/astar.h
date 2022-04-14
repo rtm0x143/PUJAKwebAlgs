@@ -70,7 +70,7 @@ public:
 	);
 };
 
-static class Pathfinder
+class Pathfinder
 {
 private:
 	Pathfinder();
