@@ -16,7 +16,7 @@ class AntController extends Controller {
 
         //set callbacks to view handlers
         this._graphView.setCoordsHandler(this.setCoords.bind(this));
-        this._graphView.getDataHandler(this.getToken.bind(this));
+        this._graphView.launchAlgHandler(this.getToken.bind(this));
     }
 
     //sendCoords data to model
@@ -94,7 +94,6 @@ class AntController extends Controller {
                 });
             })
         })
-
     }
 
 }
