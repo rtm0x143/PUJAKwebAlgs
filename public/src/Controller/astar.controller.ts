@@ -365,7 +365,7 @@ class AstarController extends CanvasController {
                 console.log(neighbors[k]);
                 
                 this.fillCellByGridCoordinates(neighbors[k], colorOpened);
-                await this.sleep(50);
+                await this.sleep(5000 /responseArray.length);
             }
             
             // Change value and color of the current cell to visited

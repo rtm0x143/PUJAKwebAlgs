@@ -13,7 +13,7 @@ class AntView extends CanvasView {
     private readonly _context: CanvasRenderingContext2D;
 
     //button elements
-    private _sendButton: HTMLButtonElement;
+    private _launchButton: HTMLButtonElement;
 
     constructor(graphModel: GraphModel) {
         super(graphModel);
@@ -25,7 +25,7 @@ class AntView extends CanvasView {
         this._context = this._canvas.getContext('2d') ?? Errors.handleError('null');
 
         //button elements initialise
-        this._sendButton = document.querySelector('.ui__calc-button') ?? Errors.handleError('null');
+        this._launchButton = document.querySelector('.ui__calc-button[name=launch]') ?? Errors.handleError('null');
 
         //subscribe model events
         this._subscribe();
@@ -51,8 +51,8 @@ class AntView extends CanvasView {
      *
      * @param tokenCallback
      */
-    getDataHandler(tokenCallback: Function) {
-        this._sendButton.addEventListener('click', async () => {
+    launchAlgHandler(tokenCallback: Function) {
+        this._launchButton.addEventListener('click', async () => {
             tokenCallback();
         })
     }
@@ -73,6 +73,7 @@ class AntView extends CanvasView {
         })
 
         this._graphModel.addEventListener('way:change', () => {
+            
             for (let i = 1; i < this._graphModel.coords.length / 2 + 2; ++i) {
                 this.drawLine(
                     this._graphModel.coords[this._graphModel.currentWay[i - 1] * 2],
@@ -81,6 +82,10 @@ class AntView extends CanvasView {
                     this._graphModel.coords[this._graphModel.currentWay[i] * 2 + 1],
                     10
                 );
+                console.log(this._graphModel.coords[this._graphModel.currentWay[i - 1] * 2],
+                        this._graphModel.coords[this._graphModel.currentWay[i - 1] * 2 + 1],
+                        this._graphModel.coords[this._graphModel.currentWay[i] * 2],
+                        this._graphModel.coords[this._graphModel.currentWay[i] * 2 + 1],);
             }
 
             console.log(this._graphModel.currentWay);
