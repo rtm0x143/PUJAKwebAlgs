@@ -6,6 +6,12 @@ class Point {
         this.x = x;
         this.y = y;
     }
+
+    equals(other: Point): boolean {
+        if (this.x === other.x && this.y === other.y) return true;
+
+        return false;
+    }
 }
 
 export default Point;
