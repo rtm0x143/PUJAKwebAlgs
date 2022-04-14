@@ -353,7 +353,7 @@ class ClasterView extends CanvasView {
             event.preventDefault();
             callback(
                 getComputedStyle(this.kmeansMenu).display,
-                this.canvasContext,
+                // this.canvasContext,
                 parseInt(this.rangeParagraph.textContent ?? Errors.handleError('null')),
                 parseInt(this.countParagraph.textContent ?? Errors.handleError('null')),
                 this.kmeansSelect.value ?? Errors.handleError('null'),
