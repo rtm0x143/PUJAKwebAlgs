@@ -15,6 +15,10 @@ algorithms.neuralNet.init(
     path.join(__dirname, "resources", process.env.biasesName)
 )
 
+if (!process.env["jwtSecret"]) {
+    throw ".env file must contain 'jwtSecret'"
+}
+
 const app = express()
 // const hbs = handlebars.create({
 //     defaultLayout: "main",
