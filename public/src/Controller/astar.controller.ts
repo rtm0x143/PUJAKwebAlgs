@@ -250,14 +250,15 @@ class AstarController extends CanvasController {
                 y: this._astarModel.startPoint.y
             },
             field: {
-                width: this._astarModel.gridResolution.y, 
-                height: this._astarModel.gridResolution.x,
+                width: this._astarModel.gridResolution.x, 
+                height: this._astarModel.gridResolution.y,
                 // @ts-ignore
                 data: buffer.Buffer.from(this._astarModel.grid.buffer).toString()
             },
         }
 
-        // console.log(JSON.stringify(data));
+        console.log(JSON.stringify(data));
+        
         
         const response = fetch(`${this.urlValue}/alg/astar/`, {
             method: "POST",
@@ -364,7 +365,7 @@ class AstarController extends CanvasController {
                 console.log(neighbors[k]);
                 
                 this.fillCellByGridCoordinates(neighbors[k], colorOpened);
-                await this.sleep(100);
+                await this.sleep(50);
             }
             
             // Change value and color of the current cell to visited
