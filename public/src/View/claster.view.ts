@@ -160,7 +160,6 @@ class ClasterView extends CanvasView {
         })*/
         
         this.drawGrid(
-            this.canvasContext,
             'grey',
             Math.floor(this.canvas.width / 30),
             Math.floor(this.canvas.height / 30)
@@ -232,7 +231,6 @@ class ClasterView extends CanvasView {
                 }
 
                 this.drawGrid(
-                    this.canvasContext,
                     'grey',
                     Math.floor(canvas.width / 30),
                     Math.floor(canvas.height / 30)
@@ -323,17 +321,17 @@ class ClasterView extends CanvasView {
     _subscribe() {
         this._clasterModel.addEventListener('claster.model:addObj', () => {
             this.drawCircle(
-                this.canvasContext,
                 '',
                 'red', 
-                this._clasterModel.positions[this._clasterModel.positions.length - 1],
-                this._clasterModel.positions[this._clasterModel.positions.length - 2],
+                {
+                    x: this._clasterModel.positions[this._clasterModel.positions.length - 1],
+                    y: this._clasterModel.positions[this._clasterModel.positions.length - 2],
+                },
                 5
         )});
 
         this._canvasModel.addEventListener('canvas.model:change', () => {
             this.drawGrid(
-                this.canvasContext,
                 'grey', 
                 Math.floor(this.canvas.width / 30),
                 Math.floor(this.canvas.height / 30)

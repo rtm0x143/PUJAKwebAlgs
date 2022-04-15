@@ -53,11 +53,12 @@ class GeneticView extends CanvasView {
             console.log(this._graphModel.coords);
             this.drawCircle
             (
-                this.canvasContext,
                 '',
                 'white',
-                this._graphModel.coords[this._graphModel.coords.length - 2],
-                this._graphModel.coords[this._graphModel.coords.length - 1],
+                {
+                    x: this._graphModel.coords[this._graphModel.coords.length - 2],
+                    y: this._graphModel.coords[this._graphModel.coords.length - 1],
+                },
                 5
             );
         })
