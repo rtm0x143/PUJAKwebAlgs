@@ -52,7 +52,7 @@ class AntController extends Controller {
             pointsData,
         }
 
-        console.log(antData);
+        // console.log(antData);
         return fetch(`${this.urlValue}/alg/ants/launch`, {
             method: "POST",
             headers: {
@@ -88,7 +88,7 @@ class AntController extends Controller {
                     pointsData, value.cost
                 );
 
-                console.log(pointsData, value.cost)
+                console.log(/*pointsData,*/ value.cost)
             });
     }
 
@@ -114,7 +114,8 @@ class AntController extends Controller {
             sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
             console.log(token);
             return token;
-        }).then(token => {
+        })
+        .then(token => {
             this._graphModel.cost = Number.MAX_VALUE;
             this.updateIntervalId = setInterval(this.updateSimulation.bind(this), 500, token);
         })
