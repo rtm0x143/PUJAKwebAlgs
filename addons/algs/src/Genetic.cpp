@@ -71,12 +71,6 @@ void Genetic::generate() {
 		}
 
 		crossChromo(firstChromo, secondChromo, splitPath);
-
-		for (size_t j = 0; j < graph->length; ++j) {
-			std::cout << splitPath[j] << " ";
-		}
-
-		std::cout << std::endl;
 		
 		if (rand() % 100 <= 5) {
 			mutation(splitPath);

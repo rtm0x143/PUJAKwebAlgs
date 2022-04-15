@@ -1,21 +1,17 @@
-import CanvasView from './canvas.view.js';
+import GraphView from './graph.view.js';
 import Errors from "../config/Errors.js";
 import GraphModel from "../Model/graph.model.js";
 
-class GeneticView extends CanvasView {
-    //class Objects
-    private _graphModel: GraphModel;
+class GeneticView extends GraphView {
 
     //button elements
-    private _sendButton: HTMLButtonElement;
+    private _launchButton: HTMLButtonElement;
 
     constructor(graphModel: GraphModel) {
         super(graphModel);
 
-        this._graphModel = graphModel;
-
         //button elements initialise
-        this._sendButton = document.querySelector('.ui__calc-button_genetic') ?? Errors.handleError('null');
+        this._launchButton = document.querySelector('.ui__calc-button[name=launch]') ?? Errors.handleError('null');
 
         //subscribe model events
         this._subscribe();
@@ -41,28 +37,28 @@ class GeneticView extends CanvasView {
      *
      * @param callback - Function
      */
-    calcHandler(callback: Function) {
-        this._sendButton.addEventListener('click', () => {
-            callback();
+    launchAlgHandler(tokenCallback: Function) {
+        this._launchButton.addEventListener('click', async () => {
+            tokenCallback();
         })
     }
 
     //subscribe dispatching events
-    _subscribe() {
-        this._graphModel.addEventListener('canvas:change', () => {
-            console.log(this._graphModel.coords);
-            this.drawCircle
-            (
-                '',
-                'white',
-                {
-                    x: this._graphModel.coords[this._graphModel.coords.length - 2],
-                    y: this._graphModel.coords[this._graphModel.coords.length - 1],
-                },
-                5
-            );
-        })
-    }
+    // _subscribe() {
+    //     this._graphModel.addEventListener('canvas:change', () => {
+    //         console.log(this._graphModel.coords);
+    //         this.drawCircle
+    //         (
+    //             '',
+    //             'white',
+    //             {
+    //                 x: this._graphModel.coords[this._graphModel.coords.length - 2],
+    //                 y: this._graphModel.coords[this._graphModel.coords.length - 1],
+    //             },
+    //             5
+    //         );
+    //     })
+    // }
 }
 
 export default GeneticView;

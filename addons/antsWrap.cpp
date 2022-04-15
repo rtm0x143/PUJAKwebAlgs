@@ -5,7 +5,13 @@
 #include "tools.h"
 
 AntsRuntime antsRuntime;
-ColonyConfig deafultConfig{ 100, 1, 1.5, 0.6 };
+
+ColonyConfig deafultConfig{ 
+    100,    // uint32_t antsCount;
+    1.0,      // double greedCoef;
+    1.0,    // double herdCoef;
+    0.75     // double pherLeak;
+    };
 
 Napi::Value launch(const Napi::CallbackInfo& info)
 {
