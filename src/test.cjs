@@ -1,138 +1,90 @@
-class ID3 {
-    constructor(csvData) {
-        this.csvData = csvData;
-        this.rowLength = csvData[0].length;
-        this.paramsArray = [];
-        this.setParams();
+async function parseCSV(length, data) {
+    let dataMatrix = [];
 
-        this.paramsObj = [];
+    let word = '';
+    let dataArray = []
 
-        for (let i = 0; i < this.paramsArray.length; ++i) {
-            this.paramsObj.push({
-                value:  this.paramsArray[i],
-                count: 0
-            })
+    for (let i = 0; i < data.length; ++i) {
+        if (i === data.length - 1) {
+            word += data[i];
+            dataArray.push(word);
+            dataMatrix.push(dataArray);
         }
-
-        this.commonEntropy = this.calcCommonEntropy();
-        this.used = [];
-
-        for (let i = 0; i < this.rowLength; ++i) {
-            this.used[i] = false;
-        }
-    }
-
-    setParams() {
-        for (let i = 1; i < this.csvData.length; ++i) {
-            if (!this.paramsArray.includes(this.csvData[i][this.rowLength - 1])) {
-                this.paramsArray.push(this.csvData[i][this.rowLength - 1]);
+        else if (data[i] === ',' || data[i] === '\n' || data[i] === ';') {
+            dataArray.push(word);
+            if (data[i] === '\r') {
+                ++i;
             }
-        }
-    }
+            word = '';
 
-    //don't touch - all work fine
-    calcCommonEntropy() {
-        for (let i = 0; i < this.paramsObj.length; ++i) {
-            this.paramsObj[i].count = 0;
-        }
+            console.log(dataArray);
 
-        for (let i = 1; i < this.csvData.length; ++i) {
-            for (let j = 0; j < this.paramsObj.length; ++j) {
-                if (this.paramsObj[j].value === this.csvData[i][this.rowLength - 1]) {
-                    ++this.paramsObj[j].count;
-                }
+            if (dataArray.length === length) {
+                dataMatrix.push(dataArray);
+                dataArray = []
             }
-        }
+        } else {
+            if (data[i] !== '\r') {
+                word += data[i];
+            }
 
-        return this.calcEntropyFunc(this.paramsObj);
+        }
     }
 
-    calcEntropyFunc(paramsObj) {
-        let value = 0;
-        let count = 0;
-        // paramsObj.forEach(obj => {count += obj.count});
-        for (let i = 0; i < paramsObj.length; ++i) {
-            count += paramsObj[i].count;
-        }
+    return dataMatrix;
+}
 
-        for (let i = 0; i < paramsObj.length; ++i) {
-            if (paramsObj[i].count === 0) {
-                value = 0;
+async function fetchCSV() {
+    let dataMatrix = []
+    let wordsCounter = 0;
+
+    await fetch(`1.csv`).then(async (response) => {
+        let textData = await response.text();
+        let flag = false
+
+        for (let i = 0; i < textData.length; ++i) {
+            if (flag) {
                 break;
             }
 
-            value -= (paramsObj[i].count / (count)) * Math.log2(paramsObj[i].count / (count));
-        }
-
-        return value;
-    }
-
-    setLabelsArray(index) {
-        let labelsArray = [];
-
-        for (let i = 1; i < this.csvData.length; ++i) {
-            if (!labelsArray.includes(this.csvData[i][index])) {
-                labelsArray.push(this.csvData[i][index]);
+            if (textData[i] === "," || textData[i] === ';') {
+                ++wordsCounter;
+            }
+            else if (textData[i] === "\n" || textData[i] === '\r') {
+                ++wordsCounter;
+                flag = true;
             }
         }
+        dataMatrix = await parseCSV(wordsCounter, textData);
+        console.log(dataMatrix);
+    })
 
-        return labelsArray;
-    }
-
-    calcLabelEntropy(index, label) {
-        for (let i = 0; i < this.paramsObj.length; ++i) {
-            this.paramsObj[i].count = 0;
-        }
-
-        for (let i = 1; i < this.csvData.length; ++i) {
-            if (this.csvData[i][index] === label) {
-                for (let j = 0; j < this.paramsObj.length; ++j) {
-                    if (this.paramsObj[j].value === this.csvData[i][this.rowLength - 1]) {
-                        ++this.paramsObj[j].count;
-                    }
-                }
-            }
-        }
-
-        return this.calcEntropyFunc(this.paramsObj);
-    }
-
-    calcLabelCount(index, label) {
-        let labelCount = 0;
-
-        for (let i = 1; i < this.csvData.length; ++i) {
-            if (this.csvData[i][index] === label) {
-                ++labelCount;
-            }
-        }
-
-        return labelCount;
-    }
-
-
-    calcFilterEntropy() {
-        let gainValues = [];
-
-        for (let i = 0; i < this.rowLength - 1; ++i) {
-            if (!this.used[i]) {
-                let gainValue = 0,
-                    labelsArray = this.setLabelsArray(i);
-
-                for (let j = 0; j < labelsArray.length; ++j) {
-                    gainValue += (this.calcLabelCount(i, labelsArray[j]) / (this.csvData.length - 1))
-                        * this.calcLabelEntropy(i, labelsArray[j]);
-                }
-
-                gainValues[i] = gainValue;
-            }
-        }
-
-        for (let i = 0; i < gainValues.length; ++i) {
-            gainValues[i] = this.commonEntropy - gainValues[i];
-        }
-
-        console.log(gainValues);
-
-        return gainValues;
-    }
+    return {data: dataMatrix, length: wordsCounter};
 }
+
+
+let csvData;
+fetchCSV()
+    .then(async (response) => {
+        //common dataset
+        csvData = response.data;
+
+        let nodesTree = [];
+        let tree = [];
+
+        let used = [];
+
+        let lastClass = csvData[0][csvData[0].length - 1];
+
+        mainData = csvData.filter((item) => {
+            return item[item.length - 1] !== lastClass;
+        })
+
+        for (let i = 0; i < csvData[0].length - 1; ++i) {
+            used[i] = false;
+        }
+
+        makeNode(csvData, used, nodesTree, tree, mainData, -1);
+        console.log(nodesTree);
+        console.log(tree);
+    });
