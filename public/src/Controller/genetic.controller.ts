@@ -2,12 +2,15 @@ import GeneticView from "../View/genetic.view";
 import Controller from "./Controller.js";
 import GraphModel from "../Model/graph.model";
 import Errors from "../config/Errors.js";
+import { time } from "console";
 
 class GeneticController extends Controller {
     private _graphView;
     private _graphModel;
-    private updateIntervalId: number | null = null;
+    // private updateIntervalId: number | null = null;
+    private sessionRuns: boolean = false;
 
+    public updateInterval: number = 100;
     public epochCount: number = 0;
 
     constructor(GraphView: GeneticView, GraphModel: GraphModel) {
@@ -75,10 +78,10 @@ class GeneticController extends Controller {
     }
 
     async _launchAlgHandler() {
-        if (this.updateIntervalId) {
-            clearInterval(this.updateIntervalId);
-            this.updateIntervalId = null;
-        }
+        // if (this.updateIntervalId) {
+        //     clearInterval(this.updateIntervalId);
+        //     this.updateIntervalId = null;
+        // }
 
         let oldToken = sessionStorage.getItem('token')
         if (oldToken) {
@@ -95,13 +98,29 @@ class GeneticController extends Controller {
         this.getToken().then(token => {
             sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
             console.log(token);
-            return token;
+            // return token;
         })
-        .then(token => {
+        .then(() => {
             this.epochCount = 0
             this._graphModel.cost = Number.MAX_VALUE;   
-            this.updateIntervalId = setInterval(this.updateSimulation.bind(this), 100, token);
+            // this.updateIntervalId = setInterval(this.updateSimulation.bind(this), 100, token);
+            if (!this.sessionRuns)
+                this.updateSimulationRec();
         })
+    }
+
+    private async updateSimulationRec() {
+        let token = sessionStorage.getItem("token");
+        if (!token) {
+            this.sessionRuns = false;
+            return;
+        }
+
+        let reqStart = Date.now();
+        await this.updateSimulation(token);
+        let gapTime = this.updateInterval - reqStart + Date.now();
+
+        setTimeout(() => this.updateSimulationRec(), gapTime)
     }
 }
 
