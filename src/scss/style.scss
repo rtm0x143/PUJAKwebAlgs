@@ -4,6 +4,7 @@ $black: #303030;
 $white: #CFCFCF;
 $greyTextColor: #E8E8E8;
 $creamyWhite: #CFCFCF;
+$exclusionColor: #F0F0F0;
 
 //Default MIXIN FOR FONTPARAMS
 @mixin setFont($fontFamily, $fontStyle, $fontSize, $lineHeight, $fontWeight, $color) {

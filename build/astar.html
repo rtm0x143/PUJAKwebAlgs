@@ -10,8 +10,52 @@
 <body>
 <p class="title">A-star</p>
 <div class="ui ui_astar">
+    <div class="regulator">
+        <div class="regulator__sliders__container">
+            <div class="regulator__range-slider__container">
+                <div class="range-slider-and-text">
+                    <input
+                        class="range-slider range-slider_width"
+                        type="range"
+                        value="250"
+                        min="200"
+                        max="800"
+                    />
+                    <span class="range-slider__text">grid height</span>
+                </div>
+                <span class="range-slider__count range-slider__text_width">0</span>
+            </div>
+
+            <div class="regulator__range-slider__container">
+                <div class="range-slider-and-text">
+                    <input
+                        class="range-slider range-slider_height"
+                        type="range"
+                        value="250"
+                        min="200"
+                        max="800"
+                    />
+                    <span class="range-slider__text">grid width</span>
+                </div>
+                <span class="range-slider__count range-slider__text_height">0</span>
+            </div>
+        </div>
+    </div>
     <div class="canvas canvas_astar">
-        <canvas class="canvas__element canvas__element_astar"></canvas>
+        <canvas
+            class="canvas__element canvas__element_astar"
+            id="wallsLayer"
+            style="position: absolute; left: 0; top: 0"
+        ></canvas>
+        <canvas
+            class="canvas__element canvas__element_astar"
+            id="gridLayer"
+            style="
+                position: absolute;
+                pointer-events: none;
+                background-color: transparent;
+            "
+        ></canvas>
         <div class="canvas_buttons">
             <span class="resize-block">
     <svg
@@ -54,25 +98,30 @@
             <div class="canvas__menu-container canvas__menu-container_astar"></div>
         </div> -->
     </div>
-    <div class="buttons-menu">
-  <div class="buttons-menu__buttons-bar">
-      <button class="buttons-menu__button">
-        <span class="buttons-menu__button__text">add start</span>
-      </button>
-      <button class="buttons-menu__button">
-        <span class="buttons-menu__button__text">add end</span>
-      </button>
-      <button class="buttons-menu__button">
-        <span class="buttons-menu__button__text">generate</span>
-      </button>
-      <!-- <button class="buttons-menu__button">
-        <span class="buttons-menu__button__text">append</span>
-      </button>
-      <button class="buttons-menu__button">
-        <span class="buttons-menu__button__text">delete</span>
-      </button> -->
-  </div>
-</div>
+    <div class="regulator">
+        <div class="regulator__buttons-bar">
+            <div class="buttons-bar__wrapper">
+                <button class="regulator__button button__start">
+                    <span class="regulator__button__text">add start</span>
+                </button>
+                <button class="regulator__button button__end">
+                    <span class="regulator__button__text">add end</span>
+                </button>
+                <button class="regulator__button button__generate">
+                    <span class="regulator__button__text">generate labyrinth</span>
+                </button>
+                <button class="regulator__button button__find-path">
+                    <span class="regulator__button__text">find path</span>
+                </button>
+            </div>
+            <!-- <button class="buttons-menu__button">
+          <span class="buttons-menu__button__text">append</span>
+        </button>
+        <button class="buttons-menu__button">
+          <span class="buttons-menu__button__text">delete</span>
+        </button> -->
+        </div>
+    </div>
 </div>
 
 <script src="./canvasResize.js"></script>
