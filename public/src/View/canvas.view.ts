@@ -66,6 +66,7 @@ class CanvasView {
     drawCircle(strokeColor: string, fillColor: string, point : {x: number, y: number}, radius: number) 
     {
         this.canvasContext.strokeStyle = strokeColor;
+        this.canvasContext.lineWidth = 1;
         this.canvasContext.fillStyle = fillColor;
         this.canvasContext.beginPath();
         this.canvasContext.arc(point.x, point.y, radius, 0, 2 * Math.PI);

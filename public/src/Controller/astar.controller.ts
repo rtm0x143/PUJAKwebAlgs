@@ -45,7 +45,6 @@ class AstarController extends CanvasController {
 
         this._astarModel.setGridSize(this._astarView.getGridSize());
         this._astarView.drawGrid(
-            this._astarView.canvasGridContext,
             '#CFCFCF', 
             this._astarModel.gridResolution.x,
             this._astarModel.gridResolution.y

@@ -10,7 +10,7 @@ function simLaunch(sim) {
             res.sendStatus(400);
             return
         }
-        let data = Buffer.from(req.body["pointsData"], "hex")
+        let data = Buffer.from(req.body["pointsData"], "base64")
         let pointsData = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2)
         let id = sim.launch(pointsData, req.body)
 

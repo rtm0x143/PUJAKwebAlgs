@@ -19,14 +19,18 @@ class GraphModel extends CanvasModel {
 
     updateWay(way: Uint16Array, cost: number) {
         if (this.cost > cost) {
+            console.log("change", this.cost, "to", cost);
+            
+            this.cost = cost;
             this.currentWay = way;
+            this.clearCanvas();
             this.dispatchEvent(new Event('way:change'))
         }
     }
 
     clearCanvas() {
         this.dispatchEvent(new Event('canvas:clear'));
-        this.dispatchEvent(new Event('draw:circles'));
+        // this.dispatchEvent(new Event('draw:circles'));
     }
 }
 
