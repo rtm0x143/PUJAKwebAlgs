@@ -58,6 +58,17 @@ class AstarModel extends CanvasModel {
         this.grid = new Uint8Array(gridResolution.x * gridResolution.y);
         this.gridResolution = gridResolution;
     }
+
+    clearVisitedCells() {
+        console.log(this.grid.length);
+        
+        for (let i = 0; i < this.grid.length; ++i) {
+            console.log(i, this.grid[i]);
+            if (this.grid[i] === 2) {
+                this.grid[i] = 0;
+            }
+        }
+    }
 }
 
 export default AstarModel;
