@@ -7,7 +7,6 @@ import pagesRouter from "./src/routes/pages.js"
 import algsRouter from "./src/routes/algs.js"
 import { binStreamParser } from "./src/middlewares.js"
 import algorithms from "./src/algorithms.cjs"
-
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
 algorithms.neuralNet.init(
