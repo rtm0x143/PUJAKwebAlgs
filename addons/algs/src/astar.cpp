@@ -27,7 +27,7 @@ bool Point::operator!=(const Point& other) const
 #pragma endregion
 
 #pragma region Cell
-int Cell::calculateDistance(Point& startPoint, Point& endPoint) 
+int Cell::calculateDistance(Point& startPoint, Point& endPoint)
 {
 	int dx = abs(startPoint.x - endPoint.x);
 	int dy = abs(startPoint.y - endPoint.y);
@@ -40,7 +40,7 @@ int Cell::calculateDistance(Point& startPoint, Point& endPoint)
 	return dx * diagonal + straight * (dy - dx);
 }
 
-Cell::Cell(Point cellPoint, Point& previousPoint, Point& endPoint, Cell *parent)
+Cell::Cell(Point cellPoint, Point& previousPoint, Point& endPoint, Cell* parent)
 {
 	point = cellPoint;
 	this->parent = parent;
@@ -55,8 +55,10 @@ int Cell::getDistanceSum() const
 #pragma endregion
 
 #pragma region Grid
-Grid::Grid(uint8_t **field, int width, int height) :
-	_field(field), _width(width), _height(height) {};
+Grid::Grid(uint8_t** field, int width, int height) :
+	_field(field), _width(width), _height(height)
+{
+};
 
 int Grid::getWidth()
 {
@@ -76,7 +78,7 @@ void Grid::setGridValue(std::vector<Point*> points, uint8_t value)
 	}
 }
 
-void Grid::setGridValue(Point *point, uint8_t value)
+void Grid::setGridValue(Point* point, uint8_t value)
 {
 	_field[point->y][point->x] = value;
 }
@@ -94,7 +96,7 @@ void Grid::printGrid()
 		uint8_t* row = _field[i];
 		for (size_t j = 0; j < _width; j++)
 		{
-			std::cout << (int)row[j] << " ";
+			std::cout << ((char)row[j] == 0 ? '.' : (char)row[j]) << "";
 		}
 
 		std::cout << "\n";
@@ -112,10 +114,10 @@ PathfinderResult::PathfinderResult(
 	int stepsCount,
 	std::vector<Point> stepsAndPath
 )
-{	
+{
 	this->stepsCount = stepsCount;
 	this->stepsAndPath = stepsAndPath;
-	
+
 }
 #pragma endregion
 
@@ -143,7 +145,7 @@ std::vector <Cell*> Pathfinder::findCellNeighbors(
 			int moveX = parentCell->point.x + j;
 			int moveY = parentCell->point.y + i;
 
-			if ((moveX >= 0 && moveX < grid.getWidth()) && 
+			if ((moveX >= 0 && moveX < grid.getWidth()) &&
 				(moveY >= 0 && moveY < grid.getHeight()))
 			{
 				if (grid[moveY][moveX] != 1) // 'w'
@@ -166,7 +168,7 @@ std::vector <Cell*> Pathfinder::findCellNeighbors(
 
 void Pathfinder::retracePath(
 	std::vector<Point>* stepsAndPath,
-	Point startCellPoint, 
+	Point startCellPoint,
 	Cell* endCell
 )
 {
@@ -183,7 +185,7 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 {
 	// std::cout << "started with " << grid.getHeight() << ' ' << grid.getWidth() << '\n';
 	// grid.printGrid();
-	
+
 	// Cell current;
 	std::vector<Point> stepsAndPath;
 	std::vector<Cell*> availableCells;
@@ -219,13 +221,13 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 				startPoint,
 				availableCells[minCellIndex]
 			);
-			
+
 			break;
 		}
 
 
 		std::vector<Cell*> neighbors = findCellNeighbors(
-			grid, 
+			grid,
 			availableCells[minCellIndex],
 			availableCells[minCellIndex]->point,
 			endPoint
@@ -237,7 +239,7 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 		for (Cell* neighbor : neighbors)
 		{
 			bool isVisited = false;
-			
+
 			for (Cell* visitedCell : visitedCells)
 			{
 				if (neighbor->point == visitedCell->point)

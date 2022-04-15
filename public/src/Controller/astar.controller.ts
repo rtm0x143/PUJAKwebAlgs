@@ -45,6 +45,10 @@ class AstarController extends CanvasController {
             this.findPathCallback();
         });
 
+        this._astarView.handleButtonLabGen(() => {
+            this.labGenCallback();
+        });
+
         this._astarModel.setGridSize(this._astarView.getGridSize());
         this._astarView.drawGridOn(
             this._astarView.canvasGridContext,
@@ -257,9 +261,6 @@ class AstarController extends CanvasController {
                 data: buffer.Buffer.from(this._astarModel.grid.buffer).toString()
             },
         }
-
-        console.log(JSON.stringify(data));
-        
         
         const response = fetch(`${this.urlValue}/alg/astar/`, {
             method: "POST",
@@ -272,25 +273,18 @@ class AstarController extends CanvasController {
         return response;
     }
 
-    findPathResponse(astarResponse: Promise<Response>) {
-        astarResponse.then(async (response) => {
+    findPathResponse(algStepsAndPathResponse: Promise<Response>) {
+        algStepsAndPathResponse.then(async (response) => {
             let reader = response.body?.getReader() ?? Errors.handleError("undefined");
             let pathStart = -1;
 
-            let readChunck = () => {
-                this.responseRead(reader, pathStart).then(() => this._astarModel.clearVisited());
-            }
-
-            readChunck();
+            this.findPathResponseRead(reader, pathStart).then(() => this._astarModel.clearVisited());
         })
     }
 
-    private async responseRead(reader: ReadableStreamDefaultReader<Uint8Array>, pathArrayStart: number): Promise<void> {
+    private async findPathResponseRead(reader: ReadableStreamDefaultReader<Uint8Array>, pathArrayStart: number): Promise<void> {
         return reader?.read().then(async ({done, value}) => {
-            if (done) {
-                console.log("Done");
-                return;
-            }
+            if (done) return;
             if (value === undefined) Errors.handleError("undefined");
             if (value === null) Errors.handleError("null");
 
@@ -302,7 +296,7 @@ class AstarController extends CanvasController {
                 this.drawPath(value, pathArrayStart);
             }
             
-            if (!done) return this.responseRead(reader, pathArrayStart);
+            if (!done) return this.findPathResponseRead(reader, pathArrayStart);
         });
     }
 
@@ -365,7 +359,7 @@ class AstarController extends CanvasController {
 
             for (let k = 0; k < neighbors.length; ++k) {      
                 this.fillCellByGridCoordinates(neighbors[k], colorOpened);
-                await this.sleep(5000 / responseArray.length);
+                // await this.sleep(5000 / responseArray.length);
             }
             
             // Change value and color of the current cell to visited
@@ -388,6 +382,40 @@ class AstarController extends CanvasController {
             let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
             this.fillCellByGridCoordinates(currentPoint, colorPath);
         }
+    }
+
+    labGenCallback() {
+        let response = this.labGenRequest();
+        this.labGenResponse(response);
+    }
+
+    private labGenRequest(): Promise<Response> {
+        let gridSize: Point = this._astarModel.gridResolution;
+
+        const response = fetch(`${this.urlValue}/alg/labgen?height=${gridSize.y}&width=${gridSize.x}`);
+        
+        return response;
+    }
+
+    private labGenResponse(labyrinthResponse: Promise<Response>) {
+        labyrinthResponse.then((response) => {
+            let reader = response.body?.getReader() ?? Errors.handleError("undefined");
+            
+            this.labGenResponseRead(reader).then(() => this._astarView.drawField());
+        });
+    }
+
+    private async labGenResponseRead(reader: ReadableStreamDefaultReader<Uint8Array>): Promise<void> {
+        const { done, value } = await reader.read();
+        if (done) return;
+        if (value === undefined) Errors.handleError("null");
+        if (value === null) Errors.handleError("null");
+
+        for (let i = 0; i < value.length; ++i) {
+            this._astarModel.grid[i] = value[i];
+        }
+
+        if (!done) return this.labGenResponseRead(reader);  
     }
 }
 

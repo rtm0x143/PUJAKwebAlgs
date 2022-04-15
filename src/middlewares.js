@@ -1,7 +1,7 @@
-export function checkQuery(nessusaryProps = []) {
+export function checkQuery(necessaryProps = []) {
     return (req, res, next) => {
         const query = req.query
-        for (const prop of nessusaryProps) {
+        for (const prop of necessaryProps) {
             if (!query[prop]) {
                 if (res) {
                     res.status(400)

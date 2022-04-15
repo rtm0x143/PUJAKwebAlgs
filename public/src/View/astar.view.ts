@@ -9,7 +9,7 @@ class AstarView extends CanvasView {
     private _buttonStartPoint: HTMLButtonElement;
     private _buttonEndPoint: HTMLButtonElement;
     private _buttonFindPath: HTMLButtonElement;
-    // private _buttonGenerate: HTMLButtonElement;
+    private _buttonGenerate: HTMLButtonElement;
     private _astarModel: AstarModel; 
 
     public canvasGrid: HTMLCanvasElement;
@@ -25,6 +25,7 @@ class AstarView extends CanvasView {
         this._buttonStartPoint = document.querySelector('.button__start') ?? Errors.handleError("null");
         this._buttonEndPoint = document.querySelector('.button__end') ?? Errors.handleError("null");
         this._buttonFindPath = document.querySelector('.button__find-path') ?? Errors.handleError("null");
+        this._buttonGenerate = document.querySelector('.button__generate') ?? Errors.handleError("null");
 
         this.canvasGrid = document.querySelector("#gridLayer") ?? Errors.handleError("null");
         this.canvasGridContext = this.canvasGrid.getContext('2d') ?? Errors.handleError("null");
@@ -50,45 +51,50 @@ class AstarView extends CanvasView {
                 this._astarModel.gridResolution.x,
                 this._astarModel.gridResolution.y
             );
+            
+            // Draws field (walls, start and end points, algorithm visualization) on field canvas (main)
+            this.drawField();
+        });
+    }
 
-            // Drawing walls
-            this.canvasContext.fillStyle = '#CFCFCF';
-            let cellWidth = this.canvas.width / this._astarModel.gridResolution.x;
-            let cellHeight = this.canvas.height / this._astarModel.gridResolution.y;
+    drawField() {
+        // Drawing walls
+        this.canvasContext.fillStyle = '#CFCFCF';
+        let cellWidth = this.canvas.width / this._astarModel.gridResolution.x;
+        let cellHeight = this.canvas.height / this._astarModel.gridResolution.y;
 
-            for (let i = 0; i < this._astarModel.gridResolution.y; ++i) {
-                for (let j = 0; j < this._astarModel.gridResolution.x; ++j) {
-                    let currentPoint = this._astarModel.getIndex(j, i);
-                    
-                    if (this._astarModel.grid[currentPoint] == 1) {
-                        this.canvasContext.fillRect(
-                            j * cellWidth, 
-                            i * cellHeight, 
-                            cellWidth,
-                            cellHeight
-                        );
-                    }
+        for (let i = 0; i < this._astarModel.gridResolution.y; ++i) {
+            for (let j = 0; j < this._astarModel.gridResolution.x; ++j) {
+                let currentPoint = this._astarModel.getIndex(j, i);
+                
+                if (this._astarModel.grid[currentPoint] == 1) {
+                    this.canvasContext.fillRect(
+                        j * cellWidth, 
+                        i * cellHeight, 
+                        cellWidth,
+                        cellHeight
+                    );
                 }
             }
-            
-            // Drawing start point
-            this.canvasContext.fillStyle = "#52f193";
-            this.canvasContext.fillRect(
-                this._astarModel.startPoint.x * cellWidth,
-                this._astarModel.startPoint.y * cellHeight,
-                cellWidth,
-                cellHeight
-            );
+        }
+        
+        // Drawing start point
+        this.canvasContext.fillStyle = "#52f193";
+        this.canvasContext.fillRect(
+            this._astarModel.startPoint.x * cellWidth,
+            this._astarModel.startPoint.y * cellHeight,
+            cellWidth,
+            cellHeight
+        );
 
-            // Drawing end point
-            this.canvasContext.fillStyle = "#e7615a";
-            this.canvasContext.fillRect(
-                this._astarModel.endPoint.x * cellWidth,
-                this._astarModel.endPoint.y * cellHeight,
-                cellWidth,
-                cellHeight
-            );
-        });
+        // Drawing end point
+        this.canvasContext.fillStyle = "#e7615a";
+        this.canvasContext.fillRect(
+            this._astarModel.endPoint.x * cellWidth,
+            this._astarModel.endPoint.y * cellHeight,
+            cellWidth,
+            cellHeight
+        );
     }
 
     handleMouseDownCanvas(callbackMouseDown: Function, callbackMouseMove: Function) {
@@ -144,10 +150,18 @@ class AstarView extends CanvasView {
         this._buttonFindPath.addEventListener('click', callbackFindPathWrapper);
     }
 
+    handleButtonLabGen(labGenCallback: Function) {
+        function callbackLabGenWrapper() {
+            labGenCallback();
+        }
+
+        this._buttonGenerate.addEventListener('click', callbackLabGenWrapper);
+    }
+
     // Этот медот должен брать данные из слайдера
     // TODO: добавить слайдер
     getGridSize(): Point {
-        return new Point(30, 10);
+        return new Point(40, 40);
     }
 }
 

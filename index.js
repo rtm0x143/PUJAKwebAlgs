@@ -29,7 +29,7 @@ const app = express()
 app.set("views", path.join(__dirname, "views"))
     .set("rootPath", __dirname)
 
-app.use(express.json())
+app.use(express.json({limit: '50mb'}))
     .use(express.static(path.join(__dirname, "public")))
     .use(binStreamParser)
     .use(pagesRouter)

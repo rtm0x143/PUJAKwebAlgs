@@ -62,7 +62,7 @@ class AstarModel extends CanvasModel {
     clearVisited() {
         for (let i = 0; i < this.grid.length; ++i) {
             if (this.grid[i] === 2) this.grid[i] = 0;
-        }
+        }        
     }
 }
 
