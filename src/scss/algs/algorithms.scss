@@ -57,6 +57,11 @@
                     @include setFont('codenext', normal, 16px, 18px, 800, $white);
                     padding: 10px 0px 0px 10px;
                     margin-top: 0px;
+
+                    a {
+                        text-decoration: underline;
+                        @include setFont('codenext', normal, 16px, 18px, 800, $white);
+                    }
                 }
 
                 .algorithm-block__link {

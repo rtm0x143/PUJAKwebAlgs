@@ -1,19 +1,118 @@
-.ui .canvas.canvas_neural-net {
-    display: block;
-    width: 600px;
-    height: 600px;
-    min-width: 200px;
-    min-height: 200px;
-    max-width: 900px;
-    max-height: 900px;
-    user-select: none;
-    margin: 0;
-    // resize: both;
-    // overflow: hidden;
-    
-    .canvas__element_neural-net {
-        vertical-align: middle;
-        width: 100%;
-        height: 100%;
+.ui_neural-net {
+    justify-content: center;
+}
+
+.ui {
+    .brush-menu {
+        .brush-menu-container {
+            display: block;
+
+            .brush-menu__select {
+                width: 210px;
+                height: 50px;
+                border: none;
+                background: rgb(243, 238, 238);
+                @include setFont('codenext', normal, 18px, 20px, 800, $black);
+                padding-left: 10px;
+                border-radius: 10px;
+                user-select: none;
+                outline: none;
+                box-shadow: none;
+            }
+
+            .brush-menu__size-input {
+                width: 200px;
+                height: 50px;
+                border: none;
+                background: rgb(243, 238, 238);
+                margin-top: 10px;
+                @include setFont('codenext', normal, 18px, 20px, 800, $black);
+                padding-left: 10px;
+                border-radius: 10px;
+                outline: 0;
+                outline-offset: 0;
+            }
+
+            .brush-menu__color-input{
+                width: 200px;
+                height: 50px;
+                border: none;
+                background: rgb(243, 238, 238);
+                margin-top: 10px;
+                @include setFont('codenext', normal, 18px, 20px, 800, $black);
+                padding-left: 10px;
+                border-radius: 10px;
+                outline: 0;
+                outline-offset: 0;
+            }
+
+            .brush-menu__answer-block {
+                margin-top: 50px;
+                
+                .brush-menu__answer-input {
+                    width: 200px;
+                    height: 50px;
+                    border: none;
+                    background: rgb(66, 196, 55);
+                    margin-top: 10px;
+                    @include setFont('codenext', normal, 18px, 20px, 800, rgb(243, 238, 238));
+                    padding-left: 10px;
+                    cursor: pointer;
+                    border-radius: 10px;
+                }
+
+                .brush-menu__answer-input:hover {
+                    transition: 0.3s;
+                    background: rgb(28, 133, 19);
+                }
+            }
+
+            .brush-menu__clear-block {
+                margin-top: 0px;
+                
+                .brush-menu__clear-input {
+                    width: 200px;
+                    height: 50px;
+                    border: none;
+                    background: rgb(252, 68, 68);
+                    margin-top: 10px;
+                    @include setFont('codenext', normal, 18px, 20px, 800, rgb(243, 238, 238));
+                    padding-left: 10px;
+                    cursor: pointer;
+                    border-radius: 10px;
+                }
+
+                .brush-menu__clear-input:hover {
+                    transition: 0.3s;
+                    background: rgb(145, 28, 28);
+                }
+            }
+        }
+    }
+
+    .canvas.canvas_neural-net {
+        display: block;
+        width: 600px;
+        height: 600px;
+        min-width: 200px;
+        min-height: 200px;
+        max-width: 900px;
+        max-height: 900px;
+        user-select: none;
+        margin: 0;
+        // resize: both;
+        // overflow: hidden;
+        margin-left: 60px;
+        
+        .canvas__element_neural-net {
+            vertical-align: middle;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .answer-paragraph {
+        margin-left: 30px;
+        @include setFont('codenext', normal, 64px, 72px, 800, $black);
     }
 }

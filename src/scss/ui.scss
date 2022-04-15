@@ -59,11 +59,11 @@ $param-width: 40px;
             }
 
             .regulator__button_height {
-                margin-top: -280px;   
+                margin-top: -580px;   
             }
 
             .regulator__button_width {
-                margin-top: -220px;   
+                margin-top: -560px;   
             }
 
             .regulator__button_range {
@@ -87,11 +87,11 @@ $param-width: 40px;
             }
 
             .regulator__bar_height {
-                height: 225px;
+                height: 525px;
             }
 
             .regulator__bar_width {
-                height: 165px;
+                height: 505px;
             }
 
             .regulator__bar_range {
@@ -155,8 +155,8 @@ $param-width: 40px;
         height: 600px;
         min-width: 300px;
         min-height: 300px;
-        max-width: 900px;
-        max-height: 900px;
+        max-width: 1300px;
+        max-height: 1300px;
         user-select: none;
 
         .canvas__element {
@@ -239,13 +239,66 @@ $param-width: 40px;
         }
     }
 
-    // .buttons-menu {
-    //     flex-grow: 1;
-    //     margin-left: 27px;  
-    //     background: $black;
-    //     flex-basis: 0px;
-    //     height: 1053px;
-    //     display: block;
-    //     border-radius: 30px;
-    // }
+    .buttons-menu {
+        flex-grow: 1;
+        margin-left: 27px;  
+        background: $black;
+        flex-basis: 0px;
+        height: 1053px;
+        display: block;
+        border-radius: 30px;
+    }
+}
+
+.ui_salesman {
+    justify-content: center;
+
+    .ui__buttons-block_salesman-ant {
+        padding: 50px 20px 60px 20px;
+        background: #303030;
+        border-radius: 30px;
+
+        div {
+            width: 100%;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 0px;
+            width: 100%;
+        }
+
+        input {
+            padding-left: 10px;
+        }
+
+        input, button {
+            height: 50px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 15px;
+            background: #CFCFCF;
+            outline: 0;
+            outline-offset: 0;
+            @include setFont('codenext', normal, 18px, 20px, 800, $black);
+        }
+
+        .way-result-paragraph {
+            @include setFont('codenext', normal, 24px, 20px, 800, rgb(243, 238, 238));
+        }
+
+        .way-insert-paragraph {
+            @include setFont('codenext', normal, 18px, 20px, 800, $black);
+        }
+
+        .ui__calc-button-block button {
+            @include setFont('codenext', normal, 18px, 20px, 800, rgb(243, 238, 238));
+            background: rgb(66, 196, 55);
+        }
+
+        .ui__clear-block button {
+            @include setFont('codenext', normal, 18px, 20px, 800, rgb(243, 238, 238));
+            background: rgb(252, 68, 68);
+        }
+    }
 }
