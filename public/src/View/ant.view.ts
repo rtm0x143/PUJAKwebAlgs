@@ -1,8 +1,6 @@
 import CanvasView from './canvas.view.js';
 import Errors from "../config/Errors.js";
 import GraphModel from "../Model/graph.model.js";
-import ts from "typescript/lib/tsserverlibrary";
-import emptyArray = ts.server.emptyArray;
 
 class AntView extends CanvasView {
     //class Objects
@@ -54,13 +52,13 @@ class AntView extends CanvasView {
     _subscribe() {
         this._graphModel.addEventListener('canvas:change', () => {
             this.drawCircle(
-                '',
-                'red',
+                '#CVCVCV',
+                "#ffffff",
                 {
                     x: this._graphModel.coords[this._graphModel.coords.length - 2],
                     y: this._graphModel.coords[this._graphModel.coords.length - 1]
                 },
-                5
+                10
             );
         })
 
@@ -77,29 +75,29 @@ class AntView extends CanvasView {
                 }
 
                 this.drawLine(p1, p2, 10);
+                this._graphModel.dispatchEvent(new Event('draw:circles'))
             }
-
-            // console.log(this._graphModel.currentWay);
         })
 
         //event for clear canvas
-        // this._graphModel.addEventListener('canvas:clear', _ => {
-        //     this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        // })
+        this._graphModel.addEventListener('canvas:clear', _ => {
+            this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            // this._canvasModel.dispatchEvent(new Event('draw:circles'));
+        })
 
-        // this._graphModel.addEventListener('draw:circles', () => {
-        //     for (let i = 1; i < this._graphModel.coords.length; i += 2) {
-        //         this.drawCircle
-        //         (
-        //             this.canvasContext,
-        //             '',
-        //             "ffffff",
-        //             this._graphModel.coords[i - 1],
-        //             this._graphModel.coords[i],
-        //             5
-        //         );
-        //     }
-        // })
+        this._graphModel.addEventListener('draw:circles', () => {
+            for (let i = 1; i < this._graphModel.coords.length; i += 2) {
+                this.drawCircle(
+                    '#CVCVCV',
+                    "#ffffff",
+                    {
+                        x: this._graphModel.coords[i - 1],
+                        y: this._graphModel.coords[i]
+                    },
+                    10
+                );
+            }
+        })
     }
 }
 
