@@ -63,8 +63,6 @@ class AstarModel extends CanvasModel {
         for (let i = 0; i < this.grid.length; ++i) {
             if (this.grid[i] === 2) this.grid[i] = 0;
         }
-
-        console.log("Walls cleared");
     }
 }
 

@@ -6,6 +6,7 @@ import Errors from "../config/Errors.js";
 class AntController extends Controller {
     private _graphView;
     private _graphModel;
+    private updateIntervalId: number | null = null;
 
     constructor(GraphView: AntView, GraphModel: GraphModel) {
         super();
@@ -16,7 +17,8 @@ class AntController extends Controller {
 
         //set callbacks to view handlers
         this._graphView.setCoordsHandler(this.setCoords.bind(this));
-        this._graphView.launchAlgHandler(this.getToken.bind(this));
+        // this._graphView.launchAlgHandler(this.getToken.bind(this));
+        this._graphView.launchAlgHandler(this._launchAlgHandler.bind(this));
     }
 
     //sendCoords data to model
@@ -25,25 +27,33 @@ class AntController extends Controller {
     }
 
     //call calculate distances in model
-    getToken(antsCount: number, greedCoef: number, herdCoef: number, pherLeak: number, pointsData: string) {
+    getToken(settings: {
+            antsCount: number | undefined,
+            greedCoef: number | undefined,
+            herdCoef: number | undefined,
+            pherLeak: number | undefined,
+            [index: string]: any
+        } | undefined) : Promise<string | undefined> {
         // @ts-ignore
         let buff = buffer.Buffer.from(new Uint16Array(this._graphModel.coords).buffer);
-        pointsData = buff.toString("hex");
+        let pointsData = buff.toString("base64");
 
         /*console.log(this._graphModel.coords);
         console.log(buff);*/
 
-        let antData = {
-            antsCount,
-            greedCoef,
-            herdCoef,
-            pherLeak,
+        let antData = {}
+        if (settings) {
+            Object.keys(settings).forEach(key => {
+                antData = {...antData, key: settings[key]}
+            }) 
+        }
+        antData = {
+            ...antData,
             pointsData,
         }
 
         console.log(antData);
-
-        fetch(`${this.urlValue}/alg/ants/launch`, {
+        return fetch(`${this.urlValue}/alg/ants/launch`, {
             method: "POST",
             headers: {
                 'Content-type': 'application/json'
@@ -52,50 +62,63 @@ class AntController extends Controller {
         }).then((response) => {
             if (response.ok) {
                 return response.text();
-            }
-        }).then(async (token) => {
-            if (!sessionStorage.getItem('token')) {
-                await sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
-            } else {
-                fetch(`${this.urlValue}/alg/ants/terminateSession`, {
-                    method: "GET",
-                    headers: {
-                        'Authorization': sessionStorage.getItem('token') ?? Errors.handleError('null')
-                    }
-                }).then(async() => {
-                    sessionStorage.removeItem('token');
-                    await sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
-                })
-            }
-
-            return token;
-        }).then(async (token) => {
-            await fetch(`${this.urlValue}/alg/ants/getState`, {
-                method: "GET",
-                headers: {
-                    'Authorization': token ?? Errors.handleError('null'),
-                },
-            }).then((response) => {
-                response.json().then((value) => {
-                    // @ts-ignore
-                    let bufferData = buffer.Buffer.from(value.path ?? Errors.handleError('undefined'));
-                    let pointsData = new Uint16Array(
-                        bufferData.buffer,
-                        bufferData.byteOffset,
-                        bufferData.byteLength / 2)
-
-                    this._graphModel.updateWay(
-                        pointsData, value.cost
-                    );
-
-                    this._graphModel.clearCanvas();
-
-                    console.log(pointsData, value.cost)
-                });
-            })
+            } 
         })
     }
 
+    updateSimulation(token: string) {
+        return fetch(`${this.urlValue}/alg/ants/getState`, {
+                method: "GET",
+                headers: {
+                    'Authorization': token,
+                },
+            }).then((response) => {
+                return response.json()
+            }).then((value) => {
+                // @ts-ignore
+                let bufferData = buffer.Buffer.from(value.path ?? Errors.handleError('undefined'));
+                let pointsData = new Uint16Array(
+                    bufferData.buffer,
+                    bufferData.byteOffset,
+                    bufferData.byteLength / 2)
+
+                // this._graphModel.clearCanvas();
+
+                this._graphModel.updateWay(
+                    pointsData, value.cost
+                );
+
+                console.log(pointsData, value.cost)
+            });
+    }
+
+    async _launchAlgHandler(colonySettings: any) {
+        if (this.updateIntervalId) {
+            clearInterval(this.updateIntervalId);
+            this.updateIntervalId = null;
+        }
+
+        let oldToken = sessionStorage.getItem('token')
+        if (oldToken) {
+            await fetch(`${this.urlValue}/alg/ants/terminateSession`, {
+                method: "GET",
+                headers: {
+                    'Authorization': oldToken
+                }
+            }).then(() => {
+                sessionStorage.removeItem('token');
+            });
+        }
+        
+        this.getToken(colonySettings).then(token => {
+            sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
+            console.log(token);
+            return token;
+        }).then(token => {
+            this._graphModel.cost = Number.MAX_VALUE;
+            this.updateIntervalId = setInterval(this.updateSimulation.bind(this), 500, token);
+        })
+    }
 }
 
 export default AntController;

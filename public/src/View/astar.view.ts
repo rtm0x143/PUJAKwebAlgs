@@ -44,7 +44,7 @@ class AstarView extends CanvasView {
             this.canvasGrid.width = this._canvasModel.width;
             this.canvasGrid.height = this._canvasModel.height;
             
-            this.drawGrid(
+            this.drawGridOn(
                 this.canvasGridContext,
                 '#CFCFCF', 
                 this._astarModel.gridResolution.x,

@@ -46,7 +46,7 @@ class AstarController extends CanvasController {
         });
 
         this._astarModel.setGridSize(this._astarView.getGridSize());
-        this._astarView.drawGrid(
+        this._astarView.drawGridOn(
             this._astarView.canvasGridContext,
             '#CFCFCF', 
             this._astarModel.gridResolution.x,
@@ -235,7 +235,7 @@ class AstarController extends CanvasController {
         this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
     }
 
-    findPathCallback(): void {
+    async findPathCallback() {
         let response = this.findPathRequest();
         this.findPathResponse(response);
     }
