@@ -12,6 +12,7 @@ class GeneticView extends GraphView {
 
         //button elements initialise
         this._launchButton = document.querySelector('.ui__calc-button[name=launch]') ?? Errors.handleError('null');
+        this.clearButton = document.querySelector('.ui__clear-canvas') ?? Errors.handleError('null');
 
         //subscribe model events
         this._subscribe();
