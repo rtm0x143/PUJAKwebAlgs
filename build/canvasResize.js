@@ -12,7 +12,7 @@ function resize(e) {
     mousePosX = e.x;
     mousePosY = e.y;
 
-    canvas.style.width = parseInt(getComputedStyle(canvas, '').width) + 2 * dx + "px";
+    canvas.style.width = parseInt(getComputedStyle(canvas, '').width) + dx + "px";
     canvas.style.height = parseInt(getComputedStyle(canvas, '').height) + dy + "px";
 }
 
@@ -20,7 +20,6 @@ resizeIcon.addEventListener("mousedown", (e) => {
     // if (e.offsetX > BORDER_SIZE_X && e.offsetY > BORDER_SIZE_Y) {
         mousePosX = e.x;
         mousePosY = e.y;
-        console.log("pososi");
         document.addEventListener("mousemove", resize, false);
     // }
 });

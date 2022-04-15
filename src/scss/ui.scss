@@ -153,6 +153,10 @@ $param-width: 40px;
         background: $white;
         width: 800px;
         height: 600px;
+        min-width: 300px;
+        min-height: 300px;
+        max-width: 1300px;
+        max-height: 1300px;
         user-select: none;
 
         .canvas__element {
@@ -160,85 +164,6 @@ $param-width: 40px;
             height: 100%;
             background: $black;
             border-radius: 20px;
-        }
-
-        .canvas__menu {
-            display: flex;
-            justify-content: center;
-
-            .canvas__menu-container {
-                position: absolute;
-                bottom: 20px;
-
-                .canvas__menu-button_DBSCAN {
-                    cursor: pointer;
-                    width: 120px;
-                    height: 50px;
-                    border: none;
-                    text-shadow: none;
-                    border-radius: 10px;
-                    outline: 0;
-                    background: $white;
-                    outline-offset: 0;
-                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
-                }
-
-                .canvas__menu-button_DBSCAN:nth-child(2) {
-                    margin-left: 10px;
-                }
-
-                .canvas__menu-button_kmeans {
-                    cursor: pointer;
-                    width: 120px;
-                    height: 50px;
-                    border: none;
-                    text-shadow: none;
-                    border-radius: 10px;
-                    outline: 0;
-                    background: $white;
-                    outline-offset: 0;
-                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
-                }
-
-                .canvas__menu-button_send {
-                    margin-left: 10px;
-                    cursor: pointer;
-                    width: 120px;
-                    height: 50px;
-                    border: none;
-                    text-shadow: none;
-                    border-radius: 10px;
-                    outline: 0;
-                    background: #12C97A;
-                    outline-offset: 0;
-                    @include setFont('codenext', normal, 16px, 16px, 800, $white);
-                }
-
-                .canvas__menu-button_kmeans:nth-child(2) {
-                    margin-left: 10px;
-                }
-
-                .canvas__menu-button_DBSCAN:hover {
-                    transition: 0.3s;
-                    color: $white;
-                    background: $black;
-                    border: 1px solid $white;
-                }
-
-                .canvas__menu-button_kmeans:hover {
-                    transition: 0.3s;
-                    color: $white;
-                    background: $black;
-                    border: 1px solid $white;
-                }
-
-                .canvas__menu-button_send:hover {
-                    transition: 0.3s;
-                    color: $white;
-                    background: $black;
-                    border: 1px solid $white;
-                }
-            }
         }
 
         .brush-menu {
@@ -257,7 +182,12 @@ $param-width: 40px;
                     border-radius: 10px;
                     outline: 0;
                     outline-offset: 0;
-                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
+                    font-family: codenext, sans-serif;
+                    font-style: normal;
+                    font-size: 16px;
+                    line-height: 16px;
+                    font-weight: 800;
+                    color: $black;   
                 }
 
                 .brush-menu-container__input {
@@ -268,52 +198,45 @@ $param-width: 40px;
                     border-radius: 10px;
                     outline: 0;
                     outline-offset: 0;
-                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
+                    font-family: codenext, sans-serif;
+                    font-style: normal;
+                    font-size: 16px;
+                    line-height: 16px;
+                    font-weight: 800;
+                    color: $black;
                     margin-left: 10px;
                 }
             }
         }
 
-        .kmeans-menu {
-            display: flex;
-            align-items: center;
-
-            .kmeans-menu-container {
-                position: absolute;
-                transform:translateY(-50%);
-                display: block;
-                top: 50%;
-                left: 2px;
-
-                .kmeans-menu__select {
-                    width: 120px;
-                    height: 50px;
-                    border: none;
-                    text-shadow: none;
-                    border-radius: 10px;
-                    outline: 0;
-                    outline-offset: 0;
-                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
-                }
-
-                .kmeans-menu__input input {
-                    width: 120px;
-                    height: 50px;
-                    border: none;
-                    text-shadow: none;
-                    border-radius: 10px;
-                    outline: 0;
-                    outline-offset: 0;
-                    @include setFont('codenext', normal, 16px, 16px, 800, $black);
-                    margin-top: 10px;
+        .resize-block {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            
+            .resize-icon {
+                border-radius: 5px;
+                width: 35px;
+                height: 35px;
+    
+                .resize-icon-path {
+                    fill: $creamyWhite;
                 }
             }
         }
-    }
-
-    .canvas_genetic {
-        width: 1200px;
-        height: 800px;
+    
+        .resize-block:hover, .resize-block:active {
+            
+            .resize-icon {
+                transition: background 0.3s;
+                background-color: $creamyWhite;
+    
+                .resize-icon-path {
+                    fill: $black;
+                }
+            }
+            
+        }
     }
 
     .buttons-menu {
@@ -324,5 +247,58 @@ $param-width: 40px;
         height: 1053px;
         display: block;
         border-radius: 30px;
+    }
+}
+
+.ui_salesman {
+    justify-content: center;
+
+    .ui__buttons-block_salesman-ant {
+        padding: 50px 20px 60px 20px;
+        background: #303030;
+        border-radius: 30px;
+
+        div {
+            width: 100%;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 0px;
+            width: 100%;
+        }
+
+        input {
+            padding-left: 10px;
+        }
+
+        input, button {
+            height: 50px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 15px;
+            background: #CFCFCF;
+            outline: 0;
+            outline-offset: 0;
+            @include setFont('codenext', normal, 18px, 20px, 800, $black);
+        }
+
+        .way-result-paragraph {
+            @include setFont('codenext', normal, 24px, 20px, 800, rgb(243, 238, 238));
+        }
+
+        .way-insert-paragraph {
+            @include setFont('codenext', normal, 18px, 20px, 800, $black);
+        }
+
+        .ui__calc-button-block button {
+            @include setFont('codenext', normal, 18px, 20px, 800, rgb(243, 238, 238));
+            background: rgb(66, 196, 55);
+        }
+
+        .ui__clear-block button {
+            @include setFont('codenext', normal, 18px, 20px, 800, rgb(243, 238, 238));
+            background: rgb(252, 68, 68);
+        }
     }
 }

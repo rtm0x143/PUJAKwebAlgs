@@ -1,4 +1,4 @@
-const overlay = document.getElementById('navigation-screen');
+const overlay = document.getElementById('   ');
 
 function openMenu(overlay) {
     const element = document.getElementById('nav-trigger');

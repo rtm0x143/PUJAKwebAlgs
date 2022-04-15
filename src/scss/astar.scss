@@ -16,7 +16,7 @@
     .heuristics-switcher-menu {
         position: absolute;
         top: 5px;
-        left: 10px;
+        left: 5px;
         white-space: nowrap;
         // block-size: fit-content;
         // width: fit-content;
@@ -26,11 +26,11 @@
             cursor: pointer;
             border: none;
             padding: 8px;
-            border-radius: 8px;
+            border-radius: 13px;
             background-color: $black;
 
             .button-wrap {
-                @include setFont('garet-book', normal, 16px, 0px, 400, $black);
+                @include setFont('garet-book', normal, 14px, 0px, 400, $black);
                 color: $white;
                 vertical-align: middle;
                 mix-blend-mode: exclusion;
@@ -39,7 +39,7 @@
 
         .heuristics-switcher-button:hover {
             transition: 0.3s;
-            background-color: #CFCFCF;
+            background-color: $creamyWhite;
             // border: 1px solid $white;
             
             // Same as .heuristics-switcher-button:hover .button-wrap
@@ -51,18 +51,6 @@
         
     }
 
-
-    .resize-block {
-        position: absolute;
-        bottom: 15px;
-        right: 15px;
-
-        .resize-icon {
-            width: 35px;
-            height: 35px;
-        }
-    }
-
     .heuristics-menu {
         list-style: none;
         position: absolute;
@@ -72,9 +60,9 @@
         padding: 0px;
     }
 
-    .link-container {
+    // .link-container {
         
-    }
+    // }
 
     .heuristics-menu-heading {
         @include setFont('gatet-book', normal, 24px, 32px, 400, $black);
