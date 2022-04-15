@@ -1,4 +1,4 @@
-#include "/napi.h"
+#include "napi.h"
 #include "astar.h"
 
 // gets (start{x, y}, end{x, y}, fieldData = Uint8Array[height, width, ...fieldCells...])
