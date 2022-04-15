@@ -200,9 +200,9 @@ class AstarController extends CanvasController {
     //     this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
     // }
 
-    sleep(ms: number) {
-        return new Promise((resolve, reject) => setTimeout(resolve, ms))
-    }
+    sleep(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms))
+    }   
 
     private fillCell(point: Point, color: string): void {
         let steps = new Point(
@@ -234,9 +234,11 @@ class AstarController extends CanvasController {
         this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
     }
 
-    findPathCallback(): void {
+    async findPathCallback() {
         let response = this.findPathRequest();
         this.findPathResponse(response);
+        this._astarModel.clearVisitedCells();
+        console.log("Alg finished: ", this._astarModel.grid);
     }
 
     private findPathRequest(): Promise<Response> {
@@ -256,8 +258,6 @@ class AstarController extends CanvasController {
                 data: buffer.Buffer.from(this._astarModel.grid.buffer).toString()
             },
         }
-
-        // console.log(JSON.stringify(data));
         
         const response = fetch(`${this.urlValue}/alg/astar/`, {
             method: "POST",
@@ -288,15 +288,13 @@ class AstarController extends CanvasController {
                     if (pathStart !== -1) {
                         this.drawPath(value, pathStart);
                     }
-
-                    // console.log(value, done);
                     
                     if (!done) readChunck();
                 })
             }
-
+            
             readChunck();
-        });
+        });        
     }
 
     findNeighbors(currentPoint: Point): Array<Point> {
@@ -345,13 +343,9 @@ class AstarController extends CanvasController {
         
         for (let i = 0; i < responseArray.length; i += 2) {
             let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
-            console.log("current point: ", currentPoint);
             
             // If end point was reached in alg steps part of an array
             if (currentPoint.x === this._astarModel.endPoint.x && currentPoint.y === this._astarModel.endPoint.y) {
-
-                console.log("last point reached in alg steps: ", currentPoint.x, currentPoint.y);
-              
                 pathStart = i + 2;
                 break;
             }
@@ -361,8 +355,6 @@ class AstarController extends CanvasController {
             let neighbors = this.findNeighbors(currentPoint);
 
             for (let k = 0; k < neighbors.length; ++k) { 
-                console.log(neighbors[k]);
-                
                 this.fillCellByGridCoordinates(neighbors[k], colorOpened);
                 await this.sleep(5000 /responseArray.length);
             }
@@ -385,9 +377,6 @@ class AstarController extends CanvasController {
 
         for (let i = pathStart; i < responseArray.length; i += 2) {
             let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
-
-            console.log("current point: ", currentPoint.x, currentPoint.y);
-
             this.fillCellByGridCoordinates(currentPoint, colorPath);
         }
     }
