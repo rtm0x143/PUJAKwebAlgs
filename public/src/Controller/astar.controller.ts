@@ -3,9 +3,10 @@ import AstarView from '../View/astar.view.js';
 import AstarModel from '../Model/astar.model.js';
 import Errors from '../config/Errors.js';
 import Point from '../Model/point.js';
-import { isThisTypeNode, moveEmitHelpers } from 'typescript';
+import { isThisTypeNode, moveEmitHelpers, textChangeRangeIsUnchanged } from 'typescript';
 import { timingSafeEqual } from 'crypto';
 import { moveMessagePortToContext } from 'worker_threads';
+import { resolve } from 'path';
 
 
 // black: #303030, 
@@ -201,7 +202,7 @@ class AstarController extends CanvasController {
     // }
 
     sleep(ms: number) {
-        return new Promise((resolve, reject) => setTimeout(resolve, ms))
+        return new Promise(resolve => setTimeout(resolve, ms))
     }
 
     private fillCell(point: Point, color: string): void {
@@ -272,31 +273,36 @@ class AstarController extends CanvasController {
     }
 
     findPathResponse(astarResponse: Promise<Response>) {
-        astarResponse.then((response) => {
-            let reader = response.body?.getReader();
+        astarResponse.then(async (response) => {
+            let reader = response.body?.getReader() ?? Errors.handleError("undefined");
             let pathStart = -1;
-            
+
             let readChunck = () => {
-                reader?.read().then(async ({done, value}) => {
-                    if (done) return; 
-                    if (value === undefined) Errors.handleError("undefined");
-                    if (value === null) Errors.handleError("null");
-
-                    if (pathStart === -1) {
-                        pathStart = await this.drawAlgSteps(value);
-                    }
-                    
-                    if (pathStart !== -1) {
-                        this.drawPath(value, pathStart);
-                    }
-
-                    // console.log(value, done);
-                    
-                    if (!done) readChunck();
-                })
+                this.responseRead(reader, pathStart).then(() => this._astarModel.clearVisited());
             }
 
             readChunck();
+        })
+    }
+
+    private async responseRead(reader: ReadableStreamDefaultReader<Uint8Array>, pathArrayStart: number): Promise<void> {
+        return reader?.read().then(async ({done, value}) => {
+            if (done) {
+                console.log("Done");
+                return;
+            }
+            if (value === undefined) Errors.handleError("undefined");
+            if (value === null) Errors.handleError("null");
+
+            if (pathArrayStart === -1) {
+                pathArrayStart = await this.drawAlgSteps(value);
+            }
+            
+            if (pathArrayStart !== -1) {
+                this.drawPath(value, pathArrayStart);
+            }
+            
+            if (!done) return this.responseRead(reader, pathArrayStart);
         });
     }
 
@@ -346,13 +352,9 @@ class AstarController extends CanvasController {
         
         for (let i = 0; i < responseArray.length; i += 2) {
             let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
-            console.log("current point: ", currentPoint);
             
             // If end point was reached in alg steps part of an array
             if (currentPoint.x === this._astarModel.endPoint.x && currentPoint.y === this._astarModel.endPoint.y) {
-
-                console.log("last point reached in alg steps: ", currentPoint.x, currentPoint.y);
-              
                 pathStart = i + 2;
                 break;
             }
@@ -361,11 +363,9 @@ class AstarController extends CanvasController {
             
             let neighbors = this.findNeighbors(currentPoint);
 
-            for (let k = 0; k < neighbors.length; ++k) { 
-                console.log(neighbors[k]);
-                
+            for (let k = 0; k < neighbors.length; ++k) {      
                 this.fillCellByGridCoordinates(neighbors[k], colorOpened);
-                await this.sleep(5000 /responseArray.length);
+                await this.sleep(5000 / responseArray.length);
             }
             
             // Change value and color of the current cell to visited
@@ -386,9 +386,6 @@ class AstarController extends CanvasController {
 
         for (let i = pathStart; i < responseArray.length; i += 2) {
             let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
-
-            console.log("current point: ", currentPoint.x, currentPoint.y);
-
             this.fillCellByGridCoordinates(currentPoint, colorPath);
         }
     }
