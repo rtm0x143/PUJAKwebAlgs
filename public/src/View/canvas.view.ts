@@ -46,14 +46,14 @@ class CanvasView {
     }
     //#endregion
 
-    drawGrid(canvasContext: CanvasRenderingContext2D, color: string, columnCount: number, rowsCount: number) {
-        canvasContext.strokeStyle = color;
+    drawGrid(color: string, columnCount: number, rowsCount: number) {
+        this.canvasContext.strokeStyle = color;
         let stepX = this.canvas.width / columnCount;
         let stepY = this.canvas.height / rowsCount;
         
         for (let i = 0; i < columnCount; ++i) {
             for (let j = 0; j < rowsCount; ++j) {
-                canvasContext.strokeRect(
+                this.canvasContext.strokeRect(
                     i * stepX,
                     j * stepY, 
                     stepX, 
@@ -63,13 +63,25 @@ class CanvasView {
         }
     }
 
-    drawCircle(canvasContext: CanvasRenderingContext2D, strokeColor: string, fillColor: string, x: number, y: number, radius: number) {
-        canvasContext.strokeStyle = strokeColor;
-        canvasContext.fillStyle = fillColor;
-        canvasContext.beginPath();
-        canvasContext.arc(x, y, radius, 0, 2 * Math.PI);
-        canvasContext.stroke();
-        canvasContext.fill();
+    drawCircle(strokeColor: string, fillColor: string, point : {x: number, y: number}, radius: number) 
+    {
+        this.canvasContext.strokeStyle = strokeColor;
+        this.canvasContext.fillStyle = fillColor;
+        this.canvasContext.beginPath();
+        this.canvasContext.arc(point.x, point.y, radius, 0, 2 * Math.PI);
+        this.canvasContext.stroke();
+        this.canvasContext.fill();
+    }
+
+    drawLine(point1 : {x: number, y: number}, point2 : {x: number, y: number}, width: number)
+    {
+        this.canvasContext.beginPath();
+        this.canvasContext.strokeStyle = "#CFCFCF";
+        this.canvasContext.lineWidth = width;
+        this.canvasContext.moveTo(point1.x, point1.y);
+        this.canvasContext.lineTo(point2.x, point2.y);
+        this.canvasContext.stroke();
+        this.canvasContext.closePath();
     }
 
     _subscribeToCanvasModel() {
