@@ -24,6 +24,13 @@ class GeneticController extends Controller {
         this._graphView.setCoordsHandler(this.setCoords.bind(this));
 
         this._graphView.launchAlgHandler(this._launchAlgHandler.bind(this));
+        this._graphView.clearCanvasHandler(() => {
+            let token = sessionStorage.getItem("token");
+            if (token) {
+                this.terminateSimulation(token);
+            }
+            this._graphModel.clearCanvas();
+        })
     }
 
     //sendCoords data to model
@@ -48,6 +55,18 @@ class GeneticController extends Controller {
                 return response.text();
             } 
         })
+    }
+
+    terminateSimulation(token: string) {
+        this.sessionRuns = false;
+        fetch(`${this.urlValue}/alg/genetic/terminateSession`, {
+            method: "GET",
+            headers: {
+                'Authorization': token
+            }
+        }).then(() => {
+            sessionStorage.removeItem('token');
+        });
     }
 
     updateSimulation(token: string) {
@@ -85,14 +104,7 @@ class GeneticController extends Controller {
 
         let oldToken = sessionStorage.getItem('token')
         if (oldToken) {
-            await fetch(`${this.urlValue}/alg/genetic/terminateSession`, {
-                method: "GET",
-                headers: {
-                    'Authorization': oldToken
-                }
-            }).then(() => {
-                sessionStorage.removeItem('token');
-            });
+            await this.terminateSimulation(oldToken);
         }
         
         this.getToken().then(token => {
@@ -104,13 +116,18 @@ class GeneticController extends Controller {
             this.epochCount = 0
             this._graphModel.cost = Number.MAX_VALUE;   
             // this.updateIntervalId = setInterval(this.updateSimulation.bind(this), 100, token);
-            if (!this.sessionRuns)
+            if (!this.sessionRuns) {
+                this.sessionRuns = true;
                 this.updateSimulationRec();
+            }
         })
     }
 
     private async updateSimulationRec() {
+        if (!this.sessionRuns) return;
+
         let token = sessionStorage.getItem("token");
+        
         if (!token) {
             this.sessionRuns = false;
             return;
