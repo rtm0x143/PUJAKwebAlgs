@@ -30,6 +30,7 @@ class GeneticController extends Controller {
                 this.terminateSimulation(token);
             }
             this._graphModel.clearCanvas();
+            this._graphModel.coords = []
         })
     }
 
