@@ -18,8 +18,8 @@ class GeneticView extends GraphView {
         this._subscribe();
 
         //initialise canvas size params
-        this.canvas.height = 800;
-        this.canvas.width = 1200;
+        this.canvas.height = +this.canvas.style.height;
+        this.canvas.width = +this.canvas.style.width;
     }
 
     /**
