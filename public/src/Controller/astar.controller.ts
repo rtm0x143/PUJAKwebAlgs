@@ -228,7 +228,7 @@ class AstarController extends CanvasController {
     sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
-
+  
     private fillCell(point: Point, color: string): void {
         let steps = new Point(
             this._astarView.canvas.width / this._astarModel.gridResolution.x,
@@ -244,22 +244,7 @@ class AstarController extends CanvasController {
         this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
     }
 
-    private fillCellByGridCoordinates(point: Point, color: string) {
-        let steps = new Point(
-            this._astarView.canvas.width / this._astarModel.gridResolution.x,
-            this._astarView.canvas.height / this._astarModel.gridResolution.y,
-        );
-
-        let topLeftCorner = new Point(
-            point.x * steps.x,
-            point.y * steps.y
-        );
-
-        this._astarView.canvasContext.fillStyle = color;
-        this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
-    }
-
-    async findPathCallback() {
+    findPathCallback(): void {
         let response = this.findPathRequest();
         this.findPathResponse(response);
     }
@@ -275,8 +260,8 @@ class AstarController extends CanvasController {
                 y: this._astarModel.startPoint.y
             },
             field: {
-                width: this._astarModel.gridResolution.x, 
-                height: this._astarModel.gridResolution.y,
+                height: this._astarModel.gridResolution.y, 
+                width: this._astarModel.gridResolution.x,
                 // @ts-ignore
                 data: buffer.Buffer.from(this._astarModel.grid.buffer).toString()
             },
@@ -320,50 +305,30 @@ class AstarController extends CanvasController {
         });
     }
 
-    findNeighbors(currentPoint: Point): Array<Point> {
-        let neighbors: Array<Point> = [];
+    fillCellByGridCoordinates(point: Point, color: string) {
+        let steps = new Point(
+            this._astarView.canvas.width / this._astarModel.gridResolution.x,
+            this._astarView.canvas.height / this._astarModel.gridResolution.y,
+        );
 
-        for (let n = -1; n <= 1; ++n) {
-            for (let m = -1; m <= 1; ++m) {
-                if (n === 0 && m === 0) continue;
+        let topLeftCorner = new Point(
+            point.x * steps.x,
+            point.y * steps.y
+        );
 
-                let move = new Point(
-                    currentPoint.x + m,
-                    currentPoint.y + n
-                );
-
-                if (
-                    move.x >= 0 && move.x < this._astarModel.gridResolution.x &&
-                    move.y >= 0 && move.y < this._astarModel.gridResolution.y
-                ) {
-                    let index: number = this._astarModel.getIndex(move.x, move.y);
-
-                    // 1 - wall,
-                    // 2 - visited cell
-                    if (
-                        this._astarModel.grid[index] !== 1 &&
-                        this._astarModel.grid[index] !== 2 &&
-                        !move.equals(this._astarModel.startPoint) &&
-                        !move.equals(this._astarModel.endPoint)
-                    ) {
-                        neighbors.push(move);
-                    }
-                }
-            }
-        }
-
-        return neighbors;
+        this._astarView.canvasContext.fillStyle = color;
+        this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
     }
 
     // visited cell: #5EF2F0
     // opened cell: #F2D546
     // current cell: #706BF2
-    async drawAlgSteps(responseArray: Uint8Array): Promise<number> {
+    drawAlgSteps(responseArray: Uint8Array): number {
         let pathStart = -1;
         
         for (let i = 0; i < responseArray.length; i += 2) {
             let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
-            
+
             // If end point was reached in alg steps part of an array
             if (currentPoint.x === this._astarModel.endPoint.x && currentPoint.y === this._astarModel.endPoint.y) {
                 pathStart = i + 2;

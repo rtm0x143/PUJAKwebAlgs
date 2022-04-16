@@ -32,9 +32,6 @@ class AstarView extends CanvasView {
     public allHeuristicsLinks: NodeListOf<HTMLLIElement>;
     public canvasGrid: HTMLCanvasElement;
     public canvasGridContext: CanvasRenderingContext2D;
-    // private readonly _regulatorButtons: NodeListOf<HTMLButtonElement>;
-    // private readonly _regulatorButtonGridWidth: HTMLButtonElement;
-    // private readonly _regulatorButtonGridHeight: HTMLButtonElement;
 
     constructor (model: AstarModel) {
         super(model);

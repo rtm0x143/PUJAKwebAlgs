@@ -1,102 +1,52 @@
-import CanvasView from './canvas.view.js';
+import GraphView from "../View/graph.view.js"
 import Errors from "../config/Errors.js";
 import GraphModel from "../Model/graph.model.js";
 
-class AntView extends CanvasView {
-    //class Objects
-    private _graphModel: GraphModel;
-
+class AntView extends GraphView {
     //button elements
     private _launchButton: HTMLButtonElement;
+
+    private _countInput: HTMLInputElement;
+    private _influenceInput: HTMLInputElement;
+    private _desirabilityInput: HTMLInputElement;
+    private _leekInput: HTMLInputElement;
 
     constructor(graphModel: GraphModel) {
         super(graphModel);
 
-        this._graphModel = graphModel;
-
         //button elements initialise
-        this._launchButton = document.querySelector('.ui__calc-button[name=launch]') ?? Errors.handleError('null');
+        this._launchButton = document.querySelector('.ui__calc-button[name=launch]')
+            ?? Errors.handleError('null');
 
-        //subscribe model events
-        this._subscribe();
+        this._countInput = document.querySelector('.ui__count-button')
+            ?? Errors.handleError('null');
+        this._influenceInput = document.querySelector('.ui__influence-button')
+            ?? Errors.handleError('null');
+        this._desirabilityInput = document.querySelector('.ui__desirability-button')
+            ?? Errors.handleError('null');
+        this._leekInput = document.querySelector('.ui__leek-button')
+            ?? Errors.handleError('null');
 
         //initialise canvas size params]
         this.canvas.height = 800;
         this.canvas.width = 1200;
+
     }
 
-    /**
-     * this handler method used for listen mouseEvent and call function that set mouseEvent coordinates to model
-     *
-     * @param callback - Function
-     */
-    setCoordsHandler(callback: Function) {
-        this.canvas.addEventListener('click', (e) => {
-            callback(e.offsetX, e.offsetY);
-        })
-    }
-
-    /**
+     /**
      * this handler method used to call function that count distances in model
      *
      * @param tokenCallback
      */
     launchAlgHandler(tokenCallback: Function) {
         this._launchButton.addEventListener('click', async () => {
-            tokenCallback();
-        })
-    }
-
-
-    //subscribe dispatching events
-    _subscribe() {
-        this._graphModel.addEventListener('canvas:change', () => {
-            this.drawCircle(
-                '#CVCVCV',
-                "#ffffff",
-                {
-                    x: this._graphModel.coords[this._graphModel.coords.length - 2],
-                    y: this._graphModel.coords[this._graphModel.coords.length - 1]
-                },
-                10
-            );
-        })
-
-        this._graphModel.addEventListener('way:change', () => {
+            let settings: {[index: string]: number} = {}
+            if (this._countInput.value) settings["antsCount"] = +this._countInput.value;
+            if (this._influenceInput.value) settings["greedCoef"] = +this._influenceInput.value;
+            if (this._desirabilityInput.value) settings["herdCoef"] = +this._desirabilityInput.value;
+            if (this._leekInput.value) settings["pherLeak"] = +this._leekInput.value;
             
-            for (let i = 1; i < this._graphModel.coords.length / 2 + 2; ++i) {
-                let p1 = {
-                    x: this._graphModel.coords[this._graphModel.currentWay[i - 1] * 2],
-                    y: this._graphModel.coords[this._graphModel.currentWay[i - 1] * 2 + 1]
-                }
-                let p2 = {
-                    x: this._graphModel.coords[this._graphModel.currentWay[i] * 2],
-                    y: this._graphModel.coords[this._graphModel.currentWay[i] * 2 + 1],
-                }
-
-                this.drawLine(p1, p2, 10);
-                this._graphModel.dispatchEvent(new Event('draw:circles'))
-            }
-        })
-
-        //event for clear canvas
-        this._graphModel.addEventListener('canvas:clear', _ => {
-            this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            // this._canvasModel.dispatchEvent(new Event('draw:circles'));
-        })
-
-        this._graphModel.addEventListener('draw:circles', () => {
-            for (let i = 1; i < this._graphModel.coords.length; i += 2) {
-                this.drawCircle(
-                    '#CVCVCV',
-                    "#ffffff",
-                    {
-                        x: this._graphModel.coords[i - 1],
-                        y: this._graphModel.coords[i]
-                    },
-                    10
-                );
-            }
+            tokenCallback(settings);
         })
     }
 }

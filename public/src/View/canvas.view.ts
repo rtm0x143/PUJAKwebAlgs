@@ -8,6 +8,7 @@ class CanvasView {
     public canvasContext: CanvasRenderingContext2D;
     public canvasWrapper: HTMLDivElement;
     public resizeIcon: HTMLDivElement;
+    public clearButton: HTMLDivElement | null;
 
     constructor(model: CanvasModel) {
         this._canvasModel = model;
@@ -15,6 +16,7 @@ class CanvasView {
         this.canvasWrapper = document.querySelector('.canvas') ?? Errors.handleError('null');
         this.canvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
         this.canvasContext = this.canvas.getContext('2d') ?? Errors.handleError("null");
+        this.clearButton = document.querySelector('.ui__clear-canvas');
 
         // Without this grid looks bad;
         this.canvas.width = parseInt(window.getComputedStyle(this.canvasWrapper, '').width);
@@ -131,6 +133,13 @@ class CanvasView {
         }
 
         return ''
+    }
+
+    clearCanvasHandler(clearCallback: Function) {
+        if (this.clearButton) 
+            this.clearButton.addEventListener('click', () => {
+                clearCallback();
+            })
     }
 }
 

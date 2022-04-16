@@ -31,7 +31,6 @@ class ClasterController extends CanvasController {
 
     request(
         type: string,
-        // context: CanvasRenderingContext2D,
         range: number,
         groupSize: number,
         metricType: string,
@@ -58,6 +57,8 @@ class ClasterController extends CanvasController {
                             x: this._clasterModel.positions[i],
                             y: this._clasterModel.positions[i - 1]
                         };
+                        
+                        let color = "#CFCFCF"
 
                         if (value[i] >= 2) {
                             if (value[i - 1] > colorsArray.length) {
@@ -71,11 +72,12 @@ class ClasterController extends CanvasController {
                                     );
                                 };
                             } 
+                            color = colorsArray[value[i - 1] - 1]
                         } 
                         
                         this._clasterView.drawCircle(
                             '',
-                            colorsArray[value[i - 1] - 1],
+                            color,
                             point,
                             radius
                         );
@@ -126,8 +128,6 @@ class ClasterController extends CanvasController {
                         );
                         
                     }
-
-                    console.log(colorsArray);
                 })
             })
         }

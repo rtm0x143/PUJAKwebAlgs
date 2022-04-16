@@ -2,12 +2,15 @@
 #include <iostream>
 
 
-Graph::Graph(u16 length, double** matrix) : ways(length) {
+Graph::Graph(u16 length, double** matrix) : ways(length * length) {
 	this->length = length;
 	this->matrix = matrix;
+	this->lengthCube = length * length;
+
+	//ways_data = (u16*)malloc(2 * lengthCube);
 
 	for (Way& way : ways) {
-		way.path = new u16[length];
+		way.path = (u16*)malloc(2 * length);
 		way.weight = 0.0;
 		setRandomWay(way);
 	}
@@ -16,9 +19,9 @@ Graph::Graph(u16 length, double** matrix) : ways(length) {
 Graph::~Graph()
 {
 	for (Way& way : ways) {
-		delete way.path;
+		free(way.path);
 	}
-	
+	//free(ways_data);
 }
 
 //create random way on Graph
