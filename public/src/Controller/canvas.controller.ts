@@ -1,4 +1,3 @@
-import { isJSDocThisTag } from "typescript";
 import CanvasModel from "../Model/canvas.model.js"
 import CanvasView from "../View/canvas.view.js";
 
@@ -21,7 +20,6 @@ class CanvasController {
         });
     }
 
-    //#region mouse methods callbacks
     mouseDownCallback(e: MouseEvent) {
         this._mousePosX = e.clientX;
         this._mousePosY = e.clientY;
@@ -39,7 +37,6 @@ class CanvasController {
 
         this._model.changeCanvasParams(newWidth, newHeight);   
     }
-    //#endregion
 }
 
 export default CanvasController;
