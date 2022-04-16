@@ -140,9 +140,15 @@ export default Router()
         Object.values(result).forEach(arrayBuffer => res.write(Buffer(arrayBuffer)))
         res.end()
     }]) // http://localhost:8000/alg/labgen?height=50&width=50
-    .post("/astar", (req, res) => {
+    .post("/astar", [checkQuery(["metric"]), (req, res) => {
         if (!req.body["start"] || !req.body["end"] || !req.body["field"]) res.sendStatus(400);
-        if (!collisionCheck([req.body["start"], req.body["end"]], req.body["field"]["height"], req.body["field"]["width"])) res.sendStatus(400);
+
+        if (!collisionCheck([req.body["start"], req.body["end"]], req.body["field"]["height"], 
+            req.body["field"]["width"])) 
+        {
+            res.sendStatus(400);
+            return;
+        }
 
         let field = req.body["field"]
         let raw = Buffer.from(field["data"])
@@ -150,13 +156,13 @@ export default Router()
                 req.body["start"], 
                 req.body["end"], 
                 { width: field["width"], height: field["height"] },
-                new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength)));
+                new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength), req.query["metric"]));
 
         res.setHeader("Content-Type", "application/octet-stream")
         res.setHeader("Content-Lenght", result.length)
         res.write(result)
         res.end()
-    })
+    }])
     .post("/neuralNet", (req, res) => {
         if (req.header("content-type") !== "application/octet-stream") res.sendStatus(400)
         if (+req.header("Content-Length") !== 10000) {

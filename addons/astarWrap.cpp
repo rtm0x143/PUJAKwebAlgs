@@ -10,11 +10,13 @@ Napi::Value astar(const Napi::CallbackInfo& info)
 {
     Napi::Env env = info.Env();
     
-    if (info.Length() < 4) {
+    if (info.Length() < 5) {
         Napi::TypeError::New(env, "Invalid arguments count").ThrowAsJavaScriptException();
         return env.Undefined();
     }
-    else if(!info[0].IsObject() || !info[1].IsObject() || !info[2].IsObject() || !info[3].IsTypedArray()) {
+    else if(!info[0].IsObject() || !info[1].IsObject() 
+        || !info[2].IsObject() || !info[3].IsTypedArray() || !info[4].IsString()) 
+    {
         Napi::TypeError::New(env, "Invalid arguments type").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -35,7 +37,8 @@ Napi::Value astar(const Napi::CallbackInfo& info)
     Napi::Object start = info[0].ToObject(),
         end =  info[1].ToObject();
 
-    PathfinderResult result = Pathfinder::findPath(
+    Pathfinder pathFinder(metrics::metricFromName(info[4].ToString()));
+    PathfinderResult result = pathFinder.findPath(
         grid, 
         { start.Get("x").ToNumber().Int32Value(), start.Get("y").ToNumber().Int32Value() }, 
         { end.Get("x").ToNumber().Int32Value(), end.Get("y").ToNumber().Int32Value() });
