@@ -6,7 +6,6 @@ import Errors from "../config/Errors.js";
 class AntController extends Controller {
     private _graphView;
     private _graphModel;
-    // private updateIntervalId: number | null = null;
     private sessionRuns: boolean = false;
 
     public updateInterval: number = 100;
@@ -21,7 +20,6 @@ class AntController extends Controller {
 
         //set callbacks to view handlers
         this._graphView.setCoordsHandler(this.setCoords.bind(this));
-        // this._graphView.launchAlgHandler(this.getToken.bind(this));
         this._graphView.launchAlgHandler(this._launchAlgHandler.bind(this));
         this._graphView.clearCanvasHandler(() => {
             let token = sessionStorage.getItem("token");
@@ -49,9 +47,6 @@ class AntController extends Controller {
         // @ts-ignore
         let buff = buffer.Buffer.from(new Uint16Array(this._graphModel.coords).buffer);
         let pointsData = buff.toString("base64");
-
-        /*console.log(this._graphModel.coords);
-        console.log(buff);*/
 
         const antData: {[index: string]: number | undefined} = {pointsData}
         if (settings) {
@@ -94,13 +89,9 @@ class AntController extends Controller {
                     bufferData.byteOffset,
                     bufferData.byteLength / 2)
 
-                // this._graphModel.clearCanvas();
-
                 this._graphModel.updateWay(
                     pointsData, value.cost
                 );
-
-                console.log(/*pointsData,*/ value.cost)
             });
     }
 
@@ -130,12 +121,10 @@ class AntController extends Controller {
         this.getToken(colonySettings).then(token => {
             sessionStorage.setItem('token', token ?? Errors.handleError('undefined'));
             console.log(token);
-            // return token;
         })
         .then(() => {
             this.epochCount = 0
             this._graphModel.cost = Number.MAX_VALUE;
-            // this.updateIntervalId = setInterval(this.updateSimulation.bind(this), 500, token);
             if (!this.sessionRuns) {
                 this.sessionRuns = true;
                 this.updateSimulationRec();
