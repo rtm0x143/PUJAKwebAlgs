@@ -181,21 +181,6 @@ class AstarController extends CanvasController {
         this._mousePosY < canvasBoundingClientRect.bottom;
     }
 
-    // private fillCell(x: number, y: number, color: string): void {
-    //     let steps = new Point(
-    //         this._astarView.canvas.width / this._astarModel.gridResolution.x,
-    //         this._astarView.canvas.height / this._astarModel.gridResolution.y,
-    //     );
-
-    //     let topLeftCorner = new Point(
-    //         Math.floor(x / steps.x) * steps.x,
-    //         Math.floor(y / steps.y) * steps.y,
-    //     )
-
-    //     this._astarView.canvasContext.fillStyle = color;
-    //     this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
-    // }
-
     private fillCell(point: Point, color: string): void {
         let steps = new Point(
             this._astarView.canvas.width / this._astarModel.gridResolution.x,
@@ -233,8 +218,6 @@ class AstarController extends CanvasController {
                 data: buffer.Buffer.from(this._astarModel.grid.buffer).toString()
             },
         }
-
-        // console.log(JSON.stringify(data));
         
         const response = fetch(`${this.urlValue}/alg/astar/`, {
             method: "POST",
@@ -264,8 +247,6 @@ class AstarController extends CanvasController {
                     if (pathStart !== -1) {
                         this.drawPath(value, pathStart);
                     }
-
-                    // console.log(value, done);
                     
                     if (!done) readChunck();
                 })
