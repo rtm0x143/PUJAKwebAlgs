@@ -300,8 +300,8 @@ namespace labirint {
             }
         }
         
-        int i = random(0, height);
-        int j = random(0, width);
+        int i = random(0, height / 2) * 2 + 1;
+        int j = random(0, width / 2) * 2 + 1;
 
         matrix[i][j] = 0;
         addEdges(i, j);
@@ -375,6 +375,15 @@ namespace labirint {
             edges.erase(element);
             addEdges(i, j);
         }
+
+        
+        for (int i = 0; i < height; ++i) {
+            if (matrix[i][0] == 0) break; 
+        }
+
+        for (int j = 0; j < width; ++j) {
+            if (matrix[0][j] == 0) break; 
+        } 
 
         return matrix;
     }
