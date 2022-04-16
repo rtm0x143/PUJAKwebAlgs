@@ -3,10 +3,6 @@ import AstarView from '../View/astar.view.js';
 import AstarModel from '../Model/astar.model.js';
 import Errors from '../config/Errors.js';
 import Point from '../Model/point.js';
-import { isThisTypeNode, moveEmitHelpers, textChangeRangeIsUnchanged } from 'typescript';
-import { timingSafeEqual } from 'crypto';
-import { moveMessagePortToContext } from 'worker_threads';
-import { resolve } from 'path';
 
 class AstarController extends CanvasController {
     private readonly _astarModel: AstarModel;
@@ -320,10 +316,45 @@ class AstarController extends CanvasController {
         this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
     }
 
+    findNeighbors(currentPoint: Point): Array<Point> {
+        let neighbors: Array<Point> = [];
+
+        for (let n = -1; n <= 1; ++n) {
+            for (let m = -1; m <= 1; ++m) {
+                if (n === 0 && m === 0) continue;
+
+                let move = new Point(
+                    currentPoint.x + m,
+                    currentPoint.y + n
+                );
+
+                if (
+                    move.x >= 0 && move.x < this._astarModel.gridResolution.x &&
+                    move.y >= 0 && move.y < this._astarModel.gridResolution.y
+                ) {
+                    let index: number = this._astarModel.getIndex(move.x, move.y);
+
+                    // 1 - wall,
+                    // 2 - visited cell
+                    if (
+                        this._astarModel.grid[index] !== 1 &&
+                        this._astarModel.grid[index] !== 2 &&
+                        !move.equals(this._astarModel.startPoint) &&
+                        !move.equals(this._astarModel.endPoint)
+                    ) {
+                        neighbors.push(move);
+                    }
+                }
+            }
+        }
+
+        return neighbors;
+    }
+
     // visited cell: #5EF2F0
     // opened cell: #F2D546
     // current cell: #706BF2
-    drawAlgSteps(responseArray: Uint8Array): number {
+    async drawAlgSteps(responseArray: Uint8Array) {
         let pathStart = -1;
         
         for (let i = 0; i < responseArray.length; i += 2) {
