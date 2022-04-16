@@ -22,7 +22,6 @@ class ClasterController extends CanvasController {
         }
     }
     request(type, 
-    // context: CanvasRenderingContext2D,
     range, groupSize, metricType, clastersCount, radius) {
         if (type === 'none') {
             fetch(`${this.urlValue}/alg/clasterisation?type=DBSCAN&range=${range}&gSize=${groupSize}`, {
