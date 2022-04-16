@@ -33,13 +33,13 @@ public:
 
 	int getDistanceSum() const;
 
-	Cell(Point cellPoint, Point& previousPoint, Point& endPoint, Cell *parent);
+	Cell(Point cellPoint, Point& previousPoint, Point& endPoint, Cell* parent);
 };
 
 class Grid
 {
-private: 
-	uint8_t **_field;
+private:
+	uint8_t** _field;
 	int _width;
 	int _height;
 
@@ -47,15 +47,15 @@ public:
 	int getWidth();
 	int getHeight();
 
-	Grid(uint8_t **field, int width, int height);
+	Grid(uint8_t** field, int width, int height);
 	// Grid(int width, int height);
 
 	void setGridValue(std::vector<Point*> points, uint8_t value);
 	void setGridValue(Point point, uint8_t value);
-	void setGridValue(Point *point, uint8_t value);
+	void setGridValue(Point* point, uint8_t value);
 	void printGrid();
 
-	uint8_t *operator[](int i);
+	uint8_t* operator[](int i);
 };
 
 struct PathfinderResult
@@ -63,9 +63,9 @@ struct PathfinderResult
 public:
 	int stepsCount;
 	std::vector<Point> stepsAndPath;
-	
+
 	PathfinderResult(
-		int stepsCount, 
+		int stepsCount,
 		std::vector<Point> stepsAndPath
 	);
 };
@@ -76,12 +76,12 @@ private:
 	Pathfinder();
 
 	static std::vector<Cell*> findCellNeighbors(
-		Grid grid, 
-		Cell* parentCell, 
+		Grid grid,
+		Cell* parentCell,
 		Point previousPoint,
 		Point endPoint
 	);
-	
+
 	// This method adds a path to the existing vector of all astar steps 
 	// (needed to transfer data to the client) 
 	static void retracePath(

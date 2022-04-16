@@ -13,11 +13,11 @@ Napi::Value astar(const Napi::CallbackInfo& info)
     if (info.Length() < 4) {
         Napi::TypeError::New(env, "Invalid arguments count").ThrowAsJavaScriptException();
         return env.Undefined();
-    } 
+    }
     else if(!info[0].IsObject() || !info[1].IsObject() || !info[2].IsObject() || !info[3].IsTypedArray()) {
         Napi::TypeError::New(env, "Invalid arguments type").ThrowAsJavaScriptException();
         return env.Undefined();
-    } 
+    }
 
     Napi::Object dims = info[2].ToObject();
     int height = dims.Get("height").ToNumber(), 

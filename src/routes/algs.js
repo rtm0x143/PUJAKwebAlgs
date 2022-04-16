@@ -1,6 +1,7 @@
 import { config } from "dotenv"; config()
 import { Router } from "express"
 import { checkQuery } from "../middlewares.js"
+import { collisionCheck } from "../../utils/tools.js"
 import jwt from "jsonwebtoken"
 import nAlgs from "../algorithms.cjs"
 
@@ -141,7 +142,8 @@ export default Router()
     }]) // http://localhost:8000/alg/labgen?height=50&width=50
     .post("/astar", (req, res) => {
         if (!req.body["start"] || !req.body["end"] || !req.body["field"]) res.sendStatus(400);
-        
+        if (!collisionCheck([req.body["start"], req.body["end"]], req.body["field"]["height"], req.body["field"]["width"])) res.sendStatus(400);
+
         let field = req.body["field"]
         let raw = Buffer.from(field["data"])
         let result = new Uint8Array(nAlgs.astar(
