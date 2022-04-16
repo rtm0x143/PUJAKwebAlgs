@@ -46,7 +46,7 @@ Napi::Value launch(const Napi::CallbackInfo& info)
         if (settings.Has("pherLeak"))
             config.pherLeak = settings.Get("pherLeak").ToNumber().DoubleValue();
     }
-    
+
     Colony* colony = new Colony(config,
         tools::genGraphFromPoints(pointsData.Data(), pointsCount), pointsCount);
 

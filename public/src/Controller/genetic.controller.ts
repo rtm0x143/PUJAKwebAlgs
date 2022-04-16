@@ -10,7 +10,7 @@ class GeneticController extends Controller {
     // private updateIntervalId: number | null = null;
     private sessionRuns: boolean = false;
 
-    public updateInterval: number = 100;
+    public updateInterval: number = 50;
     public epochCount: number = 0;
 
     constructor(GraphView: GeneticView, GraphModel: GraphModel) {

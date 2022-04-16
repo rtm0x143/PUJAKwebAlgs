@@ -1,18 +1,15 @@
 #include "../Genetic.h"
 #include <iostream>
+#include <algorithm>
 
 Genetic::Genetic(Graph* graph) : graph(graph), bestWay(nullptr) {}
 
 void Genetic::crossChromo(u16 firstChromo, u16 secondChromo, u16* splitPath) {
-	u16 start = rand() % (graph->length);
+	u16 start = rand() % (graph->length - 1) + 1;
 	u16 end = rand() % (graph->length - start) + start + 1;
 
 	while (start == end) {
 		end = rand() % (graph->length - start) + start + 1;
-	}
-
-	if (end == graph->length) {
-		--end;
 	}
 
 	for (int i = start; i < end; ++i) {
@@ -58,36 +55,62 @@ void Genetic::reverseMutation(u16* splitPath)
 }
 
 void Genetic::generate() {
-	std::vector<Graph::Way> nextGeneration;
-	
-	for (size_t i = 0; i < graph->length; ++i) {
-		u16* splitPath = new u16[graph->length];
+	for (size_t i = 0; i < graph->lengthCube; ++i) {
+		//u16* splitPath = new u16[graph->length];
+		u16* splitPath = (u16*)malloc(graph->length * 2);
 
-		u16 firstChromo = rand() % graph->length;
-		u16 secondChromo = rand() % graph->length;
+		u16 firstChromo = rand() % (graph->length * graph->length);
+		u16 secondChromo = rand() % (graph->length * graph->length);
 
 		while (secondChromo == firstChromo) {
-			secondChromo = rand() % graph->length;
+			secondChromo = rand() % (graph->length * graph->length);
 		}
 
 		crossChromo(firstChromo, secondChromo, splitPath);
 		
-		if (rand() % 100 <= 5) {
+		if (rand() % 100 <= 50) {
 			mutation(splitPath);
+		}
+
+		if (rand() % 100 <= 30) {
+			mutation(splitPath);
+			mutation(splitPath);
+		}
+
+		if (rand() % 100 <= 20) {
+			mutation(splitPath);
+			mutation(splitPath);
+			mutation(splitPath);
+		}
+
+
+		if (rand() % 100 <= 10) {
+			reverseMutation(splitPath);
 		}
 
 		Graph::Way firstSplitWay{ splitPath };
 
 		graph->countWeight(firstSplitWay);
-		nextGeneration.push_back(firstSplitWay);
+		graph->ways.push_back(firstSplitWay);
 	}
 
-	this->graph->ways = nextGeneration;
+	std::sort(graph->ways.begin(), graph->ways.end(), 
+		[](Graph::Way& v1, Graph::Way& v2) { return v1.weight < v2.weight; });
+
+	//std::cout << (*graph->ways.begin()).weight << std::endl;
+
+	for (size_t i = graph->lengthCube; i < graph->lengthCube * 2; i++) {
+		free(graph->ways[i].path);
+	}
+	graph->ways.resize(graph->lengthCube);
 };
 
 std::pair<std::vector<u16>, double>* Genetic::operator()()
 {
-	generate();
+	for (size_t i = 0; i < 10; ++i) {
+		generate();
+	}
+
 	Graph::Way& minWay = graph->getMinWay();
 	std::pair<std::vector<u16>, double>* epochResult =
 		new std::pair<std::vector<u16>, double>{ std::vector<u16>(graph->length + 1), minWay.weight };

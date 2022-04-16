@@ -15,6 +15,8 @@ public:
 	};
 
 	u16 length;
+	uint32_t lengthCube;
+	//u16* ways_data;
 	double** matrix;
 
 	std::vector<Way> ways;

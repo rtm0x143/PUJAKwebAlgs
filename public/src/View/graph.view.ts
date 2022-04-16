@@ -1,15 +1,18 @@
 import CanvasView from './canvas.view.js';
-// import Errors from "../config/Errors.js";
+import Errors from "../config/Errors.js";
 import GraphModel from "../Model/graph.model.js";
 
 class GraphView extends CanvasView {
     //class Objects
     private _graphModel: GraphModel;
+    private _graphWayCost: HTMLParagraphElement;
 
     constructor(graphModel: GraphModel) {
         super(graphModel);
 
         this._graphModel = graphModel;
+        this._graphWayCost = document.querySelector('.way-result-paragraph')
+            ?? Errors.handleError('null');
 
         //subscribe model events
         this._subscribe();
@@ -57,6 +60,18 @@ class GraphView extends CanvasView {
 
                 this.drawLine(p1, p2, 10);
                 this._graphModel.dispatchEvent(new Event('draw:circles'))
+            }
+
+            let cost = this._graphModel.cost;
+            this._graphModel.setCosts(cost);
+            this._graphWayCost.innerHTML = `Best Way ${cost.toFixed(2)}`;
+        })
+
+        this._graphModel.addEventListener('add:costs', () => {
+            for (let i = 0; i < 3; ++i) {
+                if (this._graphModel.costs[i]) {
+                    console.log(this._graphModel.costs[i]);
+                }
             }
         })
 

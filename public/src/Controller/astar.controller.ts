@@ -3,8 +3,6 @@ import AstarView from '../View/astar.view.js';
 import AstarModel from '../Model/astar.model.js';
 import Errors from '../config/Errors.js';
 import Point from '../Model/point.js';
-import { isThisTypeNode } from 'typescript';
-import { timingSafeEqual } from 'crypto';
 
 
 // black: #303030, 
