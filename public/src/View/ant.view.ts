@@ -5,6 +5,7 @@ import GraphModel from "../Model/graph.model.js";
 class AntView extends GraphView {
     //button elements
     private _launchButton: HTMLButtonElement;
+
     private _countInput: HTMLInputElement;
     private _influenceInput: HTMLInputElement;
     private _desirabilityInput: HTMLInputElement;
@@ -39,12 +40,13 @@ class AntView extends GraphView {
      */
     launchAlgHandler(tokenCallback: Function) {
         this._launchButton.addEventListener('click', async () => {
-            tokenCallback({
-                antsCount: this._countInput.value,
-                greedCoef: this._influenceInput.value,
-                herdCoef: this._desirabilityInput.value,
-                pherLeak: this._leekInput.value
-            });
+            let settings: {[index: string]: number} = {}
+            if (this._countInput.value) settings["antsCount"] = +this._countInput.value;
+            if (this._influenceInput.value) settings["greedCoef"] = +this._influenceInput.value;
+            if (this._desirabilityInput.value) settings["herdCoef"] = +this._desirabilityInput.value;
+            if (this._leekInput.value) settings["pherLeak"] = +this._leekInput.value;
+            
+            tokenCallback(settings);
         })
     }
 }

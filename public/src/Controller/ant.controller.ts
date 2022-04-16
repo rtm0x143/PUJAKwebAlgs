@@ -9,7 +9,7 @@ class AntController extends Controller {
     // private updateIntervalId: number | null = null;
     private sessionRuns: boolean = false;
 
-    public updateInterval: number = 0;
+    public updateInterval: number = 100;
     public epochCount: number = 0;
 
     constructor(GraphView: AntView, GraphModel: GraphModel) {
@@ -29,6 +29,7 @@ class AntController extends Controller {
                 this.terminateSimulation(token);
             }
             this._graphModel.clearCanvas();
+            this._graphModel.coords = []
         })
     }
 
@@ -55,8 +56,8 @@ class AntController extends Controller {
         const antData: {[index: string]: number | undefined} = {pointsData}
         if (settings) {
             Object.keys(settings).forEach(key => {
-                // antData = {...antData, key: settings[key]}
-                antData[key] = settings[key];
+                if (settings[key])
+                    antData[key] = settings[key];
             }) 
         }
 
