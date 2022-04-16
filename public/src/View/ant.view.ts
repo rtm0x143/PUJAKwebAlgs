@@ -28,8 +28,8 @@ class AntView extends GraphView {
             ?? Errors.handleError('null');
 
         //initialise canvas size params]
-        this.canvas.height = 800;
-        this.canvas.width = 1200;
+        this.canvas.height = +this.canvasWrapper.offsetHeight;
+        this.canvas.width = +this.canvasWrapper.offsetWidth;
 
     }
 

@@ -17,9 +17,9 @@ class GeneticView extends GraphView {
         //subscribe model events
         this._subscribe();
 
-        //initialise canvas size params
-        this.canvas.height = +this.canvas.style.height;
-        this.canvas.width = +this.canvas.style.width;
+        //initialise canvas size params;
+        this.canvas.height = +this.canvasWrapper.offsetHeight;
+        this.canvas.width = +this.canvasWrapper.offsetWidth;
     }
 
     /**
