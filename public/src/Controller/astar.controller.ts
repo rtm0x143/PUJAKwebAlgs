@@ -8,12 +8,6 @@ import { timingSafeEqual } from 'crypto';
 import { moveMessagePortToContext } from 'worker_threads';
 import { resolve } from 'path';
 
-
-// black: #303030, 
-// white: #CFCFCF,
-// green: #52F193,
-// red: #F25D52,
-// 
 class AstarController extends CanvasController {
     private readonly _astarModel: AstarModel;
     private _astarView: AstarView;
@@ -48,14 +42,47 @@ class AstarController extends CanvasController {
         this._astarView.handleButtonLabGen(() => {
             this.labGenCallback();
         });
+        
+        this._astarView.handleRangeInputs(() => {            
+            this.rangeInputCallback();
+        });
+
+        this._astarView.handleButtonHeuristics(() => {
+            this.buttonHeuristicsCallback();
+        });
+
+        this._astarView.handleHeuristicsLinks((li: HTMLLIElement) => {
+            this.liHeuristicsLinksCallback(li);
+        });
 
         this._astarModel.setGridSize(this._astarView.getGridSize());
         this._astarView.drawGridOn(
             this._astarView.canvasGridContext,
-            '#CFCFCF', 
+            AstarView.colorCreamyWhite, 
             this._astarModel.gridResolution.x,
             this._astarModel.gridResolution.y
         );
+    }
+
+    liHeuristicsLinksCallback(li: HTMLLIElement) {
+        let buttonId = this._astarView.buttonChooseHeuristics.id;
+        let buttonText = this._astarView.buttonChooseHeuristics.textContent;
+        let buttonChildren = this._astarView.buttonChooseHeuristics.children[0];
+        let liChildren = li.children[0];
+
+        this._astarView.buttonChooseHeuristics.id = li.id;
+        buttonChildren.textContent = liChildren.textContent;
+        
+        li.id = buttonId;
+        liChildren.textContent = buttonText;
+    }
+
+    buttonHeuristicsCallback() {
+        this._astarView.heuristicsMenu.className = "heuristics-menu__opened";
+    }
+
+    rangeInputCallback() {
+        this._astarModel.setGridSize(this._astarView.getGridSize());
     }
 
     buttonStartClickCallback() {
@@ -98,18 +125,18 @@ class AstarController extends CanvasController {
             if (this._astarModel.grid[gridIndex] !== 1) {
                 if (this._isStartPoint) {
                     // Clear previous start point
-                    this.fillCell(this._astarModel.startPointMousePos, "#303030");
+                    this.fillCell(this._astarModel.startPointMousePos, AstarView.colorBlack);
                     // Fill current start point cell
-                    this.fillCell(mouseCanvasPos, "#52F193");
+                    this.fillCell(mouseCanvasPos, AstarView.colorGreen);
                     this._astarModel.setStartPoint(canvas2dCoords, mouseCanvasPos);
                     this._isStartPoint = false;
                     return;
                 }
                 else if (this._isEndPoint) {
                     // Clear previous end point
-                    this.fillCell(this._astarModel.endPointMousePos, "#303030");
+                    this.fillCell(this._astarModel.endPointMousePos, AstarView.colorBlack);
                     // Full current end point cell
-                    this.fillCell(mouseCanvasPos, "#F25D52");
+                    this.fillCell(mouseCanvasPos, AstarView.colorRed);
                     this._astarModel.setEndPoint(canvas2dCoords, mouseCanvasPos);
                     this._isEndPoint = false;
                     return;
@@ -123,14 +150,14 @@ class AstarController extends CanvasController {
             }
 
             if (this._isDrawingWalls) {
-                this.fillCell(mouseCanvasPos, "#CFCFCF");
+                this.fillCell(mouseCanvasPos, AstarView.colorCreamyWhite);
                 this._astarModel.addWall(    
                     canvas2dCoords.x, 
                     canvas2dCoords.y
                 );
             }
             else {
-                this.fillCell(mouseCanvasPos, "#303030");
+                this.fillCell(mouseCanvasPos, AstarView.colorBlack);
                 this._astarModel.removeWall(    
                     canvas2dCoords.x, 
                     canvas2dCoords.y
@@ -167,14 +194,14 @@ class AstarController extends CanvasController {
             }
 
             if (this._isDrawingWalls) {
-                this.fillCell(mouseCanvasPos, "#CFCFCF");
+                this.fillCell(mouseCanvasPos, AstarView.colorCreamyWhite);
                 this._astarModel.addWall(    
                     canvas2dCoords.x, 
                     canvas2dCoords.y
                 );
             }
             else {
-                this.fillCell(mouseCanvasPos, "#303030");
+                this.fillCell(mouseCanvasPos, AstarView.colorBlack);
                 this._astarModel.removeWall(    
                     canvas2dCoords.x, 
                     canvas2dCoords.y
@@ -189,21 +216,6 @@ class AstarController extends CanvasController {
         this._mousePosX < canvasBoundingClientRect.right &&
         this._mousePosY < canvasBoundingClientRect.bottom;
     }
-
-    // private fillCell(x: number, y: number, color: string): void {
-    //     let steps = new Point(
-    //         this._astarView.canvas.width / this._astarModel.gridResolution.x,
-    //         this._astarView.canvas.height / this._astarModel.gridResolution.y,
-    //     );
-
-    //     let topLeftCorner = new Point(
-    //         Math.floor(x / steps.x) * steps.x,
-    //         Math.floor(y / steps.y) * steps.y,
-    //     )
-
-    //     this._astarView.canvasContext.fillStyle = color;
-    //     this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
-    // }
 
     sleep(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms))
@@ -340,9 +352,6 @@ class AstarController extends CanvasController {
     // current cell: #706BF2
     async drawAlgSteps(responseArray: Uint8Array): Promise<number> {
         let pathStart = -1;
-        let colorVisited = "#5EF2F0";
-        let colorOpened = "#F2D546";
-        let colorCurrent = "#706BF2";
         
         for (let i = 0; i < responseArray.length; i += 2) {
             let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
@@ -353,13 +362,13 @@ class AstarController extends CanvasController {
                 break;
             }
             
-            this.fillCellByGridCoordinates(currentPoint, colorCurrent);
+            this.fillCellByGridCoordinates(currentPoint, AstarView.colorCurrent);
             
             let neighbors = this.findNeighbors(currentPoint);
 
             for (let k = 0; k < neighbors.length; ++k) {      
-                this.fillCellByGridCoordinates(neighbors[k], colorOpened);
-                // await this.sleep(5000 / responseArray.length);
+                this.fillCellByGridCoordinates(neighbors[k], AstarView.colorOpened);
+                await this.sleep(3000 / responseArray.length);
             }
             
             // Change value and color of the current cell to visited
@@ -368,19 +377,18 @@ class AstarController extends CanvasController {
                 this.fillCellByGridCoordinates(currentPoint, "#52F193");
             }
             else {
-                this.fillCellByGridCoordinates(currentPoint, colorVisited);
+                this.fillCellByGridCoordinates(currentPoint, AstarView.colorVisited);
             }
         }
 
         return pathStart
     }
 
-    drawPath(responseArray: Uint8Array, pathStart: number): void {
-        let colorPath = "#F22EC3";
-
+    async drawPath(responseArray: Uint8Array, pathStart: number): Promise<void> {
         for (let i = pathStart; i < responseArray.length; i += 2) {
             let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
-            this.fillCellByGridCoordinates(currentPoint, colorPath);
+            this.fillCellByGridCoordinates(currentPoint, AstarView.colorPath);
+            await this.sleep(3000 / responseArray.length);
         }
     }
 
