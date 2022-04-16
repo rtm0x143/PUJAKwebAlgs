@@ -44,8 +44,8 @@
     </div>
 </div>
 <p class="title">Salesman Algorithm</p>
-<div class="ui">
-    <div class="canvas canvas_genetic">
+<div class="ui ui_salesman">
+    <div class="canvas canvas_salesman">
         <canvas class="canvas__element"></canvas>
         <span class="resize-block">
         <svg class="resize-icon" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +53,29 @@
         </svg>
       </span>
     </div>
-    <button class="ui__calc-button ui__calc-button_ant">send</button>
+    <div class="ui__buttons-block_salesman">
+        <div class="ui__way-result">
+            <p class="way-result-paragraph">Best Way: 0</p>
+        </div>
+        <div class="ui__count-block">
+            <input class="ui__count-button" placeholder="Ants count">
+        </div>
+        <div class="ui__influence-block">
+            <input class="ui__influence-button" placeholder="influence">
+        </div>
+        <div class="ui-desirability-block">
+            <input class="ui__desirability-button" placeholder="desirability">
+        </div>
+        <div class="ui__leek-block">
+            <input class="ui__leek-button" placeholder="feromone leek">
+        </div>
+        <div class="ui__calc-button-block">
+            <button class="ui__calc-button ui__calc-button_ant" name="launch">launch</button>
+        </div>
+        <div class="ui__clear-block">
+            <button class="ui__clear-canvas" name="clear">clear</button>
+        </div>
+    </div>
 </div>
 
 <script src="https://bundle.run/buffer@6.0.3"></script>

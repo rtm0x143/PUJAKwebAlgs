@@ -31,7 +31,6 @@ class ClasterController extends CanvasController {
 
     request(
         type: string,
-        context: CanvasRenderingContext2D,
         range: number,
         groupSize: number,
         metricType: string,
@@ -54,6 +53,11 @@ class ClasterController extends CanvasController {
                     let colorsArray = []
 
                     for (let i = 1; i < value.length; i += 2) {
+                        const point = {
+                            x: this._clasterModel.positions[i],
+                            y: this._clasterModel.positions[i - 1]
+                        };
+
                         if (value[i] >= 2) {
                             if (value[i - 1] > colorsArray.length) {
                                 for (let j = colorsArray.length; j < value[i - 1]; ++j) {
@@ -64,36 +68,16 @@ class ClasterController extends CanvasController {
                                         1,
                                         0.8 + Math.random() * 0.2) ?? Errors.handleError('undefined')
                                     );
-                                }
-
-                                this._clasterView.drawCircle(
-                                    context,
-                                    '',
-                                    colorsArray[value[i - 1] - 1],
-                                    this._clasterModel.positions[i],
-                                    this._clasterModel.positions[i - 1],
-                                    radius
-                                );
-                            } else {
-                                this._clasterView.drawCircle(
-                                    context,
-                                    '',
-                                    colorsArray[value[i - 1] - 1],
-                                    this._clasterModel.positions[i],
-                                    this._clasterModel.positions[i - 1],
-                                    radius
-                                );
-                            }
-                        } else {
-                            this._clasterView.drawCircle(
-                                context,
-                                '',
-                                'grey',
-                                this._clasterModel.positions[i],
-                                this._clasterModel.positions[i - 1],
-                                radius
-                            );
-                        }
+                                };
+                            } 
+                        } 
+                        
+                        this._clasterView.drawCircle(
+                            '',
+                            colorsArray[value[i - 1] - 1],
+                            point,
+                            radius
+                        );
                     }
                 })
             })
@@ -116,6 +100,11 @@ class ClasterController extends CanvasController {
                     let colorsArray = []
 
                     for (let i = 0, k = 0; i < value.length; ++i, k += 2) {
+                        let point = {
+                            x: this._clasterModel.positions[k + 1],
+                            y: this._clasterModel.positions[k]
+                        }
+
                         if (value[i] + 1 > colorsArray.length) {
                             for (let j = colorsArray.length; j < value[i] + 1; ++j) {
                                 colorsArray.push(this._clasterView.hsvToRGB(
@@ -126,28 +115,16 @@ class ClasterController extends CanvasController {
                                     1) ?? Errors.handleError('undefined')
                                 );
                             }
-
-                            this._clasterView.drawCircle(
-                                context,
-                                '',
-                                colorsArray[value[i]],
-                                this._clasterModel.positions[k + 1],
-                                this._clasterModel.positions[k],
-                                radius
-                            );
-                        } else {
-                            this._clasterView.drawCircle(
-                                context,
-                                '',
-                                colorsArray[value[i]],
-                                this._clasterModel.positions[k + 1],
-                                this._clasterModel.positions[k],
-                                radius
-                            );
-                        }
+                        } 
+                        
+                        this._clasterView.drawCircle(
+                            '',
+                            colorsArray[value[i]],
+                            point,
+                            radius
+                        );
+                        
                     }
-
-                    console.log(colorsArray);
                 })
             })
         }

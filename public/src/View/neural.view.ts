@@ -143,22 +143,19 @@ class NeuralView extends canvasView {
     private _subscribe(): void {
         this._neuralModel.addEventListener('neuralcoordschange', _ => {
             if (this._neuralModel.coords.length > 1) {
+                let p1 = {
+                    x: this._neuralModel.coords[this._neuralModel.coords.length - 4],
+                    y: this._neuralModel.coords[this._neuralModel.coords.length - 3]
+                }
+                let p2 = {
+                    x: this._neuralModel.coords[this._neuralModel.coords.length - 2],
+                    y: this._neuralModel.coords[this._neuralModel.coords.length - 1]
+                }
+
                 if (this._selectButton.value === 'circle') {
-                    this.drawCircleLine(
-                        this._neuralModel.coords[this._neuralModel.coords.length - 4],
-                        this._neuralModel.coords[this._neuralModel.coords.length - 3],
-                        this._neuralModel.coords[this._neuralModel.coords.length - 2],
-                        this._neuralModel.coords[this._neuralModel.coords.length - 1],
-                        parseInt(this._sizeInput.value)
-                    );
+                    this.drawCircleLine(p1, p2, parseInt(this._sizeInput.value))
                 } else {
-                    this.drawLine(
-                        this._neuralModel.coords[this._neuralModel.coords.length - 4],
-                        this._neuralModel.coords[this._neuralModel.coords.length - 3],
-                        this._neuralModel.coords[this._neuralModel.coords.length - 2],
-                        this._neuralModel.coords[this._neuralModel.coords.length - 1],
-                        parseInt(this._sizeInput.value)
-                    );
+                    this.drawLine(p1, p2, parseInt(this._sizeInput.value));
                 }
             }
         })
@@ -182,15 +179,15 @@ class NeuralView extends canvasView {
      * @param y2 - the pos y of second Point
      * @param width - width for line
      */
-    drawLine(x1: number, y1: number, x2: number, y2: number, width: number): void {
+     drawLine(point1 : {x: number, y: number}, point2 : {x: number, y: number}, width: number) {
         this._neuralContext.shadowBlur = 10;
         this._neuralContext.shadowColor = "#fff";
         this._neuralContext.shadowOffsetX = -1000;
         this._neuralContext.beginPath();
         this._neuralContext.strokeStyle = 'white';
         this._neuralContext.lineWidth = width;
-        this._neuralContext.moveTo(x1, y1);
-        this._neuralContext.lineTo(x2, y2);
+        this.canvasContext.moveTo(point1.x, point1.y);
+        this.canvasContext.lineTo(point2.x, point2.y);
         this._neuralContext.stroke();
         this._neuralContext.closePath();
     }
@@ -203,22 +200,24 @@ class NeuralView extends canvasView {
      * @param y2 - the pos y of second Point
      * @param radius - radius for circle
      */
-    drawCircleLine(x1: number, y1: number, x2: number, y2: number, radius: number): void {
+    drawCircleLine(point1 : {x: number, y: number}, 
+        point2 : {x: number, y: number}, radius: number) 
+    {
         this._neuralContext.fillStyle = "white";
         this._neuralContext.strokeStyle = "white";
         this._neuralContext.lineWidth = 0;
         this._neuralContext.globalAlpha = Number("1");
 
         //find distance between two points
-        let distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        let distance = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
         //find angle of two points
-        let angle = Math.atan2( x2 - x1, y2 - y1);
+        let angle = Math.atan2(point2.x - point1.x, point2.y - point1.y);
 
         this._neuralContext.beginPath();
 
         for (let i = 0; i < distance; ++i) {
-            let x = x1 + (Math.sin(angle) * i) - 25;
-            let y = y1 + (Math.cos(angle) * i) - 25;
+            let x = point1.x + (Math.sin(angle) * i) - radius;
+            let y = point1.y + (Math.cos(angle) * i) - radius;
             this._neuralContext.arc(x + 10, y + 10, radius, 0, Math.PI * 2);
         }
 

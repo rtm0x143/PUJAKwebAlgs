@@ -3,7 +3,7 @@
 
 // gets (start{x, y}, end{x, y}, fieldData = Uint8Array[height, width, ...fieldCells...])
 // field encoding : 0 - void, 1 - wall; 
-// returns ArrayBuffer[yxyxyxyxyxyxyxyxyx...FinalX?_FinalY?xyxyxyxyxy]
+// returns ArrayBuffer[yxyxyxyxyxyxyxyxyx...FinalY?_FinalX?yxyxyxyx]
 //                     ^^^^^^^^^^^^^^^^^^                   ^^^^^^^^
 //                      alg's steps                         result path
 Napi::Value astar(const Napi::CallbackInfo& info) 
@@ -31,21 +31,14 @@ Napi::Value astar(const Napi::CallbackInfo& info)
     }
     
     Grid grid(field, width, height);
-    // grid.printGrid();
 
     Napi::Object start = info[0].ToObject(),
         end =  info[1].ToObject();
-
-    // std::cout << "objects\n" 
-    //     << (int)start.Get("x").ToNumber() << ' ' << start.Get("y").As<Napi::Number>().Int32Value() << '\n'
-    //     << (int)end.Get("x").ToNumber() << ' ' << end.Get("y").As<Napi::Number>().Int32Value() << '\n';
 
     PathfinderResult result = Pathfinder::findPath(
         grid, 
         { start.Get("x").ToNumber().Int32Value(), start.Get("y").ToNumber().Int32Value() }, 
         { end.Get("x").ToNumber().Int32Value(), end.Get("y").ToNumber().Int32Value() });
-
-    // std::cout << "found\n";
 
     size_t byteSize = result.stepsAndPath.size() * 2;
     uint8_t* normalizedData = (uint8_t*)malloc(byteSize);

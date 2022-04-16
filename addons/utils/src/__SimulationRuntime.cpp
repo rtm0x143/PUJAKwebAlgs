@@ -67,15 +67,15 @@ void SimulationRuntime<Simulation, State>::workerRuntime(
 template <class Simulation, class State>
 Simulation* SimulationRuntime<Simulation, State>::hasSession(const uint64_t& id)
 {
-	std::cout << "Seaks for " << id << " Has " << sessions.size() << " sessions:\n\t";
-	for (Session* s : sessions) std::cout << s->id << ' ';
-	std::cout << '\n';
+	// std::cout << "Seaks for " << id << " Has " << sessions.size() << " sessions:\n\t";
+	// for (Session* s : sessions) std::cout << s->id << ' ';
+	// std::cout << '\n';
 
 	auto s_it = std::find_if(sessions.begin(), sessions.end(),
 		[&id](const Session* s) -> bool { return s->id == id; });
 
-	if (s_it != sessions.end()) std::cout << "Foound " << (*s_it)->id << '\n';
-	else std::cout << "Not found\n";
+	// if (s_it != sessions.end()) std::cout << "Foound " << (*s_it)->id << '\n';
+	// else std::cout << "Not found\n";
 
 	return (s_it != sessions.end() ? (*s_it)->sim : nullptr);
 }
@@ -144,7 +144,7 @@ Simulation* SimulationRuntime<Simulation, State>::detach(const uint64_t& id)
 		delete *s_it;
 		sessions.erase(s_it);
 	}
-	std::cout << "c++deleted " << id << ' ' << sim << '\n';
+	// std::cout << "c++deleted " << id << ' ' << sim << '\n';
 	return sim;
 }
 

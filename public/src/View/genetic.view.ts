@@ -1,36 +1,25 @@
-import CanvasView from './canvas.view.js';
+import GraphView from './graph.view.js';
 import Errors from "../config/Errors.js";
 import GraphModel from "../Model/graph.model.js";
 
-class GeneticView extends CanvasView {
-    //class Objects
-    private _graphModel: GraphModel;
-
-    //canvas elements
-    private _canvas: HTMLCanvasElement;
-    private readonly _context: CanvasRenderingContext2D;
+class GeneticView extends GraphView {
 
     //button elements
-    private _sendButton: HTMLButtonElement;
+    private _launchButton: HTMLButtonElement;
 
     constructor(graphModel: GraphModel) {
         super(graphModel);
 
-        this._graphModel = graphModel;
-
-        //canvas elements initialise
-        this._canvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
-        this._context = this._canvas.getContext('2d') ?? Errors.handleError('null');
-
         //button elements initialise
-        this._sendButton = document.querySelector('.ui__calc-button_genetic') ?? Errors.handleError('null');
+        this._launchButton = document.querySelector('.ui__calc-button[name=launch]') ?? Errors.handleError('null');
+        this.clearButton = document.querySelector('.ui__clear-canvas') ?? Errors.handleError('null');
 
         //subscribe model events
         this._subscribe();
 
         //initialise canvas size params
-        this._canvas.height = 800;
-        this._canvas.width = 1200;
+        this.canvas.height = 800;
+        this.canvas.width = 1200;
     }
 
     /**
@@ -39,7 +28,7 @@ class GeneticView extends CanvasView {
      * @param callback - Function
      */
     setCoordsHandler(callback: Function) {
-        this._canvas.addEventListener('click', (e) => {
+        this.canvas.addEventListener('click', (e) => {
             callback(e.offsetX, e.offsetY);
         })
     }
@@ -49,25 +38,9 @@ class GeneticView extends CanvasView {
      *
      * @param callback - Function
      */
-    calcHandler(callback: Function) {
-        this._sendButton.addEventListener('click', () => {
-            callback();
-        })
-    }
-
-    //subscribe dispatching events
-    _subscribe() {
-        this._graphModel.addEventListener('canvas:change', () => {
-            console.log(this._graphModel.coords);
-            this.drawCircle
-            (
-                this._context,
-                '',
-                'white',
-                this._graphModel.coords[this._graphModel.coords.length - 2],
-                this._graphModel.coords[this._graphModel.coords.length - 1],
-                5
-            );
+    launchAlgHandler(tokenCallback: Function) {
+        this._launchButton.addEventListener('click', async () => {
+            tokenCallback();
         })
     }
 }

@@ -3,63 +3,88 @@ import Errors from '../config/Errors.js';
 import CanvasModel from '../Model/canvas.model.js';
 
 class CanvasView {
-    private _canvasModel: CanvasModel;
-
+    public readonly _canvasModel: CanvasModel; 
     public canvas: HTMLCanvasElement; 
+    public canvasContext: CanvasRenderingContext2D;
     public canvasWrapper: HTMLDivElement;
     public resizeIcon: HTMLDivElement;
-
-    private _isDrawing = false;
+    public clearButton: HTMLDivElement | null;
 
     constructor(model: CanvasModel) {
-        this.resizeIcon = document.querySelector('.resize-icon') ?? Errors.handleError('null');
-        this.canvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
-        this.canvasWrapper = document.querySelector('.canvas') ?? Errors.handleError('null');
         this._canvasModel = model;
+        this.resizeIcon = document.querySelector('.resize-icon') ?? Errors.handleError('null');
+        this.canvasWrapper = document.querySelector('.canvas') ?? Errors.handleError('null');
+        this.canvas = document.querySelector('.canvas__element') ?? Errors.handleError('null');
+        this.canvasContext = this.canvas.getContext('2d') ?? Errors.handleError("null");
+        this.clearButton = document.querySelector('.ui__clear-canvas');
+
+        // Without this grid looks bad;
+        this.canvas.width = parseInt(window.getComputedStyle(this.canvasWrapper, '').width);
+        this.canvas.height = parseInt(window.getComputedStyle(this.canvasWrapper, '').height);
 
         this._subscribeToCanvasModel();
     }
 
-    //#region handleMouse methods (doensn't work)
-    handleMouseDownResize(callback: Function): void {
+    //#region handle resize events
+    handleResize(mouseDownCallback: Function, mouseMoveCallback: Function): void {
+        function mouseDownCallbackWrapper(e: MouseEvent): void {
+            mouseDownCallback(e);
+        }
+
+        function mouseMoveCallbackWrapper(e: MouseEvent): void {
+            mouseMoveCallback(e);
+        }
+        
         this.resizeIcon.addEventListener('mousedown', (e: MouseEvent) => {
             e.preventDefault();
 
-            callback(e);
+            mouseDownCallbackWrapper(e);
+            document.addEventListener('mousemove', mouseMoveCallbackWrapper);
         });
-    }
 
-    handleMouseMoveResize(callback: Function): void {
-        document.addEventListener('mousemove', (e: MouseEvent) => {
-            e.preventDefault();
-
-            callback(this.canvasWrapper, e);
-        });
-    }
-
-    handleMouseUpResize(callback: Function): void {
         document.addEventListener('mouseup', () => {
-            callback();
+            document.removeEventListener('mousemove', mouseMoveCallbackWrapper);
         });
-    } 
+    }
     //#endregion
 
-    drawGrid(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, color: string, columnCount: number, rowsCount: number) {
-        context.strokeStyle = color;
+    drawGrid(color: string, columnCount: number, rowsCount: number) {
+        this.canvasContext.strokeStyle = color;
+        let stepX = this.canvas.width / columnCount;
+        let stepY = this.canvas.height / rowsCount;
+        
         for (let i = 0; i < columnCount; ++i) {
             for (let j = 0; j < rowsCount; ++j) {
-                context.strokeRect(i * canvas.width / columnCount, j * canvas.height / rowsCount, canvas.width / columnCount, canvas.height / rowsCount);
+                this.canvasContext.strokeRect(
+                    i * stepX,
+                    j * stepY, 
+                    stepX, 
+                    stepY
+                );
             }
         }
     }
 
-    drawCircle(canvasContext: CanvasRenderingContext2D, strokeColor: string, fillColor: string, x: number, y: number, radius: number) {
-        canvasContext.strokeStyle = strokeColor;
-        canvasContext.fillStyle = fillColor;
-        canvasContext.beginPath();
-        canvasContext.arc(x, y, radius, 0, 2 * Math.PI);
-        canvasContext.stroke();
-        canvasContext.fill();
+    drawCircle(strokeColor: string, fillColor: string, point : {x: number, y: number}, radius: number) 
+    {
+        this.canvasContext.strokeStyle = strokeColor;
+        this.canvasContext.lineWidth = 1;
+        this.canvasContext.fillStyle = fillColor;
+        this.canvasContext.beginPath();
+        this.canvasContext.arc(point.x, point.y, radius, 0, 2 * Math.PI);
+        this.canvasContext.stroke();
+        this.canvasContext.fill();
+    }
+
+    drawLine(point1 : {x: number, y: number}, point2 : {x: number, y: number}, width: number)
+    {
+        this.canvasContext.beginPath();
+        this.canvasContext.strokeStyle = "#CFCFCF";
+        this.canvasContext.lineWidth = width;
+        this.canvasContext.moveTo(point1.x, point1.y);
+        this.canvasContext.lineTo(point2.x, point2.y);
+        this.canvasContext.stroke();
+        this.canvasContext.closePath();
     }
 
     _subscribeToCanvasModel() {
@@ -68,7 +93,6 @@ class CanvasView {
             this.canvasWrapper.style.height = this._canvasModel.height.toString() + "px";
             this.canvas.width = this._canvasModel.width;
             this.canvas.height = this._canvasModel.height;
-            this.drawGrid(this.canvas, this.canvas.getContext('2d') ?? Errors.handleError("null"), 'grey', Math.floor(this.canvas.width / 30), Math.floor(this.canvas.height / 30));
         });
     }
 
@@ -106,6 +130,13 @@ class CanvasView {
         }
 
         return ''
+    }
+
+    clearCanvasHandler(clearCallback: Function) {
+        if (this.clearButton) 
+            this.clearButton.addEventListener('click', () => {
+                clearCallback();
+            })
     }
 }
 

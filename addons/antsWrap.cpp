@@ -5,7 +5,13 @@
 #include "tools.h"
 
 AntsRuntime antsRuntime;
-ColonyConfig deafultConfig{ 100, 1, 1.5, 0.6 };
+
+ColonyConfig deafultConfig{ 
+    100,    // uint32_t antsCount;
+    1.0,      // double greedCoef;
+    1.0,    // double herdCoef;
+    0.75     // double pherLeak;
+    };
 
 Napi::Value launch(const Napi::CallbackInfo& info)
 {
@@ -32,15 +38,21 @@ Napi::Value launch(const Napi::CallbackInfo& info)
         Napi::Object settings = info[1].ToObject();
 
         if (settings.Has("antsCount"))
-            config.antsCount = settings.Get("anysCount").ToNumber().Int32Value();
+            config.antsCount = settings.Get("antsCount").ToNumber().Int32Value();
         if (settings.Has("greedCoef"))
             config.greedCoef = settings.Get("greedCoef").ToNumber().DoubleValue();
         if (settings.Has("herdCoef"))
             config.herdCoef = settings.Get("herdCoef").ToNumber().DoubleValue();
         if (settings.Has("pherLeak"))
             config.pherLeak = settings.Get("pherLeak").ToNumber().DoubleValue();
+
+        // std::cout << "Config: " << 
+        //     (std::string)settings.Get("antsCount").ToString() << ' ' <<
+        //     (std::string)settings.Get("greedCoef").ToString() << ' ' << 
+        //     (std::string)settings.Get("herdCoef").ToString() << ' ' << 
+        //     (std::string)settings.Get("pherLeak").ToString() << '\n';
     }
-    
+
     Colony* colony = new Colony(config,
         tools::genGraphFromPoints(pointsData.Data(), pointsCount), pointsCount);
 

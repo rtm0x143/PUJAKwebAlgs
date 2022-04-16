@@ -4,24 +4,20 @@ import { checkQuery } from "../middlewares.js"
 import jwt from "jsonwebtoken"
 import nAlgs from "../algorithms.cjs"
 
-if (!process.env["jwtSecret"]) {
-    throw ".env file must contain 'jwtSecret'"
-}
-
 function simLaunch(sim) {
     return (req, res) => {
         if (!req.body["pointsData"]) {
             res.sendStatus(400);
             return
         }
-        let data = Buffer.from(req.body["pointsData"], "hex")
+        let data = Buffer.from(req.body["pointsData"], "base64")
         let pointsData = new Uint16Array(data.buffer, data.byteOffset, data.byteLength / 2)
         let id = sim.launch(pointsData, req.body)
 
-        console.log("From launch with", sim, " created ", id);
+        // console.log("From launch with", sim, " created ", id);
 
         jwt.sign(id, process.env["jwtSecret"], (err, token) => {
-            console.log(jwt.decode(token), token, "created");
+            // console.log(jwt.decode(token), token, "created");
             if (err) {
                 console.log(err)
                 res.sendStatus(500)
@@ -39,7 +35,7 @@ function graphSimGetState(sim) {
         //     return
         // }
         jwt.verify(token, process.env.jwtSecret, (err, payload) => {
-            console.log("requested", sim, "with", payload);
+            // console.log("requested", sim, "with", payload);
             if (!err && sim.hasSession(payload)) 
             {
                 let result = sim.getNextEpoch(payload);
@@ -63,9 +59,9 @@ function simTerminate(sim) {
         // }
         jwt.verify(token, process.env.jwtSecret, (err, payload) => {
             if (!err && sim.hasSession(payload)) {
-                console.log("Trying to delete", sim, "with", payload);
+                // console.log("Trying to delete", sim, "with", payload);
                 sim.terminateSession(payload)
-                console.log(payload, "deleted");
+                // console.log(payload, "deleted");
                 res.sendStatus(200)
             } 
             else {
@@ -117,7 +113,7 @@ export default Router()
             try {
                 result = nAlgs[req.query.type](...params)
             } catch (error) {
-                console.log("Algorithm internal Error!\n", error);
+                // console.log("Algorithm internal Error!\n", error);
                 res.status(400)
                 res.send(error.toString())
                 return
@@ -148,7 +144,6 @@ export default Router()
         
         let field = req.body["field"]
         let raw = Buffer.from(field["data"])
-
         let result = new Uint8Array(nAlgs.astar(
                 req.body["start"], 
                 req.body["end"], 
