@@ -2,7 +2,7 @@
 #include <vector>
 #include "../Astar.h"
 
-using namespace metrics;
+// using namespace metricsV;
 
 #pragma region Point
 Point::Point()
@@ -295,33 +295,33 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 }
 #pragma endregion
 
-double(*metricFromName(const std::string& name))(const Point& p1, const Point& p2)
+double(*metricsV::metricFromName(const std::string& name))(const Point& p1, const Point& p2)
 {
 	if (name == "Euclidean") {
-		return metrics::Euclidean;
+		return metricsV::Euclidean;
 	} else if (name == "EuclideanCubes") {
-		return metrics::EuclideanCubes;
+		return metricsV::EuclideanCubes;
 	} else if (name == "Manhattan") {
-		return metrics::Manhattan;
+		return metricsV::Manhattan;
 	} else if (name == "Chebyshev") {
-		return metrics::Chebyshev;
+		return metricsV::Chebyshev;
 	} else {
 		throw "Invalid metric name";
 	}
 }
 
-double Euclidean(const Point& p1, const Point& p2) {
+double metricsV::Euclidean(const Point& p1, const Point& p2) {
 	return std::sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
 
-double EuclideanCubes(const Point& p1, const Point& p2) {
+double metricsV::EuclideanCubes(const Point& p1, const Point& p2) {
 	return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
 }
 
-double Chebyshev(const Point& p1, const Point& p2) {
+double metricsV::Chebyshev(const Point& p1, const Point& p2) {
 	return std::max(std::abs(p1.x - p2.x), std::abs(p1.y - p2.y));
 }
 
-double Manhattan(const Point& p1, const Point& p2) {
+double metricsV::Manhattan(const Point& p1, const Point& p2) {
 	return std::abs(p1.x - p2.x) + std::abs(p1.y - p2.y);
 }

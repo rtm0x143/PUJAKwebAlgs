@@ -37,7 +37,7 @@ Napi::Value astar(const Napi::CallbackInfo& info)
     Napi::Object start = info[0].ToObject(),
         end =  info[1].ToObject();
 
-    Pathfinder pathFinder(metrics::metricFromName(info[4].ToString()));
+    Pathfinder pathFinder(metricsV::metricFromName(info[4].ToString()));
     PathfinderResult result = pathFinder.findPath(
         grid, 
         { start.Get("x").ToNumber().Int32Value(), start.Get("y").ToNumber().Int32Value() }, 

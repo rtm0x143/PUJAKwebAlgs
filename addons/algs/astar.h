@@ -100,7 +100,7 @@ public:
 	Pathfinder(double(*metric)(const Point&, const Point&));
 };
 
-namespace metrics
+namespace metricsV
 {
 	double(*metricFromName(const std::string& name))(const Point& p1, const Point& p2);
 
