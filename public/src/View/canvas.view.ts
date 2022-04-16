@@ -47,15 +47,14 @@ class CanvasView {
         });
     }
     //#endregion
-
-    drawGrid(color: string, columnCount: number, rowsCount: number) {
-        this.canvasContext.strokeStyle = color;
+    drawGridOn(context: CanvasRenderingContext2D, color: string, columnCount: number, rowsCount: number) {
+        context.strokeStyle = color;
         let stepX = this.canvas.width / columnCount;
         let stepY = this.canvas.height / rowsCount;
         
         for (let i = 0; i < columnCount; ++i) {
             for (let j = 0; j < rowsCount; ++j) {
-                this.canvasContext.strokeRect(
+                context.strokeRect(
                     i * stepX,
                     j * stepY, 
                     stepX, 
@@ -63,6 +62,10 @@ class CanvasView {
                 );
             }
         }
+    }
+
+    drawGrid(color: string, columnCount: number, rowsCount: number) {
+        this.drawGridOn(this.canvasContext, color, columnCount, rowsCount)
     }
 
     drawCircle(strokeColor: string, fillColor: string, point : {x: number, y: number}, radius: number) 

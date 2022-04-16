@@ -2,6 +2,8 @@
 #include <vector>
 #include "../Astar.h"
 
+// using namespace metricsV;
+
 #pragma region Point
 Point::Point()
 {
@@ -27,20 +29,22 @@ bool Point::operator!=(const Point& other) const
 #pragma endregion
 
 #pragma region Cell
-int Cell::calculateDistance(Point& startPoint, Point& endPoint) 
-{
-	int dx = abs(startPoint.x - endPoint.x);
-	int dy = abs(startPoint.y - endPoint.y);
+// int Cell::calculateDistance(Point& startPoint, Point& endPoint, 
+// 	double(*metricFunc)(const Point&, const Point&))
+// {
+// 	int dx = abs(startPoint.x - endPoint.x);
+// 	int dy = abs(startPoint.y - endPoint.y);
 
-	if (dx > dy)
-	{
-		return dy * diagonal + straight * (dx - dy);
-	}
+// 	if (dx > dy)
+// 	{
+// 		return dy * diagonal + straight * (dx - dy);
+// 	}
 
-	return dx * diagonal + straight * (dy - dx);
-}
+// 	return dx * diagonal + straight * (dy - dx);
+// }
 
-Cell::Cell(Point cellPoint, Point& previousPoint, Point& endPoint, Cell *parent)
+Cell::Cell(Point cellPoint, Point& previousPoint, Point& endPoint, Cell* parent,
+	double(*metricFunc)(const Point&, const Point&)) : calculateDistance(metricFunc)
 {
 	point = cellPoint;
 	this->parent = parent;
@@ -55,8 +59,10 @@ int Cell::getDistanceSum() const
 #pragma endregion
 
 #pragma region Grid
-Grid::Grid(uint8_t **field, int width, int height) :
-	_field(field), _width(width), _height(height) {};
+Grid::Grid(uint8_t** field, int width, int height) :
+	_field(field), _width(width), _height(height)
+{
+};
 
 int Grid::getWidth()
 {
@@ -76,7 +82,7 @@ void Grid::setGridValue(std::vector<Point*> points, uint8_t value)
 	}
 }
 
-void Grid::setGridValue(Point *point, uint8_t value)
+void Grid::setGridValue(Point* point, uint8_t value)
 {
 	_field[point->y][point->x] = value;
 }
@@ -94,7 +100,7 @@ void Grid::printGrid()
 		uint8_t* row = _field[i];
 		for (size_t j = 0; j < _width; j++)
 		{
-			std::cout << (int)row[j] << " ";
+			std::cout << ((char)row[j] == 0 ? '.' : (char)row[j]) << "";
 		}
 
 		std::cout << "\n";
@@ -112,15 +118,16 @@ PathfinderResult::PathfinderResult(
 	int stepsCount,
 	std::vector<Point> stepsAndPath
 )
-{	
+{
 	this->stepsCount = stepsCount;
 	this->stepsAndPath = stepsAndPath;
-	
+
 }
 #pragma endregion
 
 #pragma region Pathfinder
-Pathfinder::Pathfinder() {}
+Pathfinder::Pathfinder(double(*metric)(const Point&, const Point&)) : metricFunc(metric)
+{}
 
 std::vector <Cell*> Pathfinder::findCellNeighbors(
 	Grid grid,
@@ -143,7 +150,7 @@ std::vector <Cell*> Pathfinder::findCellNeighbors(
 			int moveX = parentCell->point.x + j;
 			int moveY = parentCell->point.y + i;
 
-			if ((moveX >= 0 && moveX < grid.getWidth()) && 
+			if ((moveX >= 0 && moveX < grid.getWidth()) &&
 				(moveY >= 0 && moveY < grid.getHeight()))
 			{
 				if (grid[moveY][moveX] != 1) // 'w'
@@ -153,7 +160,8 @@ std::vector <Cell*> Pathfinder::findCellNeighbors(
 							Point(moveX, moveY),
 							previousPoint,
 							endPoint,
-							parentCell
+							parentCell,
+							metricFunc
 						)
 					);
 				}
@@ -166,7 +174,7 @@ std::vector <Cell*> Pathfinder::findCellNeighbors(
 
 void Pathfinder::retracePath(
 	std::vector<Point>* stepsAndPath,
-	Point startCellPoint, 
+	Point startCellPoint,
 	Cell* endCell
 )
 {
@@ -185,7 +193,9 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 	std::vector<Point> stepsAndPath;
 	std::vector<Cell*> availableCells;
 	std::vector<Cell*> visitedCells;
-	availableCells.push_back(new Cell(startPoint, startPoint, endPoint, nullptr));
+	availableCells.push_back(
+		new Cell(startPoint, startPoint, endPoint, nullptr, metricFunc));
+
 	int stepsCount = 0;
 
 	while (!availableCells.empty())
@@ -213,13 +223,13 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 				startPoint,
 				availableCells[minCellIndex]
 			);
-			
+
 			break;
 		}
 
 
 		std::vector<Cell*> neighbors = findCellNeighbors(
-			grid, 
+			grid,
 			availableCells[minCellIndex],
 			availableCells[minCellIndex]->point,
 			endPoint
@@ -231,7 +241,7 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 		for (Cell* neighbor : neighbors)
 		{
 			bool isVisited = false;
-			
+
 			for (Cell* visitedCell : visitedCells)
 			{
 				if (neighbor->point == visitedCell->point)
@@ -284,3 +294,34 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 	return PathfinderResult(stepsCount, stepsAndPath);
 }
 #pragma endregion
+
+double(*metricsV::metricFromName(const std::string& name))(const Point& p1, const Point& p2)
+{
+	if (name == "Euclidean") {
+		return metricsV::Euclidean;
+	} else if (name == "EuclideanCubes") {
+		return metricsV::EuclideanCubes;
+	} else if (name == "Manhattan") {
+		return metricsV::Manhattan;
+	} else if (name == "Chebyshev") {
+		return metricsV::Chebyshev;
+	} else {
+		throw "Invalid metric name";
+	}
+}
+
+double metricsV::Euclidean(const Point& p1, const Point& p2) {
+	return std::sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+}
+
+double metricsV::EuclideanCubes(const Point& p1, const Point& p2) {
+	return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
+}
+
+double metricsV::Chebyshev(const Point& p1, const Point& p2) {
+	return std::max(std::abs(p1.x - p2.x), std::abs(p1.y - p2.y));
+}
+
+double metricsV::Manhattan(const Point& p1, const Point& p2) {
+	return std::abs(p1.x - p2.x) + std::abs(p1.y - p2.y);
+}

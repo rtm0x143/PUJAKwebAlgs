@@ -4,18 +4,13 @@ import AstarModel from '../Model/astar.model.js';
 import Errors from '../config/Errors.js';
 import Point from '../Model/point.js';
 
-
-// black: #303030, 
-// white: #CFCFCF,
-// green: #52F193,
-// red: #F25D52,
-// 
 class AstarController extends CanvasController {
     private readonly _astarModel: AstarModel;
     private _astarView: AstarView;
     private _isDrawingWalls: boolean = true;
     private _isStartPoint: boolean = false;
     private _isEndPoint: boolean = false;
+    private _isMenuOpened: boolean = false;
 
     constructor(model: AstarModel) {
         super(model);
@@ -41,12 +36,57 @@ class AstarController extends CanvasController {
             this.findPathCallback();
         });
 
+        this._astarView.handleButtonLabGen(() => {
+            this.labGenCallback();
+        });
+        
+        this._astarView.handleRangeInputs(() => {            
+            this.rangeInputCallback();
+        });
+
+        this._astarView.handleButtonHeuristics(() => {
+            this.buttonHeuristicsCallback();
+        });
+
+        this._astarView.handleHeuristicsLinks((li: HTMLLIElement) => {
+            this.liHeuristicsLinksCallback(li);
+        });
+
         this._astarModel.setGridSize(this._astarView.getGridSize());
-        this._astarView.drawGrid(
-            '#CFCFCF', 
+        this._astarView.drawGridOn(
+            this._astarView.canvasGridContext,
+            AstarView.colorCreamyWhite, 
             this._astarModel.gridResolution.x,
             this._astarModel.gridResolution.y
         );
+    }
+
+    liHeuristicsLinksCallback(li: HTMLLIElement) {
+        let buttonId = this._astarView.buttonChooseHeuristics.id;
+        let buttonText = this._astarView.buttonChooseHeuristics.textContent;
+        let buttonChildren = this._astarView.buttonChooseHeuristics.children[0];
+        let liChildren = li.children[0];
+
+        this._astarView.buttonChooseHeuristics.id = li.id;
+        buttonChildren.textContent = liChildren.textContent;
+        
+        li.id = buttonId;
+        liChildren.textContent = buttonText;
+    }
+
+    buttonHeuristicsCallback() {
+        if (!this._isMenuOpened) {
+            this._astarView.heuristicsMenu.className = "heuristics-menu__opened";
+            this._isMenuOpened = true;
+        }
+        else {
+            this._astarView.heuristicsMenu.className = "heuristics-menu__closed";
+            this._isMenuOpened = false;
+        }
+    }
+
+    rangeInputCallback() {
+        this._astarModel.setGridSize(this._astarView.getGridSize());
     }
 
     buttonStartClickCallback() {
@@ -89,18 +129,18 @@ class AstarController extends CanvasController {
             if (this._astarModel.grid[gridIndex] !== 1) {
                 if (this._isStartPoint) {
                     // Clear previous start point
-                    this.fillCell(this._astarModel.startPointMousePos, "#303030");
+                    this.fillCell(this._astarModel.startPointMousePos, AstarView.colorBlack);
                     // Fill current start point cell
-                    this.fillCell(mouseCanvasPos, "#52F193");
+                    this.fillCell(mouseCanvasPos, AstarView.colorGreen);
                     this._astarModel.setStartPoint(canvas2dCoords, mouseCanvasPos);
                     this._isStartPoint = false;
                     return;
                 }
                 else if (this._isEndPoint) {
                     // Clear previous end point
-                    this.fillCell(this._astarModel.endPointMousePos, "#303030");
+                    this.fillCell(this._astarModel.endPointMousePos, AstarView.colorBlack);
                     // Full current end point cell
-                    this.fillCell(mouseCanvasPos, "#F25D52");
+                    this.fillCell(mouseCanvasPos, AstarView.colorRed);
                     this._astarModel.setEndPoint(canvas2dCoords, mouseCanvasPos);
                     this._isEndPoint = false;
                     return;
@@ -114,14 +154,14 @@ class AstarController extends CanvasController {
             }
 
             if (this._isDrawingWalls) {
-                this.fillCell(mouseCanvasPos, "#CFCFCF");
+                this.fillCell(mouseCanvasPos, AstarView.colorCreamyWhite);
                 this._astarModel.addWall(    
                     canvas2dCoords.x, 
                     canvas2dCoords.y
                 );
             }
             else {
-                this.fillCell(mouseCanvasPos, "#303030");
+                this.fillCell(mouseCanvasPos, AstarView.colorBlack);
                 this._astarModel.removeWall(    
                     canvas2dCoords.x, 
                     canvas2dCoords.y
@@ -158,14 +198,14 @@ class AstarController extends CanvasController {
             }
 
             if (this._isDrawingWalls) {
-                this.fillCell(mouseCanvasPos, "#CFCFCF");
+                this.fillCell(mouseCanvasPos, AstarView.colorCreamyWhite);
                 this._astarModel.addWall(    
                     canvas2dCoords.x, 
                     canvas2dCoords.y
                 );
             }
             else {
-                this.fillCell(mouseCanvasPos, "#303030");
+                this.fillCell(mouseCanvasPos, AstarView.colorBlack);
                 this._astarModel.removeWall(    
                     canvas2dCoords.x, 
                     canvas2dCoords.y
@@ -181,6 +221,10 @@ class AstarController extends CanvasController {
         this._mousePosY < canvasBoundingClientRect.bottom;
     }
 
+    sleep(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms))
+    }
+  
     private fillCell(point: Point, color: string): void {
         let steps = new Point(
             this._astarView.canvas.width / this._astarModel.gridResolution.x,
@@ -230,29 +274,30 @@ class AstarController extends CanvasController {
         return response;
     }
 
-    findPathResponse(astarResponse: Promise<Response>) {
-        astarResponse.then((response) => {
-            let reader = response.body?.getReader();
+    findPathResponse(algStepsAndPathResponse: Promise<Response>) {
+        algStepsAndPathResponse.then(async (response) => {
+            let reader = response.body?.getReader() ?? Errors.handleError("undefined");
             let pathStart = -1;
-            
-            let readChunck = () => {
-                reader?.read().then(({done, value}) => {
-                    if (value === undefined) Errors.handleError("undefined");
-                    if (value === null) Errors.handleError("null");
 
-                    if (pathStart === -1) {
-                        pathStart = this.drawAlgSteps(value);
-                    }
-                    
-                    if (pathStart !== -1) {
-                        this.drawPath(value, pathStart);
-                    }
-                    
-                    if (!done) readChunck();
-                })
+            this.findPathResponseRead(reader, pathStart).then(() => this._astarModel.clearVisited());
+        })
+    }
+
+    private async findPathResponseRead(reader: ReadableStreamDefaultReader<Uint8Array>, pathArrayStart: number): Promise<void> {
+        return reader?.read().then(async ({done, value}) => {
+            if (done) return;
+            if (value === undefined) Errors.handleError("undefined");
+            if (value === null) Errors.handleError("null");
+
+            if (pathArrayStart === -1) {
+                pathArrayStart = await this.drawAlgSteps(value);
             }
-
-            readChunck();
+            
+            if (pathArrayStart !== -1) {
+                this.drawPath(value, pathArrayStart);
+            }
+            
+            if (!done) return this.findPathResponseRead(reader, pathArrayStart);
         });
     }
 
@@ -271,14 +316,46 @@ class AstarController extends CanvasController {
         this._astarView.canvasContext.fillRect(topLeftCorner.x, topLeftCorner.y, steps.x, steps.y);
     }
 
+    findNeighbors(currentPoint: Point): Array<Point> {
+        let neighbors: Array<Point> = [];
+
+        for (let n = -1; n <= 1; ++n) {
+            for (let m = -1; m <= 1; ++m) {
+                if (n === 0 && m === 0) continue;
+
+                let move = new Point(
+                    currentPoint.x + m,
+                    currentPoint.y + n
+                );
+
+                if (
+                    move.x >= 0 && move.x < this._astarModel.gridResolution.x &&
+                    move.y >= 0 && move.y < this._astarModel.gridResolution.y
+                ) {
+                    let index: number = this._astarModel.getIndex(move.x, move.y);
+
+                    // 1 - wall,
+                    // 2 - visited cell
+                    if (
+                        this._astarModel.grid[index] !== 1 &&
+                        this._astarModel.grid[index] !== 2 &&
+                        !move.equals(this._astarModel.startPoint) &&
+                        !move.equals(this._astarModel.endPoint)
+                    ) {
+                        neighbors.push(move);
+                    }
+                }
+            }
+        }
+
+        return neighbors;
+    }
+
     // visited cell: #5EF2F0
     // opened cell: #F2D546
     // current cell: #706BF2
-    drawAlgSteps(responseArray: Uint8Array): number {
+    async drawAlgSteps(responseArray: Uint8Array) {
         let pathStart = -1;
-        let colorVisited = "#5EF2F0";
-        let colorOpened = "#F2D546";
-        let colorCurrent = "#706BF2";
         
         for (let i = 0; i < responseArray.length; i += 2) {
             let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
@@ -289,52 +366,68 @@ class AstarController extends CanvasController {
                 break;
             }
             
-            this.fillCellByGridCoordinates(currentPoint, colorCurrent);
+            this.fillCellByGridCoordinates(currentPoint, AstarView.colorCurrent);
+            
+            let neighbors = this.findNeighbors(currentPoint);
 
-            for (let n = -1; n <= 1; ++n) {
-                for (let m = -1; m <= 1; ++m) {
-                    if (n === m) continue;
-
-                    let moveX = currentPoint.x + m;
-                    let moveY = currentPoint.y + n;
-
-                    // Check if the neighboring cell is not visited and not the wall
-                    if (
-                        moveX >= 0 && moveX < this._astarModel.gridResolution.x &&
-                        moveY >= 0 && moveY < this._astarModel.gridResolution.y
-                    ) {
-                        let index = this._astarModel.getIndex(moveX, moveY);
-
-                        if (
-                            this._astarModel.grid[index] !== 1 &&
-                            this._astarModel.grid[index] !== 2 &&
-                            this._astarModel.startPoint.x !== moveX &&
-                            this._astarModel.startPoint.y !== moveY &&
-                            this._astarModel.endPoint.x !== moveX &&
-                            this._astarModel.endPoint.y !== moveY
-                        ) {
-                            this.fillCellByGridCoordinates(new Point(moveX, moveY), colorOpened);
-                        }    
-                    }
-                }
+            for (let k = 0; k < neighbors.length; ++k) {      
+                this.fillCellByGridCoordinates(neighbors[k], AstarView.colorOpened);
+                await this.sleep(3000 / responseArray.length);
             }
             
             // Change value and color of the current cell to visited
             this._astarModel.grid[this._astarModel.getIndex(currentPoint.x, currentPoint.y)] = 2;
-            this.fillCellByGridCoordinates(currentPoint, colorVisited);
+            if (currentPoint.equals(this._astarModel.startPoint)) {
+                this.fillCellByGridCoordinates(currentPoint, "#52F193");
+            }
+            else {
+                this.fillCellByGridCoordinates(currentPoint, AstarView.colorVisited);
+            }
         }
 
         return pathStart
     }
 
-    drawPath(responseArray: Uint8Array, pathStart: number): void {
-        let colorPath = "#F22EC3";
-
+    async drawPath(responseArray: Uint8Array, pathStart: number): Promise<void> {
         for (let i = pathStart; i < responseArray.length; i += 2) {
             let currentPoint = new Point(responseArray[i + 1], responseArray[i]);
-
-            this.fillCellByGridCoordinates(currentPoint, colorPath);
+            this.fillCellByGridCoordinates(currentPoint, AstarView.colorPath);
+            await this.sleep(3000 / responseArray.length);
         }
+    }
+
+    labGenCallback() {
+        let response = this.labGenRequest();
+        this.labGenResponse(response);
+    }
+
+    private labGenRequest(): Promise<Response> {
+        let gridSize: Point = this._astarModel.gridResolution;
+
+        const response = fetch(`${this.urlValue}/alg/labgen?height=${gridSize.y}&width=${gridSize.x}`);
+        
+        return response;
+    }
+
+    private labGenResponse(labyrinthResponse: Promise<Response>) {
+        labyrinthResponse.then((response) => {
+            let reader = response.body?.getReader() ?? Errors.handleError("undefined");
+            
+            this.labGenResponseRead(reader).then(() => this._astarView.drawField());
+        });
+    }
+
+    private async labGenResponseRead(reader: ReadableStreamDefaultReader<Uint8Array>): Promise<void> {
+        const { done, value } = await reader.read();
+        if (done) return;
+        if (value === undefined) Errors.handleError("null");
+        if (value === null) Errors.handleError("null");
+
+        for (let i = 0; i < value.length; ++i) {
+            this._astarModel.grid[i] = value[i];
+        }
+
+        if (!done) return this.labGenResponseRead(reader);  
     }
 }
 

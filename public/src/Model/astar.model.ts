@@ -57,17 +57,14 @@ class AstarModel extends CanvasModel {
     setGridSize(gridResolution: Point) {
         this.grid = new Uint8Array(gridResolution.x * gridResolution.y);
         this.gridResolution = gridResolution;
+        
+        this.dispatchEvent(new Event('astar.model:gridSizeChanged'));
     }
 
-    clearVisitedCells() {
-        console.log(this.grid.length);
-        
+    clearVisited() {
         for (let i = 0; i < this.grid.length; ++i) {
-            console.log(i, this.grid[i]);
-            if (this.grid[i] === 2) {
-                this.grid[i] = 0;
-            }
-        }
+            if (this.grid[i] === 2) this.grid[i] = 0;
+        }        
     }
 }
 

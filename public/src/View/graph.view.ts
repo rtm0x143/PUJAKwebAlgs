@@ -16,10 +16,6 @@ class GraphView extends CanvasView {
 
         //subscribe model events
         this._subscribe();
-
-        //initialise canvas size params]
-        // this.canvas.height = 800;
-        // this.canvas.width = 1200;
     }
 
     /**

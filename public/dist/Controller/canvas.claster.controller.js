@@ -44,6 +44,7 @@ class ClasterController extends CanvasController {
                             x: this._clasterModel.positions[i],
                             y: this._clasterModel.positions[i - 1]
                         };
+                        let color = "#CFCFCF";
                         if (value[i] >= 2) {
                             if (value[i - 1] > colorsArray.length) {
                                 for (let j = colorsArray.length; j < value[i - 1]; ++j) {
@@ -51,8 +52,9 @@ class ClasterController extends CanvasController {
                                 }
                                 ;
                             }
+                            color = colorsArray[value[i - 1] - 1];
                         }
-                        this._clasterView.drawCircle('', colorsArray[value[i - 1] - 1], point, radius);
+                        this._clasterView.drawCircle('', color, point, radius);
                     }
                 });
             });
