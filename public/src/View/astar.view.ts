@@ -49,7 +49,7 @@ class AstarView extends CanvasView {
         this._widthRangeInputText = document.querySelector('.range-slider__text_width') ?? Errors.handleError("null");
         this._heightRangeInputText = document.querySelector('.range-slider__text_height') ?? Errors.handleError("null");
         this.buttonChooseHeuristics = document.querySelector('.heuristics-switcher-menu .heuristics-switcher-button') ?? Errors.handleError("null");
-        this.heuristicsMenu = document.querySelector('.heuristics-menu') ?? Errors.handleError("null");
+        this.heuristicsMenu = document.querySelector('.heuristics-menu__closed') ?? Errors.handleError("null");
         this.allHeuristicsLinks = document.querySelectorAll('.link-container');
 
         this.canvasGrid = document.querySelector("#gridLayer") ?? Errors.handleError("null");

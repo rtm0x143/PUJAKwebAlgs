@@ -14,6 +14,7 @@ class AstarController extends CanvasController {
     private _isDrawingWalls: boolean = true;
     private _isStartPoint: boolean = false;
     private _isEndPoint: boolean = false;
+    private _isMenuOpened: boolean = false;
 
     constructor(model: AstarModel) {
         super(model);
@@ -78,7 +79,14 @@ class AstarController extends CanvasController {
     }
 
     buttonHeuristicsCallback() {
-        this._astarView.heuristicsMenu.className = "heuristics-menu__opened";
+        if (!this._isMenuOpened) {
+            this._astarView.heuristicsMenu.className = "heuristics-menu__opened";
+            this._isMenuOpened = true;
+        }
+        else {
+            this._astarView.heuristicsMenu.className = "heuristics-menu__closed";
+            this._isMenuOpened = false;
+        }
     }
 
     rangeInputCallback() {
