@@ -6,18 +6,12 @@ import CanvasView from './canvas.view.js';
 class ClasterView extends CanvasView {
     private _regulatorButton: HTMLButtonElement;
     private currentAlg: string = 'DBSCAN';
-    // private _regulator: HTMLDivElement;
-
-    // private _rangeInput: HTMLInputElement;
-    // private _groupInput: HTMLInputElement;
 
     private _DBSCANButton: HTMLButtonElement;
     private _kmeansButton: HTMLButtonElement;
     private _sendButton: HTMLButtonElement;
 
     private _clasterModel: ClasterModel;
-    //private _brush: Brush;
-
     private readonly body: HTMLBodyElement;
     private readonly regulatorButtons: NodeListOf<HTMLButtonElement>;
     private readonly widthRegulator: HTMLDivElement;
@@ -58,10 +52,6 @@ class ClasterView extends CanvasView {
         //Elements fo change canvas
         this._regulatorButton = document.querySelector('.regulator__button') ?? Errors.handleError('null');
 
-        //server data
-        // this._rangeInput = document.querySelector('.range') ?? Errors.handleError('null');
-        // this._groupInput = document.querySelector('.group-size') ?? Errors.handleError('null');
-
         // //buttons to send on server data
         this._DBSCANButton = document.querySelector('.canvas__menu-button_DBSCAN')
             ?? Errors.handleError('null');
@@ -72,7 +62,7 @@ class ClasterView extends CanvasView {
 
         //Models
         this._clasterModel = model;
-        //this._brush = new Brush();    add Brush
+        
         //starts with DBSCAN
         this.kmeansMenu.style.display = 'none';
         this._subscribe();
@@ -148,16 +138,6 @@ class ClasterView extends CanvasView {
                 )
             }
         })
-
-        //listeners for swapping clasters algs
-        /*this.kmeans.addEventListener('click', (e) => {
-            let kmeansRegulator = document.querySelector('regulator__button regulator__button_height');
-            kmeansRegulator.removeEventListener('mousedown');
-        });*/
-        //listener for send button
-        /*this.sendButton.addEventListener('click', (e) => {
-
-        })*/
         
         this.drawGrid(
             'grey',
@@ -351,7 +331,6 @@ class ClasterView extends CanvasView {
             event.preventDefault();
             callback(
                 getComputedStyle(this.kmeansMenu).display,
-                // this.canvasContext,
                 parseInt(this.rangeParagraph.textContent ?? Errors.handleError('null')),
                 parseInt(this.countParagraph.textContent ?? Errors.handleError('null')),
                 this.kmeansSelect.value ?? Errors.handleError('null'),

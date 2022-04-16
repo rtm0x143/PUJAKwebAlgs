@@ -97,8 +97,6 @@ void Genetic::generate() {
 	std::sort(graph->ways.begin(), graph->ways.end(), 
 		[](Graph::Way& v1, Graph::Way& v2) { return v1.weight < v2.weight; });
 
-	//std::cout << (*graph->ways.begin()).weight << std::endl;
-
 	for (size_t i = graph->lengthCube; i < graph->lengthCube * 2; i++) {
 		free(graph->ways[i].path);
 	}

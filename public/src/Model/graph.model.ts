@@ -43,7 +43,6 @@ class GraphModel extends CanvasModel {
 
     clearCanvas() {
         this.dispatchEvent(new Event('canvas:clear'));
-        // this.dispatchEvent(new Event('draw:circles'));
     }
 }
 

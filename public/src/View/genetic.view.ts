@@ -43,23 +43,6 @@ class GeneticView extends GraphView {
             tokenCallback();
         })
     }
-
-    //subscribe dispatching events
-    // _subscribe() {
-    //     this._graphModel.addEventListener('canvas:change', () => {
-    //         console.log(this._graphModel.coords);
-    //         this.drawCircle
-    //         (
-    //             '',
-    //             'white',
-    //             {
-    //                 x: this._graphModel.coords[this._graphModel.coords.length - 2],
-    //                 y: this._graphModel.coords[this._graphModel.coords.length - 1],
-    //             },
-    //             5
-    //         );
-    //     })
-    // }
 }
 
 export default GeneticView;

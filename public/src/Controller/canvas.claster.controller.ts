@@ -31,7 +31,6 @@ class ClasterController extends CanvasController {
 
     request(
         type: string,
-        // context: CanvasRenderingContext2D,
         range: number,
         groupSize: number,
         metricType: string,
@@ -126,8 +125,6 @@ class ClasterController extends CanvasController {
                         );
                         
                     }
-
-                    console.log(colorsArray);
                 })
             })
         }

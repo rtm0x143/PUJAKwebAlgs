@@ -2,12 +2,10 @@ import GeneticView from "../View/genetic.view";
 import Controller from "./Controller.js";
 import GraphModel from "../Model/graph.model";
 import Errors from "../config/Errors.js";
-import { time } from "console";
 
 class GeneticController extends Controller {
     private _graphView;
     private _graphModel;
-    // private updateIntervalId: number | null = null;
     private sessionRuns: boolean = false;
 
     public updateInterval: number = 50;
@@ -86,23 +84,14 @@ class GeneticController extends Controller {
                     bufferData.byteOffset,
                     bufferData.byteLength / 2)
 
-                // this._graphModel.clearCanvas();
 
                 this._graphModel.updateWay(
                     pointsData, value.cost
                 );
-
-                // console.log(pointsData, value.cost)
-                console.log(++this.epochCount);
             });
     }
 
     async _launchAlgHandler() {
-        // if (this.updateIntervalId) {
-        //     clearInterval(this.updateIntervalId);
-        //     this.updateIntervalId = null;
-        // }
-
         let oldToken = sessionStorage.getItem('token')
         if (oldToken) {
             await this.terminateSimulation(oldToken);
@@ -116,7 +105,6 @@ class GeneticController extends Controller {
         .then(() => {
             this.epochCount = 0
             this._graphModel.cost = Number.MAX_VALUE;   
-            // this.updateIntervalId = setInterval(this.updateSimulation.bind(this), 100, token);
             if (!this.sessionRuns) {
                 this.sessionRuns = true;
                 this.updateSimulationRec();

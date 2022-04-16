@@ -14,9 +14,6 @@ class AstarView extends CanvasView {
 
     public canvasGrid: HTMLCanvasElement;
     public canvasGridContext: CanvasRenderingContext2D;
-    // private readonly _regulatorButtons: NodeListOf<HTMLButtonElement>;
-    // private readonly _regulatorButtonGridWidth: HTMLButtonElement;
-    // private readonly _regulatorButtonGridHeight: HTMLButtonElement;
 
     constructor (model: AstarModel) {
         super(model);
@@ -30,13 +27,8 @@ class AstarView extends CanvasView {
         this.canvasGridContext = this.canvasGrid.getContext('2d') ?? Errors.handleError("null");
         this.canvasGrid.width = parseInt(window.getComputedStyle(this.canvasWrapper, '').width);
         this.canvasGrid.height = parseInt(window.getComputedStyle(this.canvasWrapper, '').height);
-        // this._regulatorButtons = document.querySelectorAll('.regulator__button');   
-        // this._buttonStartPoint = document.querySelector('.buttons-menu__button_add-start') ?? Errors.handleError("null"); 
-        // this._buttonEndPoint = document.querySelector('.buttons-menu__button_add-end') ?? Errors.handleError("null");
-        // this._buttonGenerate = document.querySelector('.buttons-menu__button_generate') ?? Errors.handleError("null");
 
         this.subscribe();
-        // this.drawGrid('grey', this._astarModel.gridResolution.x, this._astarModel.gridResolution.y);
     }
 
     private subscribe() {
@@ -112,12 +104,6 @@ class AstarView extends CanvasView {
         });
     }
     
-    // handleMouseMoveCanvas(callbackMouseMove: Function) {
-    //     this.canvas.addEventListener('mousemove', (e: MouseEvent) => {
-    //         callbackMouseMove;
-    //     });
-    // }
-
     // Handle button start event
     handleButtonStart(callbackButtonClick: Function) {
         function callbackButtonClickWrapper() {
