@@ -1,14 +1,15 @@
 .ui .regulator {
     align-items: center;
+    justify-content: space-evenly;
     
     .regulator__buttons-bar {
         display: flex;
         justify-content: center;
         align-items: center;
         height: 93%;
-        width: 24px;
+        width: 38px;
         background-color: $creamyWhite;
-        border-radius: 15px;
+        border-radius: 20px;
         
         .buttons-bar__wrapper {
             display: flex;
@@ -25,14 +26,14 @@
                 // padding-right: 10px;
                 white-space: nowrap;
                 // height: fit-content;
-                height: 41px;
+                height: 54px;
                 border: 2px solid $black;
                 border-radius: 10px;
                 background-color: $creamyWhite;
                 text-align: left;
         
                 .regulator__button__text {
-                    @include setFont('codenext', normal, 16px, 0px, 400, $black);
+                    @include setFont('codenext', normal, 24px, 0px, 400, $black);
                     color: $black;
                 }
             }
@@ -40,10 +41,10 @@
             .regulator__button:hover {
                 border: 2px solid $creamyWhite;
                 background-color: $black;
+                transition: background 0.3s;
         
                 .regulator__button__text {
                     color: $creamyWhite;
-                    transition: background 0.3s;
                 }
             }
         }

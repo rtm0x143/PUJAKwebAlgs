@@ -12,7 +12,7 @@
                     />
                     <span class="range-slider__text">grid height</span>
                 </div>
-                <span class="range-slider__count range-slider__text_width">0</span>
+                <span class="range-slider__count">0</span>
             </div>
 
             <div class="regulator__range-slider__container">
@@ -26,7 +26,7 @@
                     />
                     <span class="range-slider__text">grid width</span>
                 </div>
-                <span class="range-slider__count range-slider__text_height">0</span>
+                <span class="range-slider__count">0</span>
             </div>
         </div>
     </div>
@@ -50,23 +50,27 @@
             <div class="cursor heuristics-switcher-menu">
                 <button
                     class="heuristics-switcher-menu heuristics-switcher-button"
+                    id="manhattan"
                 >
                     <span class="button-wrap">Manhattan heuristics</span>
                 </button>
-                <!-- <ul class="heuristics-menu">
-					<li class="link-container">
-						<p class="heuristics-menu-heading">Manhattan heurisitcs</p>
-					</li>
-					<li class="link-container">
-						<p class="heuristics-menu-heading">Euclidian heurisitcs</p>
-					</li>
-					<li class="link-container">
-						<p class="heuristics-menu-heading">Octile heurisitcs</p>
-					</li>
-					<li class="link-container">
-						<p class="heuristics-menu-heading">Chebyshev heurisitcs</p>
-					</li>
-					</ul> -->
+                <ul class="heuristics-menu__opened">
+                    <li class="heuristics-switcher-button link-container" id="euclidian">
+                        <span class="button-wrap heuristics-menu-heading">
+                            Euclidian heurisitcs
+                        </span>
+                    </li>
+                    <li class="heuristics-switcher-button link-container" id="octile">
+                        <span class="button-wrap heuristics-menu-heading">
+                            Octile heurisitcs
+                        </span>
+                    </li>
+                    <li class="heuristics-switcher-button link-container" id="chebyshev">
+                        <span class="button-wrap heuristics-menu-heading">
+                            Chebyshev heurisitcs
+                        </span>
+                    </li>
+                </ul>
             </div>
         </div>
         <!-- <div class="canvas__menu canvas__menu_astar">
@@ -82,11 +86,24 @@
                 <button class="regulator__button button__end">
                     <span class="regulator__button__text">add end</span>
                 </button>
-                <button class="regulator__button button__generate">
-                    <span class="regulator__button__text">generate labyrinth</span>
+                <button class="regulator__button button__clear-walls">
+                    <span class="regulator__button__text">clear walls</span>
                 </button>
+            </div>
+            <!-- <button class="buttons-menu__button">
+          <span class="buttons-menu__button__text">append</span>
+        </button>
+        <button class="buttons-menu__button">
+          <span class="buttons-menu__button__text">delete</span>
+        </button> -->
+        </div>
+        <div class="regulator__buttons-bar">
+            <div class="buttons-bar__wrapper">
                 <button class="regulator__button button__find-path">
                     <span class="regulator__button__text">find path</span>
+                </button>
+                <button class="regulator__button button__generate">
+                    <span class="regulator__button__text">generate labyrinth</span>
                 </button>
             </div>
             <!-- <button class="buttons-menu__button">
@@ -97,4 +114,5 @@
         </button> -->
         </div>
     </div>
+</div>
 </div>

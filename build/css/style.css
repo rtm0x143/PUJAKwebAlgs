@@ -817,8 +817,8 @@ body::-webkit-scrollbar-thumb {
 
 .ui .canvas.canvas_astar {
   display: block;
-  width: 400px;
-  height: 400px;
+  width: 700px;
+  height: 700px;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
@@ -837,6 +837,13 @@ body::-webkit-scrollbar-thumb {
   top: 5px;
   left: 5px;
   white-space: nowrap;
+  background-color: #ffb2b2;
+  font-family: "garet-book", sans-serif;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 18px;
+  font-weight: 400;
+  color: #303030;
 }
 
 .ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button {
@@ -848,12 +855,6 @@ body::-webkit-scrollbar-thumb {
 }
 
 .ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button .button-wrap {
-  font-family: "garet-book", sans-serif;
-  font-style: normal;
-  font-size: 14px;
-  line-height: 0px;
-  font-weight: 400;
-  color: #303030;
   color: #FFFFFF;
   vertical-align: middle;
   mix-blend-mode: exclusion;
@@ -862,6 +863,20 @@ body::-webkit-scrollbar-thumb {
 .ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-switcher-button:hover {
   transition: 0.3s;
   background-color: #CFCFCF;
+}
+
+.ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-menu__opened {
+  position: absolute;
+  left: 5px;
+  top: 22px;
+  background-color: transparent;
+  list-style: none;
+  padding-left: 0;
+  visibility: visible;
+}
+
+.ui .canvas.canvas_astar .heuristics-switcher-menu .heuristics-menu__closed {
+  visibility: hidden;
 }
 
 .ui .canvas.canvas_astar .heuristics-menu {
@@ -874,12 +889,6 @@ body::-webkit-scrollbar-thumb {
 }
 
 .ui .canvas.canvas_astar .heuristics-menu-heading {
-  font-family: "gatet-book", sans-serif;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 32px;
-  font-weight: 400;
-  color: #303030;
   color: #FFFFFF;
   margin: 0px;
 }
@@ -900,7 +909,9 @@ body::-webkit-scrollbar-thumb {
 
 .ui .regulator .regulator__sliders__container .regulator__range-slider__container {
   display: flex;
-  height: 100%;
+  position: relative;
+  height: 98%;
+  width: 70px;
   align-items: center;
   justify-content: center;
 }
@@ -916,7 +927,7 @@ body::-webkit-scrollbar-thumb {
   box-sizing: border-box;
   border: 5px solid #CFCFCF;
   border-radius: 20px;
-  width: 300px;
+  width: 700px;
   transition: box-shadow 0.2s ease-in-out;
 }
 
@@ -925,13 +936,15 @@ body::-webkit-scrollbar-thumb {
   white-space: nowrap;
   line-height: 40px;
   color: #F0F0F0;
+  pointer-events: none;
   mix-blend-mode: exclusion;
   isolation: isolate;
 }
 
 .ui .regulator .regulator__sliders__container .regulator__range-slider__container .range-slider__count {
   position: absolute;
-  margin-bottom: 330px;
+  top: 0;
+  color: #CFCFCF;
 }
 
 .ui_neural-net {
@@ -1085,6 +1098,7 @@ body::-webkit-scrollbar-thumb {
 
 .ui .regulator {
   align-items: center;
+  justify-content: space-evenly;
 }
 
 .ui .regulator .regulator__buttons-bar {
@@ -1092,9 +1106,9 @@ body::-webkit-scrollbar-thumb {
   justify-content: center;
   align-items: center;
   height: 93%;
-  width: 24px;
+  width: 38px;
   background-color: #CFCFCF;
-  border-radius: 15px;
+  border-radius: 20px;
 }
 
 .ui .regulator .regulator__buttons-bar .buttons-bar__wrapper {
@@ -1108,7 +1122,7 @@ body::-webkit-scrollbar-thumb {
 .ui .regulator .regulator__buttons-bar .buttons-bar__wrapper .regulator__button {
   transform: rotate(90deg);
   white-space: nowrap;
-  height: 41px;
+  height: 54px;
   border: 2px solid #303030;
   border-radius: 10px;
   background-color: #CFCFCF;
@@ -1118,7 +1132,7 @@ body::-webkit-scrollbar-thumb {
 .ui .regulator .regulator__buttons-bar .buttons-bar__wrapper .regulator__button .regulator__button__text {
   font-family: "codenext", sans-serif;
   font-style: normal;
-  font-size: 16px;
+  font-size: 24px;
   line-height: 0px;
   font-weight: 400;
   color: #303030;
@@ -1128,11 +1142,11 @@ body::-webkit-scrollbar-thumb {
 .ui .regulator .regulator__buttons-bar .buttons-bar__wrapper .regulator__button:hover {
   border: 2px solid #CFCFCF;
   background-color: #303030;
+  transition: background 0.3s;
 }
 
 .ui .regulator .regulator__buttons-bar .buttons-bar__wrapper .regulator__button:hover .regulator__button__text {
   color: #CFCFCF;
-  transition: background 0.3s;
 }
 
 .ui .canvas .canvas__menu {
