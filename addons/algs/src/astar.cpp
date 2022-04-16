@@ -181,9 +181,6 @@ void Pathfinder::retracePath(
 
 PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoint)
 {
-	// std::cout << "started with " << grid.getHeight() << ' ' << grid.getWidth() << '\n';
-	// grid.printGrid();
-	
 	// Cell current;
 	std::vector<Point> stepsAndPath;
 	std::vector<Cell*> availableCells;
@@ -193,7 +190,6 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 
 	while (!availableCells.empty())
 	{
-		// current = availableCells[0];
 		size_t minCellIndex = 0;
 
 		for (size_t i = 1; i < availableCells.size(); i++)
@@ -204,13 +200,11 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 				{
 					minCellIndex = i;
 				}
-				// current = availableCells[i];
 			}
 		}
 
 		stepsCount++;
 		stepsAndPath.push_back(availableCells[minCellIndex]->point);
-		// std::cout << (int)grid[availableCells[minCellIndex]->point.y][availableCells[minCellIndex]->point.x] << '\n';
 
 		if (availableCells[minCellIndex]->point == endPoint)
 		{
@@ -275,8 +269,6 @@ PathfinderResult Pathfinder::findPath(Grid grid, Point startPoint, Point endPoin
 			}
 			else delete neighbor;
 		}
-
-		//for (Cell* neighbor : neighbors) delete neighbor;
 	}
 
 	for (size_t i = 0; i < availableCells.size(); i++)
