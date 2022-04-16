@@ -21,8 +21,7 @@ class ClasterController extends CanvasController {
             menu.style.display = 'none';
         }
     }
-    request(type, 
-    range, groupSize, metricType, clastersCount, radius) {
+    request(type, range, groupSize, metricType, clastersCount, radius) {
         if (type === 'none') {
             fetch(`${this.urlValue}/alg/clasterisation?type=DBSCAN&range=${range}&gSize=${groupSize}`, {
                 method: 'POST',
@@ -90,7 +89,6 @@ class ClasterController extends CanvasController {
                         }
                         this._clasterView.drawCircle('', colorsArray[value[i]], point, radius);
                     }
-                    console.log(colorsArray);
                 });
             });
         }
