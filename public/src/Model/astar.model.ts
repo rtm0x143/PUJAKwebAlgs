@@ -66,6 +66,12 @@ class AstarModel extends CanvasModel {
             if (this.grid[i] === 2) this.grid[i] = 0;
         }        
     }
+
+    clearAll() {
+        for (let i = 0; i < this.grid.length; ++i) {
+            this.grid[i] = 0;
+        }
+    }
 }
 
 export default AstarModel;

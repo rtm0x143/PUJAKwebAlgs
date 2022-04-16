@@ -3,6 +3,7 @@ import AstarView from '../View/astar.view.js';
 import AstarModel from '../Model/astar.model.js';
 import Errors from '../config/Errors.js';
 import Point from '../Model/point.js';
+import { convertTypeAcquisitionFromJson } from 'typescript';
 
 class AstarController extends CanvasController {
     private readonly _astarModel: AstarModel;
@@ -52,10 +53,25 @@ class AstarController extends CanvasController {
             this.liHeuristicsLinksCallback(li);
         });
 
+        this._astarView.handleClear(() => {
+            this.clearCallback();
+        });
+
         this._astarModel.setGridSize(this._astarView.getGridSize());
         this._astarView.drawGridOn(
             this._astarView.canvasGridContext,
             AstarView.colorCreamyWhite, 
+            this._astarModel.gridResolution.x,
+            this._astarModel.gridResolution.y
+        );
+    }
+
+    clearCallback() {
+        this._astarModel.clearAll();
+        this._astarView.clearAllDrawed();
+        this._astarView.drawGridOn(
+            this._astarView.canvasGridContext,
+            AstarView.colorCreamyWhite,
             this._astarModel.gridResolution.x,
             this._astarModel.gridResolution.y
         );
@@ -245,7 +261,25 @@ class AstarController extends CanvasController {
         this.findPathResponse(response);
     }
 
+    isPointValid(point: Point): boolean {
+        if (
+            point.x >= 0 && point.x < this._astarModel.gridResolution.x &&
+            point.y >= 0 && point.y < this._astarModel.gridResolution.y
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
     private findPathRequest(): Promise<Response> {
+        if (
+            !this.isPointValid(this._astarModel.startPoint) ||
+            !this.isPointValid(this._astarModel.endPoint)
+        ) {
+            Errors.handleError('incorrectData');
+        }
+        
         let data = {
             end: {
                 x: this._astarModel.endPoint.x, 
@@ -263,7 +297,7 @@ class AstarController extends CanvasController {
             },
         }
         
-        const response = fetch(`${this.urlValue}/alg/astar/`, {
+        const response = fetch(`${this.urlValue}/alg/astar?${this._astarView.buttonChooseHeuristics.id}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

@@ -25,6 +25,7 @@ class AstarView extends CanvasView {
     private _widthRangeInputText: HTMLSpanElement;
     private _heightRangeInputText: HTMLSpanElement;
     private _astarModel: AstarModel; 
+    private _buttonClear: HTMLButtonElement;
     
     public buttonChooseHeuristics: HTMLButtonElement;
     // public  
@@ -48,6 +49,7 @@ class AstarView extends CanvasView {
         this.buttonChooseHeuristics = document.querySelector('.heuristics-switcher-menu .heuristics-switcher-button') ?? Errors.handleError("null");
         this.heuristicsMenu = document.querySelector('.heuristics-menu__closed') ?? Errors.handleError("null");
         this.allHeuristicsLinks = document.querySelectorAll('.link-container');
+        this._buttonClear = document.querySelector('.button__clear') ?? Errors.handleError("null");
 
         this.canvasGrid = document.querySelector("#gridLayer") ?? Errors.handleError("null");
         this.canvasGridContext = this.canvasGrid.getContext('2d') ?? Errors.handleError("null");
@@ -74,7 +76,7 @@ class AstarView extends CanvasView {
         });
         
         this._canvasModel.addEventListener('astar.model:gridSizeChanged', () => {
-            this.clearEverything();
+            this.clearAllDrawed();
             this.drawGridOn(
                 this.canvasGridContext,
                 '#CFCFCF',
@@ -86,7 +88,7 @@ class AstarView extends CanvasView {
         });
     }
 
-    clearEverything(): void {
+    clearAllDrawed(): void {
         this.canvasGrid.width = this.canvasGrid.width;
         this.canvasGrid.height = this.canvasGrid.height;
         this.canvas.width = this.canvas.width;
@@ -96,6 +98,7 @@ class AstarView extends CanvasView {
     clearWalls(): void {
         this.canvas.width = this.canvas.width;
         this.canvas.height = this.canvas.height;
+        this._astarModel.clearAll();
     }
 
     drawField() {
@@ -138,6 +141,12 @@ class AstarView extends CanvasView {
         );
     }
 
+    handleClear(clearWallsCallback: Function): void {
+        this._buttonClear.addEventListener('click', () => {
+            clearWallsCallback();
+        });
+    }
+
     handleMouseDownCanvas(callbackMouseDown: Function, callbackMouseMove: Function) {
         function callbackMouseMoveWrapper(e: MouseEvent) {
             callbackMouseMove(e);
@@ -158,6 +167,8 @@ class AstarView extends CanvasView {
             this.canvas.removeEventListener('mousemove', callbackMouseMoveWrapper);
         });
     }
+
+    
 
     // Handle button start event
     handleButtonStart(callbackButtonClick: Function) {

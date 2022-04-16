@@ -16,7 +16,7 @@ double metrics::EuclideanCubes(double* obj1, double* obj2, int paramCount) {
 	}
 	return result;
 }
-
+  
 double metrics::Chebyshev(double* obj1, double* obj2, int paramCount) {
 	double result = 0;
 	for (int i = 0; i < paramCount; i++) {

@@ -15,6 +15,9 @@ class Errors {
                 throw new Error(JSON.parse(data.toString()).typeError);
             }
 
+            case 'incorrectData': {
+                throw new Error(JSON.parse(data.toString()).incorrectData);
+            }
             default: {
                 throw new Error("Unhandled exception");
             }
