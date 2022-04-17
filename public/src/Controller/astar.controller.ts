@@ -297,7 +297,7 @@ class AstarController extends CanvasController {
             },
         }
         
-        const response = fetch(`${this.urlValue}/alg/astar?${this._astarView.buttonChooseHeuristics.id}`, {
+        const response = fetch(`${this.urlValue}/alg/astar?metric=${this._astarView.buttonChooseHeuristics.id}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

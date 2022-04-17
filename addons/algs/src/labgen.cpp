@@ -375,15 +375,14 @@ namespace labirint {
             edges.erase(element);
             addEdges(i, j);
         }
-
         
-        for (int i = 0; i < height; ++i) {
-            if (matrix[i][0] == 0) break; 
-        }
+        // for (int i = 0; i < height; ++i) {
+        //     if (matrix[i][0] == 0) break; 
+        // }
 
-        for (int j = 0; j < width; ++j) {
-            if (matrix[0][j] == 0) break; 
-        } 
+        // for (int j = 0; j < width; ++j) {
+        //     if (matrix[0][j] == 0) break; 
+        // } 
 
         return matrix;
     }

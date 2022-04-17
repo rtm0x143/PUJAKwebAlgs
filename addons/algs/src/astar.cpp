@@ -48,7 +48,15 @@ Cell::Cell(Point cellPoint, Point& previousPoint, Point& endPoint, Cell* parent,
 {
 	point = cellPoint;
 	this->parent = parent;
-	distanceToStart = calculateDistance(previousPoint, point) + (parent == nullptr ? 0 : parent->distanceToStart);
+	if (previousPoint != point) 
+	{
+		distanceToStart = straight + (parent == nullptr ? 0 : parent->distanceToStart);
+	}
+	else 
+	{
+		distanceToStart = diagonal + (parent == nullptr ? 0 : parent->distanceToStart);
+	}
+	//distanceToStart = calculateDistance(previousPoint, point) + (parent == nullptr ? 0 : parent->distanceToStart);
 	distanceToEnd = calculateDistance(point, endPoint);
 }
 
